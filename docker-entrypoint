@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+cat >/etc/msmtprc <<EOF
+account default
+host ${EMAIL_HOST}
+port ${EMAIL_PORT}
+from ${EMAIL_FROM}
+EOF
+
+# waits for a database to come up
+wait_for_db() {
+	local host="$1" port="$2" user="$3" password="$4" name="$5"
+
+	local mysql=(mysql -h "$host" -P "$port" -u "$user" --password="$password" "$5")
+
+	for i in {60..0}; do # 60 * 5 seconds = wait 5 minutes
+		echo -n "Connecting to database $user@$host:$port/$name... "
+		if echo 'SELECT 1' | "${mysql[@]}" &>/dev/null; then
+			echo 'Success!'
+			i=1 # ensure we succeed if this is the last iteration
+			break
+		fi
+		echo 'Fail'
+		sleep 5 # don't ping too often
+	done
+	if [ "$i" = 0 ]; then
+		echo >&2 "Failed to connect to database $user@$host:$port/$name."
+		return 1
+	fi
+}
+
+#wait_for_db "$DB_HOST" "$DB_PORT" "$DB_USERNAME" "$DB_PASSWORD" "$DB_DATABASE" || exit 0
+
+# Create necessary directories
+mkdir -p storage/logs
+chown -R inkassogram:inkassogram storage
+
+mkdir -p bootstrap/cache
+chown -R inkassogram:inkassogram bootstrap
+
+mkdir -p /var/log/php
+
+touch /var/log/php/mail.log /var/log/php/application.log /var/log/php/error.log /var/www/html/migrate.log /var/www/html/storage/logs/laravel.log
+chmod 777 -R /var/www/storage/logs
+
+# Migrate DB Changes and optimize cache and config
+php artisan optimize
+
+if [ "$ENVIRONMENT" = "production" ]; then
+    php artisan migrate --force &>> migrate.log
+else
+    php artisan migrate:fresh --seed --force &>> migrate.log
+fi
+
+service supervisor start
+
+supervisorctl reread
+supervisorctl update
+supervisorctl start laravel-worker:*
+
+chown -R inkassogram:inkassogram storage/logs
+
+exec dockerize -stderr /var/log/php/error.log -stdout /var/www/html/migrate.log -stdout /var/www/html/storage/logs/worker.log -stderr /var/www/html/storage/logs/laravel.log -stdout /var/log/php/mail.log -stdout /var/log/php/application.log -poll docker-php-entrypoint "$@"
