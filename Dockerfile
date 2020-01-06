@@ -3,8 +3,8 @@ FROM php:7-apache-buster
 RUN adduser --uid 1337 --disabled-password --gecos HD hd
 
 ENV APACHE_RUN_USER=hd \
-    DB_HOST=hd-db DB_PORT=3306 DB_DATABASE=hd DB_USERNAME=hd DB_PASSWORD=hd DB_CONNECTIOn=pgsql \
-    DOOR_DB_HOST=hd-db DOOR_DB_PORT=3306 DOOR_DB_DATABASE=hd DOOR_DB_USERNAME=hd DOOR_DB_PASSWORD=hd \
+    DB_HOST=hd-db DB_PORT=5432 DB_DATABASE=hd DB_USERNAME=hd DB_PASSWORD=hd DB_CONNECTIOn=pgsql \
+    DOOR_DB_HOST=hd-db DOOR_DB_PORT=5432 DOOR_DB_DATABASE=hd DOOR_DB_USERNAME=hd DOOR_DB_PASSWORD=hd \
 	  MAIL_HOST=mail MAIL_PORT=1025 MAIL_FROM=hd@localhost MAIL_DRIVER=smtp \
 	  CACHE_DRIVER=memcached SESSION_DRIVER=memcached MEMCACHED_HOST=hd-memcached REDIS_HOST=hd-redis \
     BROADCAST_DRIVER=redis QUEUE_DRIVER=database ENVIRONMENT=production \
@@ -26,7 +26,7 @@ RUN echo "sendmail_path = $(which msmtp) -ti" > /usr/local/etc/php/conf.d/mail.i
 # php extensions
 RUN apt-get install -y --no-install-recommends libonig-dev iec16022 libxml2-dev libcurl3-dev libpng-dev libc-client-dev libkrb5-dev libicu-dev libpq-dev && \
     PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
-    docker-php-ext-install gd xml mbstring intl pgsql pdo pdo_pgsql soap curl opcache
+    docker-php-ext-install gd xml mbstring intl pgsql pdo pdo_pgsql soap curl opcache && docker-php-ext-enable pdo_pgsql
 
 # update PECL
 RUN pecl channel-update pecl.php.net

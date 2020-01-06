@@ -27,7 +27,7 @@ services:
     env_file:
       - ./web/.env
     ports:
-      - ${HOST_AUX_PORT_HEKTO:-10}81:3306
+      - ${HOST_AUX_PORT_HEKTO:-10}81:5432
     restart: on-failure:3
 
   hd-memcached:

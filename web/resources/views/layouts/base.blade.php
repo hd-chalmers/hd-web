@@ -15,10 +15,11 @@ font-family: 'Numans', sans-serif;">
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('img/favicon.ico')}}"/>
 </head>
-<body>
+<body style="display: flex; min-height: 100vh; flex-direction: column">
 @yield('navbar', View::make('common.navbar'))
 @yield('content')
 @yield('footer', View::make('common.footer'))
+<script src="https://kit.fontawesome.com/458d5475f8.js" crossorigin="anonymous"></script>
 <script src="{{ mix('/js/app.js') }}"></script>
 </body>
 </html>

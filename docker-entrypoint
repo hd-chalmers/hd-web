@@ -33,14 +33,14 @@ wait_for_db() {
 
 # Create necessary directories
 mkdir -p storage/logs
-chown -R inkassogram:inkassogram storage
+chown -R hd:hd storage
 
 mkdir -p bootstrap/cache
-chown -R inkassogram:inkassogram bootstrap
+chown -R hd:hd bootstrap
 
 mkdir -p /var/log/php
 
-touch /var/log/php/mail.log /var/log/php/application.log /var/log/php/error.log /var/www/html/migrate.log /var/www/html/storage/logs/laravel.log
+touch /var/log/php/mail.log /var/log/php/application.log /var/log/php/error.log /var/www/html/migrate.log /var/www/html/storage/logs/laravel.log /var/www/html/storage/logs/worker.log
 chmod 777 -R /var/www/storage/logs
 
 # Migrate DB Changes and optimize cache and config
@@ -58,6 +58,6 @@ supervisorctl reread
 supervisorctl update
 supervisorctl start laravel-worker:*
 
-chown -R inkassogram:inkassogram storage/logs
+chown -R hd:hd storage/logs
 
 exec dockerize -stderr /var/log/php/error.log -stdout /var/www/html/migrate.log -stdout /var/www/html/storage/logs/worker.log -stderr /var/www/html/storage/logs/laravel.log -stdout /var/log/php/mail.log -stdout /var/log/php/application.log -poll docker-php-entrypoint "$@"

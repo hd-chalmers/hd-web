@@ -11,4 +11,11 @@
 |
 */
 
-Route::get('/', "IndexController@index");
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', "IndexController@index")->name('home');
+Route::resource('/committee', "CommitteeController@index");
+Route::resource('/events', 'EventController');
+Route::resource('/pricelist', 'PricelistController');
+Route::resource('/games', 'GameController');
+Route::get('/contact', 'ContactController@index')->name('contact');

@@ -153,9 +153,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-.idea
-*.iml
-
 .env
 /web/app/vendor/
 /web/.composer/
@@ -166,3 +163,6 @@ Temporary Items
 /web/.phpstorm.meta.php
 /web/public/js/app.js
 /web/public/css/app.css
+!/web/migrate.log
+/node_modules/bootstrap/
+/web/migrate.log
