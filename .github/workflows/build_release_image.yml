@@ -16,6 +16,7 @@ jobs:
           node-version: 13.5.0
       - name: npm install, build, and test
         run: |
+          cd web
           npm install
           npm run prod
       - name: composer install
