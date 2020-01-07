@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html style="
-        background-image: url('/img/WayaBG-Desktop.webp');
 background-size: cover;
 background-repeat: no-repeat;
 height: 100%;
@@ -15,7 +14,12 @@ font-family: 'Numans', sans-serif;">
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('img/favicon.ico')}}"/>
 </head>
-<body style="display: flex; min-height: 100vh; flex-direction: column">
+<body style="display: flex; min-height: 100vh; flex-direction: column; background-image: url('/img/back5.jpg');
+          background-color: rgb(209, 230, 255 	0.5);
+          background-repeat: no-repeat;
+          background-position: center;
+          background-attachment: fixed;
+          background-size: cover ;">
 @yield('navbar', View::make('common.navbar'))
 @yield('content')
 @yield('footer', View::make('common.footer'))

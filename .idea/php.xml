@@ -97,6 +97,10 @@
       <path value="$PROJECT_DIR$/web/vendor/symfony/filesystem" />
       <path value="$PROJECT_DIR$/web/vendor/seld/jsonlint" />
       <path value="$PROJECT_DIR$/web/vendor/seld/phar-utils" />
+      <path value="$PROJECT_DIR$/web/vendor/laravel/telescope" />
+      <path value="$PROJECT_DIR$/web/vendor/phpseclib/bcmath_compat" />
+      <path value="$PROJECT_DIR$/web/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/web/vendor/moontoast/math" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

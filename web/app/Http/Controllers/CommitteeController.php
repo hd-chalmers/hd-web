@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActiveYear;
 use Illuminate\Http\Request;
 
 class CommitteeController extends Controller
@@ -9,11 +10,11 @@ class CommitteeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        //
+        return view('committee.list')->with('active_year', ActiveYear::with('committee_members')->orderBy('id', 'DESC')->get()->first());
     }
 
     /**

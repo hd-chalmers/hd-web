@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-3 border-bottom">
     <div class="col-12 col-xl-3 col-lg-2 ml-0 pl-0 pr-0">
         <img src="/img/HD_logo.png" width="50" height="50" style="left: 0">
         <a class="navbar-brand d-none d-xl-inline-block" href="hd.chalmers.se"><span style="color: #E0218A">H</span>-Sektionens Datorförening</a>

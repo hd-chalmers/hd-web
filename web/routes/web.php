@@ -14,7 +14,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', "IndexController@index")->name('home');
-Route::resource('/committee', "CommitteeController@index");
+Route::resource('/committee', "CommitteeController");
 Route::resource('/events', 'EventController');
 Route::resource('/pricelist', 'PricelistController');
 Route::resource('/games', 'GameController');
