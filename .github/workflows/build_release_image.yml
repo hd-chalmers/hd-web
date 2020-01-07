@@ -32,3 +32,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.pkg.github.com
           dockerfile: image/release/Dockerfile
+          tag_names: true
