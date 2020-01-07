@@ -21,7 +21,9 @@ jobs:
           npm install
           npm run prod
       - name: composer install
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: |
+          cd web || echo ''
+          composer install --no-ansi --no-interaction --no-suggest --prefer-dist
       - name: Build image and publish
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
