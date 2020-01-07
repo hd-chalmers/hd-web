@@ -25,9 +25,11 @@ jobs:
       - name: Build image and publish
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: pentacore/newhd/web
+          name: pentacore/newhd/web:latest-release
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.pkg.github.com
-          dockerfile: image/release/Dockerfile
-          tag_names: true
+          dockerfile: ../image/release/Dockerfile
+          snapshot: true
+      - name: tag latest-release
+        run:
