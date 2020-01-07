@@ -63,3 +63,4 @@ CMD [ "apache2-foreground" ]
 
 COPY php.ini /usr/local/etc/php/
 COPY laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
+COPY ../../web /var/www/html
