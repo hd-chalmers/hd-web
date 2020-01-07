@@ -1,5 +1,10 @@
-name: Publish Docker
-on: [push]
+name: Build dev web image
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'image/Dockerfile'
 jobs:
   build:
     runs-on: ubuntu-latest

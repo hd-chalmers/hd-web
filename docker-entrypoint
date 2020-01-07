@@ -44,9 +44,9 @@ touch /var/log/php/mail.log /var/log/php/application.log /var/log/php/error.log 
 chmod 777 -R /var/www/storage/logs
 
 # Migrate DB Changes and optimize cache and config
-php artisan optimize
 
 if [ "$ENVIRONMENT" = "production" ]; then
+    php artisan optimize
     php artisan migrate --force &>> migrate.log
 else
     php artisan migrate:fresh --seed --force &>> migrate.log
