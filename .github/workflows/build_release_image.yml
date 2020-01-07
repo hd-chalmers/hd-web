@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+        name: Checkout master
       - name: Use Node.js 13.5.0
         uses: actions/setup-node@v1
         with:
@@ -21,7 +22,6 @@ jobs:
           npm run prod
       - name: composer install
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
-      - uses: actions/checkout@master
       - name: Build image and publish
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -31,5 +31,3 @@ jobs:
           registry: docker.pkg.github.com
           dockerfile: ../image/release/Dockerfile
           snapshot: true
-      - name: tag latest-release
-        run:
