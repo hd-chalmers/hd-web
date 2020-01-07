@@ -1,9 +1,8 @@
 name: Build release image
 on:
-  push:
-    tags:
-      - release-*
-      - release.*
+  release:
+    types:
+      - published
 jobs:
   build:
     name: Install and build NPM and Composer
