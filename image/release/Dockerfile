@@ -55,7 +55,7 @@ RUN apachectl configtest
 RUN pecl install memcached \
     && docker-php-ext-enable memcached
 
-COPY ../../docker-entrypoint /usr/local/bin/
+COPY docker-entrypoint /usr/local/bin/
 RUN sed -i -e 's/\r$//' /usr/local/bin/docker-entrypoint && chmod +x /usr/local/bin/docker-entrypoint
 ENTRYPOINT [ "docker-entrypoint" ]
 RUN service supervisor start
@@ -63,4 +63,4 @@ CMD [ "apache2-foreground" ]
 
 COPY php.ini /usr/local/etc/php/
 COPY laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
-COPY ../../web /var/www/html
+COPY web /var/www/html
