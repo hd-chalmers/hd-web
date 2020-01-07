@@ -7,19 +7,19 @@ on:
 jobs:
   build:
     name: Install and build NPM and Composer
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@master
-        - name: Use Node.js 13.5.0
-          uses: actions/setup-node@v1
-          with:
-            node-version: 13.5.0
-        - name: npm install, build, and test
-          run: |
-            npm install
-            npm run prod
-        - name: composer install
-          run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js 13.5.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.5.0
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run prod
+      - name: composer install
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
   publish:
     runs-on: ubuntu-latest
     steps:
