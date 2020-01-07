@@ -1,11 +1,9 @@
 name: Build release image
 on:
   push:
-    branches:
-      - 'master'
     tags:
-      - 'release-*'
-      - 'release.*'
+      - release-*
+      - release.*
 jobs:
   build:
     runs-on: ubuntu-latest
