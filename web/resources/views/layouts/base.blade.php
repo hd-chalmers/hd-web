@@ -15,7 +15,7 @@ font-family: 'Numans', sans-serif;">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('img/favicon.ico')}}"/>
 </head>
 <body style="display: flex; min-height: 100vh; flex-direction: column; background-image: url('/img/back5.jpg');
-          background-color: rgb(209, 230, 255 	0.5);
+          background-color: rgb(209, 230, 255);
           background-repeat: no-repeat;
           background-position: center;
           background-attachment: fixed;
