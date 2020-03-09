@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\ActiveYear
@@ -29,11 +30,20 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereYear($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CommitteeMember[] $committee_members
+ * @property-read int|null $committee_members_count
  */
 class ActiveYear extends Model
 {
+
+    protected $dates = ['year'];
+
     public function committee_members()
     {
         return $this->hasMany(CommitteeMember::class);
+    }
+
+    public function getYearAttribute($value) {
+        return substr($value, 0, 4);
     }
 }

@@ -23,6 +23,7 @@ class CreateCommitteeMembersTable extends Migration
             $table->text('description')->nullable();
             $table->text('favourite_game')->nullable();
             $table->text('favourite_sugar')->nullable();
+            $table->text('quote')->nullable();
             $table->timestamps();
         });
     }

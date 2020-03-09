@@ -2,7 +2,7 @@
 
 
 @section('content')
-<div class="container" style="flex: 1">
+<div class="container bg-light pt-2 pb-1 rounded" style="flex: 1">
 
     @if($event)
         <div class="alert alert-info mt-1 mb-1">

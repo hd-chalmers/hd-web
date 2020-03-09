@@ -31,7 +31,6 @@
       <path value="$PROJECT_DIR$/web/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/web/vendor/opis/closure" />
       <path value="$PROJECT_DIR$/web/vendor/facade/ignition" />
-      <path value="$PROJECT_DIR$/web/vendor/erusev/parsedown" />
       <path value="$PROJECT_DIR$/web/vendor/facade/flare-client-php" />
       <path value="$PROJECT_DIR$/web/vendor/facade/ignition-contracts" />
       <path value="$PROJECT_DIR$/web/vendor/nesbot/carbon" />
@@ -101,6 +100,19 @@
       <path value="$PROJECT_DIR$/web/vendor/phpseclib/bcmath_compat" />
       <path value="$PROJECT_DIR$/web/vendor/phpseclib/phpseclib" />
       <path value="$PROJECT_DIR$/web/vendor/moontoast/math" />
+      <path value="$PROJECT_DIR$/web/vendor/laravel/ui" />
+      <path value="$PROJECT_DIR$/web/vendor/league/commonmark-ext-table" />
+      <path value="$PROJECT_DIR$/web/vendor/league/commonmark" />
+      <path value="$PROJECT_DIR$/web/vendor/phenx/php-font-lib" />
+      <path value="$PROJECT_DIR$/web/vendor/phenx/php-svg-lib" />
+      <path value="$PROJECT_DIR$/web/vendor/dompdf/dompdf" />
+      <path value="$PROJECT_DIR$/web/vendor/sabberworm/php-css-parser" />
+      <path value="$PROJECT_DIR$/web/vendor/barryvdh/laravel-dompdf" />
+      <path value="$PROJECT_DIR$/web/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/web/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/web/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/web/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/web/vendor/guzzlehttp/psr7" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

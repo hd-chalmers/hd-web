@@ -13,7 +13,7 @@ class CommitteeMemberSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Ordförande',
+                'name' => 'Mushi',
                 'role' => 'ordförande',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
@@ -21,23 +21,25 @@ class CommitteeMemberSeeder extends Seeder
                 'favourite_sugar' => 'Sugar'
             ],
             [
-                'name' => 'Kassör',
+                'name' => 'Hell',
                 'role' => 'kassör',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
                 'favourite_game' => 'Game',
-                'favourite_sugar' => 'Sugar'
+                'favourite_sugar' => 'Sugar',
+                'quote' => 'Sug mitt FINGER!'
             ],
             [
-                'name' => 'PRChef',
+                'name' => 'Tengil',
                 'role' => 'prchef',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
                 'favourite_game' => 'Game',
-                'favourite_sugar' => 'Sugar'
+                'favourite_sugar' => 'Sugar',
+                'quote' => 'All makt åt tengil'
             ],
             [
-                'name' => 'inköpschef',
+                'name' => 'Pålen',
                 'role' => 'inköpschef',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
@@ -45,7 +47,7 @@ class CommitteeMemberSeeder extends Seeder
                 'favourite_sugar' => 'Sugar'
             ],
             [
-                'name' => 'Spelchef',
+                'name' => 'Hatomik',
                 'role' => 'spelchef',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
@@ -53,7 +55,7 @@ class CommitteeMemberSeeder extends Seeder
                 'favourite_sugar' => 'Sugar'
             ],
             [
-                'name' => 'Kodchef',
+                'name' => 'Penta',
                 'role' => 'kodchef',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
@@ -61,7 +63,7 @@ class CommitteeMemberSeeder extends Seeder
                 'favourite_sugar' => 'Sugar'
             ],
             [
-                'name' => 'Vice-Sysad',
+                'name' => 'Mini',
                 'role' => 'vice-sysad',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
@@ -69,7 +71,7 @@ class CommitteeMemberSeeder extends Seeder
                 'favourite_sugar' => 'Sugar'
             ],
             [
-                'name' => 'Sysad',
+                'name' => 'Null',
                 'role' => 'sysad',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
@@ -77,8 +79,8 @@ class CommitteeMemberSeeder extends Seeder
                 'favourite_sugar' => 'Sugar'
             ],
             [
-                'name' => 'Ninja',
-                'role' => 'ninja',
+                'name' => 'CK',
+                'role' => 'matslav',
                 'active_year_id' => 1,
                 'description' => 'This is the description field of the Committee_members table',
                 'favourite_game' => 'Game',

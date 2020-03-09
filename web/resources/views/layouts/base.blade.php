@@ -21,7 +21,10 @@ font-family: 'Numans', sans-serif;">
           background-attachment: fixed;
           background-size: cover ;">
 @yield('navbar', View::make('common.navbar'))
+<div style="flex: 1" id="app">
+    <vue-snotify></vue-snotify>
 @yield('content')
+</div>
 @yield('footer', View::make('common.footer'))
 <script src="https://kit.fontawesome.com/458d5475f8.js" crossorigin="anonymous"></script>
 <script src="{{ mix('/js/app.js') }}"></script>

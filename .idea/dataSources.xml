@@ -7,5 +7,17 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://127.0.0.1:1081/hd</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="Localhost Door" uuid="573e3b0d-c108-4e17-9b32-872156b85f39">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://127.0.0.1:1082/hd</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Localhost Price" uuid="41877b58-d7b3-402d-967b-65c0decddaf3">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://127.0.0.1:1083/hd</jdbc-url>
+    </data-source>
   </component>
 </project>

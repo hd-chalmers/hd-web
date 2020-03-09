@@ -78,6 +78,36 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'door' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DOOR_DB_HOST', '127.0.0.1'),
+            'port' => env('DOOR_DB_PORT', '1082'),
+            'database' => env('DOOR_DB_DATABASE', 'hd'),
+            'username' => env('DOOR_DB_USERNAME', 'hd'),
+            'password' => env('DOOR_DB_PASSWORD', 'hd'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'price' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('PRICE_DB_HOST', '127.0.0.1'),
+            'port' => env('PRICE_DB_PORT', '1083'),
+            'database' => env('PRICE_DB_DATABASE', 'hd'),
+            'username' => env('PRICE_DB_USERNAME', 'hd'),
+            'password' => env('PRICE_DB_PASSWORD', 'hd'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
