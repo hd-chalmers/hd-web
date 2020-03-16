@@ -31,6 +31,8 @@ Vue.use(Snotify, options);
 Vue.component('edit-game-form', require('./components/games/edit-game.vue').default);
 Vue.component('game-list', require('./components/games/game-list.vue').default);
 Vue.component('new-product', require('./components/pricelist/new-product').default);
+Vue.component('update-product', require('./components/pricelist/update-product').default);
+Vue.component('list-product', require('./components/pricelist/list-product').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

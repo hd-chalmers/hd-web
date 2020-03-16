@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Barcode whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Barcode whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $variant_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Barcode whereVariantName($value)
  */
 class Barcode extends Model
 {

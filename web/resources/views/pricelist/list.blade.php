@@ -8,7 +8,6 @@
 ?>
 
 @section('content')
-    @if(!\Illuminate\Support\Facades\Auth::check())
         @php
             $counter = 0;
         @endphp
@@ -32,6 +31,9 @@
                                 <th class="text-right" id="{{$category->name}}-price-header">
                                     Pris
                                 </th>
+                                @if(\Illuminate\Support\Facades\Auth::check())
+                                    <th></th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
@@ -43,6 +45,13 @@
                                     <td class="text-right">
                                         {{$product->price/100}} Kr
                                     </td>
+                                    <template>
+                                        @if(\Illuminate\Support\Facades\Auth::check())
+                                            <list-product product_id="{{$product->id}}"
+                                                          base_url="{{route('products.index')}}"
+                                                          product_name="{{$product->name}}"></list-product>
+                                        @endif
+                                    </template>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -51,7 +60,4 @@
                 @endforeach
             </div>
         </div>
-    @else
-        <h1>Auth</h1>
-    @endif
 @endsection

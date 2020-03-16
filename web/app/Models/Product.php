@@ -32,6 +32,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product wherePurchasePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $package_size
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product wherePackageSize($value)
+ * @property bool $pant
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product wherePant($value)
  */
 class Product extends Model
 {
@@ -48,8 +52,8 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function updatePrice(int $packageSize = 1, bool $pant = FALSE)
+    public function updatePrice()
     {
-        $this->price = ceil(($this->purchase_price - ($this->discount ?? 0)) / $packageSize * 1.25 + ($pant ? 100 : 0));
+        $this->price = ceil(($this->purchase_price/100 - ($this->discount/100 ?? 0)) / $this->package_size * 1.25 + ($this->pant ? 100 : 0));
     }
 }

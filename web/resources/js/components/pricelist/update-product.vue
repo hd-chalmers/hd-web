@@ -54,7 +54,8 @@
                             <div class="form-group">
                                 <label for="product_name">Antal per förpackning</label>
                                 <input type="number" class="form-control" id="package" min="1" required
-                                       placeholder="Antal per Förpackning" v-model.number="product.package"> <span style="color: red">*</span>
+                                       placeholder="Antal per Förpackning" v-model.number="product.package_size"> <span
+                                style="color: red">*</span>
                             </div>
                         </div>
                     </div>
@@ -101,9 +102,6 @@
                 <button class="btn btn-primary">
                     Spara
                 </button>
-                <button class="btn btn-success" type="button">
-                    Spara och skapa ny
-                </button>
             </div>
         </form>
 
@@ -112,30 +110,61 @@
 
 <script>
     export default {
-        name    : "new-product",
+        name    : "update-product",
         props   : {
-            categories: {
+            categories  : {
                 required: true,
                 type    : Array
             },
+            product_prop: {
+                required: true,
+                type    : Object,
+                default : function () {
+                    return {
+                        name          : 'Default Product',
+                        category_id   : -1,
+                        purchase_price: -1,
+                        discount      : -1,
+                        price         : -1,
+                        active        : false,
+                        pant          : false,
+                        package_size  : -1,
+                        barcodes      : []
+                    }
+                }
+            }
         },
         computed: {
             sale_price() {
-                return Math.ceil((this.product.purchase_price - this.product.discount) / this.product.package * 1.12 + (this.product.pant ? 1 : 0));
+                return Math.ceil(((this.product.purchase_price - this.product.discount) / this.product.package_size) * 1.12 + (this.product.pant ? 1 : 0));
+            }
+        },
+        created() {
+            this.product = {
+                name          : this.product_prop.name,
+                id            : this.product_prop.id,
+                category_id   : this.product_prop.category_id,
+                pant          : this.product_prop.pant,
+                purchase_price: this.product_prop.purchase_price / 100,
+                discount      : this.product_prop.discount / 100,
+                price         : this.product_prop.price / 100,
+                active        : this.product_prop.active,
+                package_size  : this.product_prop.package_size,
+                barcodes      : this.product_prop.barcodes
             }
         },
         methods : {
             submit: function (restart) {
                 this.$snotify.async(
                     '',
-                    'Lägger till',
+                    'Uppdaterar ' + this.product.name,
                     () => {
                         return new Promise((success, fail) => {
                             axios(
-                                "/products",
+                                "/products/" + this.product_prop.id,
                                 {
                                     data           : JSON.stringify(this.product),
-                                    method         : 'post',
+                                    method         : 'PATCH',
                                     withCredentials: true,
                                     responseType   : 'json',
                                     headers        :
@@ -178,22 +207,21 @@
                     name: '',
                     id  : 0,
                 },
-                product : {
-                    name          : '',
-                    category_id   : null,
-                    purchase_price: null,
-                    discount      : null,
-                    price         : null,
-                    active        : true,
-                    pant          : false,
-                    package       : 1,
-                    barcodes      : [
-                        {variant_name: '', barcode: ''}
-                    ],
-                },
                 barcode : {
                     variant_name: '',
                     barcode     : '',
+                },
+                product : {
+                    name          : 'Default Product',
+                    id            : -1,
+                    category_id   : -1,
+                    pant          : -1,
+                    package_size  : -1,
+                    purchase_price: -1,
+                    discount      : -1,
+                    price         : -1,
+                    active        : -1,
+                    barcodes      : []
                 }
             }
         },

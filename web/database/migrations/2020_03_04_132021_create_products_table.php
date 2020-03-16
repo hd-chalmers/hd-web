@@ -21,6 +21,8 @@ class CreateProductsTable extends Migration
             $table->integer('discount')->default(0);
             $table->integer('price');
             $table->boolean('active')->default(1);
+            $table->boolean('pant')->default(0);
+            $table->integer('package_size')->default(1);
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
         });
