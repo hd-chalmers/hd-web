@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-3 border-bottom">
-    <div class="col-12 col-xl-3 col-lg-2 ml-0 pl-0 pr-0">
+    <div class="col-12 col-xl-3 col-lg-2 ml-0 px-0">
         <a href="{{route('index')}}"><img src="/img/HD_logo.png" width="50" height="50" style="left: 0"></a>
         <a class="navbar-brand d-none d-xl-inline-block" href="{{route('index')}}"><span style="color: #E0218A">H</span>-Sektionens
             Datorförening</a>
@@ -24,8 +24,13 @@
                 <a class="nav-link" href="{{route('event.index')}}">Evenemang</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{route('pricelist.index')}}">Prislista</a>
+                <a class="nav-link" href="{{route('products.index')}}">Prislista</a>
             </li>
+            @if (\Illuminate\Support\Facades\Auth::check())
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('account.index')}}">Strecklista</a>
+                </li>
+            @endif
             <li class="nav-item">
                 <a class="nav-link" href="{{route('games.index')}}">Våra Spel</a>
             </li>
@@ -41,7 +46,5 @@
             </li>
         </ul>
     </div>
-    <div class="col-lg-2 col-xl-3 text-center text-lg-right text-right">
-        Chassit är öppet
-    </div>
+    <door :door="{{\App\Models\DoorStatus::latest()->first()}}"></door>
 </nav>

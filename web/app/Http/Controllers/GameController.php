@@ -5,11 +5,26 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SaveGames;
 use App\Models\Game;
 use App\Models\GamePlatform;
+use Composer\Util\Platform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
 {
+    /**
+     * GameController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', [
+            'except' => [
+                'index',
+                'show'
+            ],
+        ]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -27,9 +42,8 @@ class GameController extends Controller
      */
     public function create()
     {
-        if (!Auth::check()) {
-            abort(403);
-        }
+        return response(view('game.create', ['platforms' => GamePlatform::all(['id', 'name', 'type', 'bgg_type'])]));
+
     }
 
     /**
@@ -63,9 +77,6 @@ class GameController extends Controller
      */
     public function edit(Game $game)
     {
-        if (!Auth::check()) {
-            abort(403);
-        }
         $platforms = GamePlatform::orderBy('type')->get([
                                                             'id',
                                                             'name',
@@ -111,7 +122,7 @@ class GameController extends Controller
             \DB::beginTransaction();
             foreach ($request->post('games') as $data) {
                 /** @var Game $game */
-                $game                 = Game::whereId($data['id'])->firstOrFail();
+                $game                 = Game::findOrFail($data['id'])->get();
                 $game->published_year = $data['published_year'];
                 $game->max_players    = $data['max_players'];
                 $game->min_players    = $data['min_players'];

@@ -14,7 +14,9 @@
                     <nav class="navbar navbar-light">
                         <ul class="navbar-nav mx-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" href="{{route('games.create')}}">Nytt Spel</a>
+                                <h4><a href="{{route('games.create')}}"
+                                       style="color: #555555; text-decoration: underline">Nytt
+                                        Spel</a></h4>
                             </li>
                         </ul>
                     </nav>
@@ -22,7 +24,7 @@
             </div>
         @endif
         @if(\Illuminate\Support\Facades\Auth::check()) <!-- if logged in -->
-            <game-list :game_prop="{{$platforms}}"></game-list>
+        <game-list :game_prop="{{$platforms}}"></game-list>
         @else
             @foreach($platforms as $platform)
                 <div class="row">
@@ -43,13 +45,16 @@
                                 <th>
                                     Speltid
                                 </th>
+                                <th class="d-none d-md-table-cell">
+
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($platform->games->sortBy('name') as $game)
                                 <tr>
                                     <td>
-                                        {{$game->name}}
+                                        <a style="color: black" href="{{route('games.show', $game->id)}}">{{$game->name}}</a>
                                     </td>
                                     <td class="d-none d-md-table-cell">
                                         {{$game->published_year}}
@@ -61,6 +66,9 @@
                                     <td>
                                         {{$game->min_playtime}}@if($game->min_playtime !== $game->max_playtime)
                                             -{{$game->max_playtime}} @endif min
+                                    </td>
+                                    <td class="d-none d-md-table-cell">
+                                        <a href="{{route('games.show', $game->id)}}">Mer Info</a>
                                     </td>
                                 </tr>
                             @endforeach

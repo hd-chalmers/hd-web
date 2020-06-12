@@ -8,33 +8,37 @@
 ?>
 
 @section('content')
-        @php
-            $counter = 0;
-        @endphp
-        <div class="container bg-light">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h1>Prislista</h1>
-                </div>
+    @php
+        $counter = 0;
+    @endphp
+    <div class="container bg-light">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1>Prislista</h1>
+                @if(\Illuminate\Support\Facades\Auth::check())
+                    <h4><a href="{{route('products.create')}}" style="color: #555555; text-decoration: underline">Ny
+                            Produkt</a></h4>
+                @endif
             </div>
-            <div class="row">
-                @foreach($categories as $category)
-                    <div class="col-md-6 {{(count($categories) > 2) ? 'col-lg-4' : ''}} col-sm-12">
-                        <h4 class="font-weight-bold">{{ucfirst($category->name)}}</h4>
-                        <table class="table table-sm table-hover">
-                            <caption hidden>{{ucfirst($category->name)}}</caption>
-                            <thead>
-                            <tr>
-                                <th id="{{$category->name}}-name-header">
-                                    Namn
-                                </th>
-                                <th class="text-right" id="{{$category->name}}-price-header">
-                                    Pris
-                                </th>
-                                @if(\Illuminate\Support\Facades\Auth::check())
-                                    <th></th>
-                                @endif
-                            </tr>
+        </div>
+        <div class="row">
+            @foreach($categories as $category)
+                <div class="col-md-6 {{(count($categories) > 2) ? 'col-lg-4' : ''}} col-sm-12">
+                    <h4 class="font-weight-bold">{{ucfirst($category->name)}}</h4>
+                    <table class="table table-sm table-hover">
+                        <caption hidden>{{ucfirst($category->name)}}</caption>
+                        <thead>
+                        <tr>
+                            <th id="{{$category->name}}-name-header">
+                                Namn
+                            </th>
+                            <th class="text-right" id="{{$category->name}}-price-header">
+                                Pris
+                            </th>
+                            @if(\Illuminate\Support\Facades\Auth::check())
+                                <th></th>
+                            @endif
+                        </tr>
                             </thead>
                             <tbody>
                             @foreach($category->products as $product)

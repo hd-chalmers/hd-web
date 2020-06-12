@@ -3,7 +3,6 @@
     RewriteCond %{REQUEST_URI} !^public
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
-
 <IfModule mod_expires.c>
     # Turn on the module.
     ExpiresActive on
@@ -18,3 +17,4 @@
     ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType text/css "now plus 1 month"
 </IfModule>
+Options +FollowSymlinks

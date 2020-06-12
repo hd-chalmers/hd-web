@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.2",
+        "php": "^7.4",
         "barryvdh/laravel-dompdf": "^0.8.6",
         "barryvdh/laravel-ide-helper": "^2.6",
         "fideloper/proxy": "^4.0",
@@ -16,7 +16,9 @@
         "laravel/framework": "^6.2",
         "laravel/telescope": "^2.1",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^1.1"
+        "laravel/ui": "^1.1",
+        "mtownsend/collection-xml": "^1.2",
+        "spatie/laravel-image-optimizer": "^1.6"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

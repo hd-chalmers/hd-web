@@ -24,7 +24,6 @@ class ProductController extends Controller
         $this->middleware('auth', [
             'except' => [
                 'index',
-                'show',
             ],
         ]);
     }
@@ -87,18 +86,6 @@ class ProductController extends Controller
                                                         'trace'   => $e->getTraceAsString(),
                                                     ]), 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**

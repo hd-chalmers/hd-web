@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/pentacore/newhd/web:latest
+FROM registry.pentacore.se/hd/images/web:latest
 
 ENV APACHE_RUN_USER=hd \
     DB_HOST=hd-db DB_PORT=5432 DB_DATABASE=hd DB_USERNAME=hd DB_PASSWORD=hd DB_CONNECTIOn=pgsql \
@@ -10,6 +10,9 @@ ENV APACHE_RUN_USER=hd \
 
 RUN apt-get update && apt-get upgrade -y
 
+RUN apt-get install jpegoptim optipng pngquant gifsicle webp npm -y
+RUN npm install -g svgo
+
 COPY docker-entrypoint /usr/local/bin/
 RUN sed -i -e 's/\r$//' /usr/local/bin/docker-entrypoint && chmod +x /usr/local/bin/docker-entrypoint
 ENTRYPOINT [ "docker-entrypoint" ]
@@ -18,3 +21,5 @@ CMD [ "apache2-foreground" ]
 
 COPY php.ini /usr/local/etc/php/
 COPY laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
+
+# DEPLOY COPY --chown=hd:hd /web/ /var/www/html/

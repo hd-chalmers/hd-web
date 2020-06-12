@@ -2,36 +2,40 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * App\Models\ActiveYear
  *
- * @property int                             $id
- * @property string                          $year
- * @property string|null                     $description
- * @property string|null                     $group_photo
- * @property string|null                     $front_image
- * @property string|null                     $christmas_image
- * @property string|null                     $background_image
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereBackgroundImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereChristmasImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereFrontImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereGroupPhoto($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveYear whereYear($value)
- * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CommitteeMember[] $committee_members
- * @property-read int|null $committee_members_count
+ * @property int         $id
+ * @property string      $year
+ * @property string|null $description
+ * @property string|null $group_photo
+ * @property string|null $front_image
+ * @property string|null $christmas_image
+ * @property string|null $background_image
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|ActiveYear newModelQuery()
+ * @method static Builder|ActiveYear newQuery()
+ * @method static Builder|ActiveYear query()
+ * @method static Builder|ActiveYear whereBackgroundImage($value)
+ * @method static Builder|ActiveYear whereChristmasImage($value)
+ * @method static Builder|ActiveYear whereCreatedAt($value)
+ * @method static Builder|ActiveYear whereDescription($value)
+ * @method static Builder|ActiveYear whereFrontImage($value)
+ * @method static Builder|ActiveYear whereGroupPhoto($value)
+ * @method static Builder|ActiveYear whereId($value)
+ * @method static Builder|ActiveYear whereUpdatedAt($value)
+ * @method static Builder|ActiveYear whereYear($value)
+ * @mixin Eloquent
+ * @property-read Collection|CommitteeMember[] $committee_members
+ * @property-read int|null                     $committee_members_count
  */
 class ActiveYear extends Model
 {
@@ -40,10 +44,16 @@ class ActiveYear extends Model
 
     public function committee_members()
     {
-        return $this->hasMany(CommitteeMember::class);
+        return $this->hasMany(CommitteeMember::class)->orderBy('id');
     }
 
     public function getYearAttribute($value) {
-        return substr($value, 0, 4);
+        return Carbon::parse($value)->year;
+    }
+
+    public function getLatest() {
+        return Cache::remember('active_year', 30*24*60*60, static function() {
+            return ActiveYear::latest()->get();
+        });
     }
 }

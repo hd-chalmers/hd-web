@@ -17,6 +17,7 @@ class CreateGamePlatformsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('type');
+            $table->string('bgg_type')->unique()->nullable();
             $table->timestamps();
         });
     }

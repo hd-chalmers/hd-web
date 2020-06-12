@@ -20,8 +20,8 @@ font-family: 'Numans', sans-serif;">
           background-position: center;
           background-attachment: fixed;
           background-size: cover ;">
-@yield('navbar', View::make('common.navbar'))
 <div style="flex: 1" id="app">
+@yield('navbar', View::make('common.navbar'))
     <vue-snotify></vue-snotify>
 @yield('content')
 </div>

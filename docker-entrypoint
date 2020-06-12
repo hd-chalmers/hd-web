@@ -52,11 +52,11 @@ else
     php artisan migrate:fresh --seed --force &>> migrate.log
 fi
 
-service supervisor start
+#service supervisor start
 
-supervisorctl reread
-supervisorctl update
-supervisorctl start laravel-worker:*
+#supervisorctl reread
+#supervisorctl update
+#supervisorctl start laravel-worker:*
 
 chown -R hd:hd storage/logs
 

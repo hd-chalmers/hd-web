@@ -6,7 +6,8 @@
 
 import Vue from 'vue';
 import Snotify, {SnotifyPosition} from 'vue-snotify'
-import axios from 'axios'
+import VModal from 'vue-js-modal'
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -17,6 +18,9 @@ const options = {
     }
 };
 Vue.use(Snotify, options);
+Vue.use(VModal);
+import Vuetify from 'vuetify';
+Vue.use(Vuetify);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -25,14 +29,8 @@ Vue.use(Snotify, options);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-Vue.component('edit-game-form', require('./components/games/edit-game.vue').default);
-Vue.component('game-list', require('./components/games/game-list.vue').default);
-Vue.component('new-product', require('./components/pricelist/new-product').default);
-Vue.component('update-product', require('./components/pricelist/update-product').default);
-Vue.component('list-product', require('./components/pricelist/list-product').default);
+const files = require.context('./components', true, /\.vue$/i);
+files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -42,4 +40,5 @@ Vue.component('list-product', require('./components/pricelist/list-product').def
 
 const app = new Vue({
     el: '#app',
+    vuetify: new Vuetify(),
 });

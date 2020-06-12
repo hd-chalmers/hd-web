@@ -7,5 +7,5 @@
 ?>
 
 @section('content')
-    <New-Product :categories="{{$categories}}"></New-Product>
+    <new-product :categories="{{$categories}}"></new-product>
 @endsection

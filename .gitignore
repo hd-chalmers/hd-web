@@ -166,3 +166,4 @@ Temporary Items
 !/web/migrate.log
 /node_modules/bootstrap/
 /web/migrate.log
+/.idea/

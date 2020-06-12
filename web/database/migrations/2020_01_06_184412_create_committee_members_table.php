@@ -18,8 +18,7 @@ class CreateCommitteeMembersTable extends Migration
             $table->string('name');
             $table->string('role');
             $table->bigInteger('active_year_id');
-            $table->text('image_data')->nullable();
-            $table->text('image_mime_type')->nullable();
+            $table->text('image')->nullable();
             $table->text('description')->nullable();
             $table->text('favourite_game')->nullable();
             $table->text('favourite_sugar')->nullable();
