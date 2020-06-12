@@ -13,7 +13,8 @@ docker:build:
   stage: build
   services:
     - docker:dind
-  only: master
+  only: 
+    - master
   script:
     - cd web && COMPOSER_CACHE_DIR="/builds/.composer/" composer install --no-dev --ignore-platform-reqs -vvv
     - npm install
@@ -28,7 +29,8 @@ docker:build-branch:
   stage: build
   services:
     - docker:dind
-  except: master
+  except: 
+    - master
   script:
     - cd web && COMPOSER_CACHE_DIR="/builds/.composer/" composer install --no-dev --ignore-platform-reqs -vvv
     - npm install
