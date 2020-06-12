@@ -1,0 +1,41 @@
+# This file is a template, and might need editing before it works on your project.
+# Select image from https://hub.docker.com/_/php/
+image: registry.pentacore.se/toolbox/php-7.4-build
+
+# Select what we should cache between builds
+cache:
+  paths:
+    - web/vendor
+    - web/node_modules
+    - /builds/.composer/
+
+docker:build:
+  stage: build
+  services:
+    - docker:dind
+  only: master
+  script:
+    - cd web && COMPOSER_CACHE_DIR="/builds/.composer/" composer install --no-dev --ignore-platform-reqs -vvv
+    - npm install
+    - npm run prod
+    - cd ..
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    
+docker:build-branch:
+  stage: build
+  services:
+    - docker:dind
+  except: master
+  script:
+    - cd web && COMPOSER_CACHE_DIR="/builds/.composer/" composer install --no-dev --ignore-platform-reqs -vvv
+    - npm install
+    - npm run prod
+    - cd ..
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
