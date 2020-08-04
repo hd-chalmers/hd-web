@@ -2,42 +2,118 @@
 # Select image from https://hub.docker.com/_/php/
 image: registry.pentacore.se/toolbox/php-7.4-build
 
-# Select what we should cache between builds
+stages:
+  - build
+  - docker
+  - deploy
+  # Select what we should cache between builds
 cache:
   paths:
     - web/vendor
     - web/node_modules
-    - /builds/.composer/
+    - /builds/.composer
 
-docker:build:
-  stage: build
-  services:
-    - docker:dind
-  only: 
-    - master
+build:resources:
   script:
     - cd web && COMPOSER_CACHE_DIR="/builds/.composer/" composer install --no-dev --ignore-platform-reqs -vvv
     - npm install
     - npm run prod
     - cd ..
+  stage: build
+
+docker:web:
+  stage: docker
+  services:
+    - docker:dind
+  dependencies:
+    - build:resources
+  only: 
+    - master
+  script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    
-docker:build-branch:
-  stage: build
+
+docker:db:
+  stage: docker
+  services:
+    - docker:dind
+  only:
+    refs:
+      - master
+    changes:
+      - db/**/*
+      - db/*
+      - .gitlab-cii.yml
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+docker:branch-web:
+  stage: docker
   services:
     - docker:dind
   except: 
     - master
+  dependencies:
+    - build:resources
   script:
-    - cd web && COMPOSER_CACHE_DIR="/builds/.composer/" composer install --no-dev --ignore-platform-reqs -vvv
-    - npm install
-    - npm run prod
-    - cd ..
     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
+deploy:prod:
+  stage: deploy
+  services:
+    - docker:dind
+  only:
+    - master
+  when: manual
+  environment:
+    name: prod
+    url: https://hd.chalmers.se
+  needs:
+    - docker:web
+  script:
+    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
+    - envoy run prod-deploy
+  before_script:
+    - apt-get update
+    - apt-get upgrade -y
+    - apt-get install -y zip unzip tar gzip
+    - composer global require laravel/envoy
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+deploy:staging:
+  stage: deploy
+  when: manual
+  only:
+    - master
+  environment:
+    name: staging
+    url: https://staging.hd.chalmers.se
+  services:
+    - docker:dind
+  needs:
+    - docker:web
+  script:
+    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
+    - envoy run prod-deploy ---host=$HD_TARGET_HOST
+  before_script:
+    - apt-get update
+    - apt-get upgrade -y
+    - apt-get install -y zip unzip tar gzip
+    - composer global require laravel/envoy
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY

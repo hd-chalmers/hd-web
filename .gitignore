@@ -167,3 +167,4 @@ Temporary Items
 /node_modules/bootstrap/
 /web/migrate.log
 /.idea/
+*.iml
