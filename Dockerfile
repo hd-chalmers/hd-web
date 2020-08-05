@@ -19,7 +19,10 @@ ENTRYPOINT [ "docker-entrypoint" ]
 RUN service supervisor start
 CMD [ "apache2-foreground" ]
 
+WORKDIR /var/www/html
+
 COPY php.ini /usr/local/etc/php/
 COPY laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
 
 # DEPLOY COPY --chown=hd:hd /web/ /var/www/html/
+# DEPLOY COPY --chown=hd:hd /web/.* /var/www/html/
