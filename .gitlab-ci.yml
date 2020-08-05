@@ -19,6 +19,13 @@ build:resources:
     - npm install
     - npm run prod
     - cd ..
+  artifacts:
+    paths:
+      - web/public/js/app.js
+      - web/public/css/app.css
+      - web/public/fonts/
+      - web/public/img/
+      - web/public/mix-manifest.json
   stage: build
 
 docker:web:
@@ -32,6 +39,7 @@ docker:web:
   only: 
     - master
   script:
+    - ls -lah
     - sed 's/# DEPLOY //g' Dockerfile > Dockerfile.deploy
     - docker build --pull -t "$CI_REGISTRY_IMAGE" . -f Dockerfile.deploy
     - docker push "$CI_REGISTRY_IMAGE"
