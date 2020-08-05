@@ -20,5 +20,5 @@
     docker-compose up
     docker-compose exec hd php artisan optimize:clear
     docker-compose exec hd php artisan optimize
-    docker-compose exec hd php artisan migrate --force
+    docker-compose exec hd php artisan migrate:fresh --force --seed
 @endtask
