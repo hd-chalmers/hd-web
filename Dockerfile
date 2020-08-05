@@ -8,12 +8,6 @@ ENV APACHE_RUN_USER=hd \
 	  CACHE_DRIVER=redis SESSION_DRIVER=redis MEMCACHED_HOST=hd-memcached REDIS_HOST=hd-redis \
     BROADCAST_DRIVER=redis QUEUE_DRIVER=database ENVIRONMENT=production
 
-RUN apt-get update && apt-get upgrade -y
-
-RUN apt-get install jpegoptim optipng pngquant gifsicle webp -y
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN npm install -g svgo
-
 COPY docker-entrypoint /usr/local/bin/
 RUN sed -i -e 's/\r$//' /usr/local/bin/docker-entrypoint && chmod +x /usr/local/bin/docker-entrypoint
 ENTRYPOINT [ "docker-entrypoint" ]
