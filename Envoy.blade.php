@@ -6,7 +6,7 @@
     docker login -u "{{$docker_user}}" -p "{{$docker_password}}" {{$docker_registry}}
     docker-compose pull
     docker-compose down hd
-    docker-compose up hd
+    docker-compose up hd -d
     docker-compose exec hd php artisan optimize:clear
     docker-compose exec hd php artisan optimize
     docker-compose exec hd php artisan migrate --force
@@ -17,7 +17,7 @@
     docker login -u "{{$docker_user}}" -p "{{$docker_password}}" {{$docker_registry}}
     docker-compose pull
     docker-compose down
-    docker-compose up
+    docker-compose up -d
     docker-compose exec hd php artisan optimize:clear
     docker-compose exec hd php artisan optimize
     docker-compose exec hd php artisan migrate:fresh --force --seed
