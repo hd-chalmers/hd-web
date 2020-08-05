@@ -7,7 +7,6 @@
     docker-compose pull
     docker-compose down hd
     docker-compose up hd -d
-    docker-compose exec hd php artisan optimize:clear
     docker-compose exec hd php artisan optimize
     docker-compose exec hd php artisan migrate --force
 @endtask
@@ -18,7 +17,6 @@
     docker-compose pull
     docker-compose down
     docker-compose up -d
-    docker-compose exec hd php artisan optimize:clear
     docker-compose exec hd php artisan optimize
     docker-compose exec hd php artisan migrate:fresh --force --seed
 @endtask
