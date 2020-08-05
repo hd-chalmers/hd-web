@@ -84,8 +84,7 @@ deploy:prod:
     - docker:web
   script:
     - ssh-add <(echo "$HD_SSH_PRIV_KEY")
-    - composer global require laravel/envoy
-    - envoy run prod-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry=$CI_REGISTRY
+    - /root/.composer/vendor/bin/envoy run prod-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry=$CI_REGISTRY
   before_script:
     - apt-get update
     - apt-get upgrade -y
@@ -110,8 +109,7 @@ deploy:staging:
     - docker:web
   script:
     - ssh-add <(echo "$HD_SSH_PRIV_KEY")
-    - composer global require laravel/envoy
-    - envoy run prod-deploy ---host=$HD_TARGET_HOST
+      - /root/.composer/vendor/bin/envoy run prod-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry=$CI_REGISTRY
   before_script:
     - apt-get update
     - apt-get upgrade -y
