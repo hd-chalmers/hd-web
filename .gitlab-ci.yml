@@ -10,7 +10,7 @@ stages:
 
 build:resources:
   script:
-    - cd web && COMPOSER_CACHE_DIR="../.composer" composer install --no-dev --ignore-platform-reqs -vvv
+    - cd web && COMPOSER_CACHE_DIR="../.composer" composer install --ignore-platform-reqs -vvv
     - npm install
     - npm run prod
     - cd ..
