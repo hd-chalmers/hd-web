@@ -8,6 +8,8 @@ ENV APACHE_RUN_USER=hd \
 	  CACHE_DRIVER=redis SESSION_DRIVER=redis MEMCACHED_HOST=hd-memcached REDIS_HOST=hd-redis \
     BROADCAST_DRIVER=redis QUEUE_DRIVER=database ENVIRONMENT=production
 
+EXPOSE 6001
+
 COPY docker-entrypoint /usr/local/bin/
 RUN sed -i -e 's/\r$//' /usr/local/bin/docker-entrypoint && chmod +x /usr/local/bin/docker-entrypoint
 ENTRYPOINT [ "docker-entrypoint" ]

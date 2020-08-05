@@ -7,7 +7,8 @@ services:
     env_file:
       - ./web/.env
     ports:
-      - ${HOST_WEB_PORT_HEKTO:-80}81:8080
+      - 8081:8080
+      - 6001:6001
     volumes:
       - ./web:/var/www/html
       - ./web/bootstrap/cache:/opt/app/cache
