@@ -7,8 +7,8 @@
     docker-compose pull
     docker-compose down hd
     docker-compose up hd -d
-    docker-compose exec hd php artisan optimize
-    docker-compose exec hd php artisan migrate --force
+    docker-compose exec -T hd php artisan optimize
+    docker-compose exec -T hd php artisan migrate --force
 @endtask
 
 @task('staging-deploy', ['on' => 'staging'])
@@ -17,6 +17,6 @@
     docker-compose pull
     docker-compose down
     docker-compose up -d
-    docker-compose exec hd php artisan optimize
-    docker-compose exec hd php artisan migrate:fresh --force --seed
+    docker-compose exec -T hd php artisan optimize
+    docker-compose exec -T hd php artisan migrate:fresh --force --seed
 @endtask
