@@ -10,7 +10,8 @@ ENV APACHE_RUN_USER=hd \
 
 RUN apt-get update && apt-get upgrade -y
 
-RUN apt-get install jpegoptim optipng pngquant gifsicle webp npm -y
+RUN apt-get install jpegoptim optipng pngquant gifsicle webp -y
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN npm install -g svgo
 
 COPY docker-entrypoint /usr/local/bin/
