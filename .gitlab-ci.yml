@@ -100,9 +100,6 @@ deploy:prod:
   needs:
     - docker:web
   before_script:
-    - apt-get update
-    - apt-get upgrade -y
-    - apt-get install -y zip unzip tar gzip
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
@@ -125,9 +122,6 @@ deploy:staging:
   needs:
     - docker:web
   before_script:
-    - apt-get update
-    - apt-get upgrade -y
-    - apt-get install -y zip unzip tar gzip
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
