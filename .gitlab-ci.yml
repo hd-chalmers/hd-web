@@ -44,7 +44,6 @@ docker:web:
       - web/node_modules
       - .composer
   script:
-    - ls -lah
     - sed 's/# DEPLOY //g' Dockerfile > Dockerfile.deploy
     - docker build --pull -t "$CI_REGISTRY_IMAGE" . -f Dockerfile.deploy
     - docker push "$CI_REGISTRY_IMAGE"
