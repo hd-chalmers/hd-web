@@ -1,4 +1,4 @@
-@servers(['prod' => ['gitlab_deploy@'.$host],  'staging' => ['gitlab_deploy@'.$host]])
+@servers(['prod' => ['gitlab_deploy@129.16.220.7'],  'staging' => ['gitlab_deploy@129.16.220.7']])
 @include('web/vendor/autoload.php')
 
 @task('prod-deploy', ['on' => 'prod'])
