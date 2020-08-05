@@ -27,6 +27,8 @@ docker:web:
     - docker:dind
   dependencies:
     - build:resources
+  needs:
+    - build:resources
   only: 
     - master
   script:
@@ -60,6 +62,8 @@ docker:branch-web:
     - master
   dependencies:
     - build:resources
+  needs:
+    - build:resources
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
@@ -80,12 +84,12 @@ deploy:prod:
     - docker:web
   script:
     - ssh-add <(echo "$HD_SSH_PRIV_KEY")
-    - envoy run prod-deploy
+    - composer global require laravel/envoy
+    - envoy run prod-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry=$CI_REGISTRY
   before_script:
     - apt-get update
     - apt-get upgrade -y
     - apt-get install -y zip unzip tar gzip
-    - composer global require laravel/envoy
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
@@ -106,12 +110,12 @@ deploy:staging:
     - docker:web
   script:
     - ssh-add <(echo "$HD_SSH_PRIV_KEY")
+    - composer global require laravel/envoy
     - envoy run prod-deploy ---host=$HD_TARGET_HOST
   before_script:
     - apt-get update
     - apt-get upgrade -y
     - apt-get install -y zip unzip tar gzip
-    - composer global require laravel/envoy
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
