@@ -7,11 +7,6 @@ stages:
   - docker
   - deploy
   # Select what we should cache between builds
-cache:
-  paths:
-    - web/vendor
-    - web/node_modules
-    - .composer
 
 build:resources:
   script:
@@ -27,6 +22,11 @@ build:resources:
       - web/public/img/
       - web/public/mix-manifest.json
   stage: build
+  cache:
+    paths:
+      - web/vendor
+      - web/node_modules
+      - .composer
 
 docker:web:
   stage: docker
@@ -38,6 +38,11 @@ docker:web:
     - build:resources
   only: 
     - master
+  cache:
+    paths:
+      - web/vendor
+      - web/node_modules
+      - .composer
   script:
     - ls -lah
     - sed 's/# DEPLOY //g' Dockerfile > Dockerfile.deploy
@@ -74,6 +79,11 @@ docker:branch-web:
     - build:resources
   needs:
     - build:resources
+  cache:
+    paths:
+      - web/vendor
+      - web/node_modules
+      - .composer
   script:
     - sed 's/# DEPLOY //g' Dockerfile > Dockerfile.deploy
     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" . -f Dockerfile.deploy
