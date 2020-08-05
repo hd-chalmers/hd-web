@@ -99,9 +99,6 @@ deploy:prod:
     url: https://hd.chalmers.se
   needs:
     - docker:web
-  script:
-    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
-    - /root/.composer/vendor/bin/envoy run prod-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry=$CI_REGISTRY
   before_script:
     - apt-get update
     - apt-get upgrade -y
@@ -111,6 +108,9 @@ deploy:prod:
     - eval $(ssh-agent -s)
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
+    - /root/.composer/vendor/bin/envoy run prod-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry=$CI_REGISTRY
 
 deploy:staging:
   stage: deploy
@@ -124,9 +124,6 @@ deploy:staging:
     - docker:dind
   needs:
     - docker:web
-  script:
-    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
-    - /root/.composer/vendor/bin/envoy run staging-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry="$CI_REGISTRY"
   before_script:
     - apt-get update
     - apt-get upgrade -y
@@ -136,3 +133,6 @@ deploy:staging:
     - eval $(ssh-agent -s)
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
+    - /root/.composer/vendor/bin/envoy run staging-deploy ---host=$HD_TARGET_HOST --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry="$CI_REGISTRY"
