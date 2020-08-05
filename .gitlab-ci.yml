@@ -47,10 +47,10 @@ docker:db:
     changes:
       - db/**/*
       - db/*
-      - .gitlab-cii.yml
+      - .gitlab-ci.yml
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE/db" .
+    - docker push "$CI_REGISTRY_IMAGE/db"
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
@@ -58,7 +58,7 @@ docker:branch-web:
   stage: docker
   services:
     - docker:dind
-  except: 
+  except:
     - master
   dependencies:
     - build:resources
@@ -67,6 +67,23 @@ docker:branch-web:
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+docker:branch-db:
+  stage: docker
+  services:
+    - docker:dind
+  except:
+    - master
+  only:
+    changes:
+      - db/**/*
+      - db/*
+      - .gitlab-ci.yml
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE/db" .
+    - docker push "$CI_REGISTRY_IMAGE/db"
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
