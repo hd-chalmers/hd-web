@@ -1,50 +1,26 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-3 border-bottom">
-    <div class="col-12 col-xl-3 col-lg-2 ml-0 px-0">
-        <a href="{{route('index')}}"><img src="/img/HD_logo.png" width="50" height="50" style="left: 0"></a>
-        <a class="navbar-brand d-none d-xl-inline-block" href="{{route('index')}}"><span style="color: #E0218A">H</span>-Sektionens
-            Datorförening</a>
-        <a class="navbar-brand d-xl-none" href="{{route('index')}}"><span style="color: #E0218A">H</span><span
-                style="color:black">D</span> </a>
-        <button class="navbar-toggler float-right mr-0" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-
-    <div class="collapse navbar-collapse col-lg-8 col-xl-6" id="navbarSupportedContent">
-        <ul class="navbar-nav mx-auto align-self-center">
-            <li class="nav-item active">
-                <a class="nav-link" href="{{route('index')}}" style="color: #E0218A">/</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('committee.index')}}">Sittande</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('event.index')}}">Evenemang</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('products.index')}}">Prislista</a>
-            </li>
-            @if (\Illuminate\Support\Facades\Auth::check())
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('account.index')}}">Strecklista</a>
-                </li>
-            @endif
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('games.index')}}">Våra Spel</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('contact')}}">Kontakta Oss</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.facebook.com/HDChalmers/">Facebook</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.facebook.com/HsektionenChalmers/"><span
-                        style="color: #E0218A">H</span>-Sektionen</a>
-            </li>
-        </ul>
-    </div>
-    <door :door="{{\App\Models\DoorStatus::latest()->first()}}"></door>
-</nav>
+<v-app-bar app>
+    <v-img src="/img/HD_logo.png" max-width="100"></v-img>
+    <v-toolbar-title>
+        <v-btn
+            text
+            href="{{route('index')}}">
+            <span style="color: #E0218A">H</span>-Sektionens Datorförening
+        </v-btn>
+    </v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-toolbar-items>
+        <v-btn text href="{{route('committee.index')}}">Sittande</v-btn>
+        <v-btn text href="{{route('event.index')}}">Evenemang</v-btn>
+        <v-btn text href="{{route('products.index')}}">Prislista</v-btn>
+        @if (\Illuminate\Support\Facades\Auth::check())
+            <v-btn text href="{{route('account.index')}}">Strecklista</v-btn>
+        @endif
+        <v-btn text href="{{route('games.index')}}">Våra Spel</v-btn>
+        <v-btn text href="{{route('contact')}}">Kontakta Oss</v-btn>
+        <v-btn text href="https://www.facebook.com/HsektionenChalmers/"><span
+                style="color: #E0218A">H</span>-Sektionen
+        </v-btn>
+        <v-btn color="blue" icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-facebook</v-icon></v-btn>
+        <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
+    </v-toolbar-items>
+</v-app-bar>

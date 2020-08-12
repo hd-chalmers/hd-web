@@ -1,9 +1,15 @@
-<div class="bg-light mt-3">
-    <div class="container mb-1 text-center" style="
-    color: black;">
-        <i class="far fa-copyright"></i> {{date('Y')}}
-        <span style="color: #E0218A">H</span>-Sektionens Datorförening <br/>
-        <span class="font-weight-bold"><span style="color: #E0218A">H</span><span style="color:black">D</span></span> är
-        en kommitté som främjar spel och nördkulturen på Chalmers H-Sektionen
-    </div>
-</div>
+<v-footer app
+          color="white"
+          padless
+>
+    <v-row
+        justify="center"
+        no-gutters
+        align-content="center"
+    >
+        <v-spacer class="my-2"></v-spacer>
+            <v-icon x-small>mdi-copyright</v-icon>
+            {{date('Y')}} <strong class="mx-1">H-Sektionens Datorförening</strong>
+        <v-spacer></v-spacer>
+    </v-row>
+</v-footer>
