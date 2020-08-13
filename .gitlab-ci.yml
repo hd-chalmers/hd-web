@@ -132,7 +132,6 @@ deploy:prod:
 
 deploy:staging:
   stage: deploy
-  when: manual
   only:
     - master
   environment:
