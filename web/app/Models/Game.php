@@ -46,15 +46,40 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Game extends Model
 {
-    public function game_platform() {
+
+    protected $appends = [
+        'platform',
+        'num_players',
+        'playtime'
+    ];
+
+    public function getPlatformAttribute ()
+    {
+        return ucfirst($this->game_platform->name);
+    }
+
+    public function getNumPlayersAttribute ()
+    {
+        return $this->min_players === $this->max_players ? $this->min_players : $this->min_players . ' - ' . $this->max_players;
+    }
+
+    public function getPlaytimeAttribute ()
+    {
+        return $this->min_playtime === $this->max_playtime ? $this->min_playtime : $this->min_playtime . ' - ' . $this->max_playtime.' min';
+    }
+
+    public function game_platform ()
+    {
         return $this->belongsTo(GamePlatform::class);
     }
 
-    public function expansion_to() {
+    public function expansion_to ()
+    {
         return $this->belongsTo(__CLASS__, 'expansion_to');
     }
 
-    public function expansions() {
+    public function expansions ()
+    {
         return $this->hasMany(__CLASS__, 'expansion_to');
     }
 

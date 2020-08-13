@@ -28,11 +28,14 @@ class GameController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function index()
     {
-        return view('game.list')->with('platforms', GamePlatform::with('games')->get());
+        if (\request()->query('json')) {
+            return response()->json(Game::all());
+        }
+        return view('game.list');
     }
 
     /**
