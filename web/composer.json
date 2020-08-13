@@ -10,23 +10,22 @@
     "require": {
         "php": "^7.4",
         "barryvdh/laravel-dompdf": "^0.8.6",
-        "barryvdh/laravel-ide-helper": "^2.6",
-        "beyondcode/laravel-websockets": "^1.4",
+        "barryvdh/laravel-ide-helper": "^2.8",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.5",
-        "laravel/framework": "^6.2",
-        "laravel/telescope": "^2.1",
+        "laravel/framework": "^7.0",
+        "laravel/telescope": "^3.1",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^1.1",
+        "laravel/ui": "^2.0",
         "mtownsend/collection-xml": "^1.2",
         "spatie/laravel-image-optimizer": "^1.6"
     },
     "require-dev": {
-        "facade/ignition": "^1.4",
+        "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0"
+        "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^8.5"
     },
     "config": {
         "optimize-autoloader": true,
