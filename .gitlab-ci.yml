@@ -10,23 +10,17 @@ stages:
 
 build:resources:
   script:
-    - cd web && COMPOSER_CACHE_DIR="../.composer" composer install --ignore-platform-reqs -vvv
-    - npm install
-    - npm run prod
+    - cd web && COMPOSER_CACHE_DIR="../.composer-cache" composer install --ignore-platform-reqs -vvv
+    - npm install --cache ../.npm-cache
+    - npm run prod --cache ../.npm-cache
     - cd ..
   artifacts:
-    paths:
-      - web/public/js/app.js
-      - web/public/css/app.css
-      - web/public/fonts/
-      - web/public/img/
-      - web/public/mix-manifest.json
+    untracked: true
   stage: build
   cache:
     paths:
-      - web/vendor
-      - web/node_modules
-      - .composer
+      - .composer-cache
+      - .npm-cache
 
 docker:web:
   stage: docker
@@ -40,9 +34,8 @@ docker:web:
     - master
   cache:
     paths:
-      - web/vendor
-      - web/node_modules
-      - .composer
+      - .composer-cache
+      - .npm-cache
   script:
     - sed 's/# DEPLOY //g' Dockerfile > Dockerfile.deploy
     - docker build --pull -t "$CI_REGISTRY_IMAGE" . -f Dockerfile.deploy
@@ -80,9 +73,8 @@ docker:branch-web:
     - build:resources
   cache:
     paths:
-      - web/vendor
-      - web/node_modules
-      - .composer
+      - .composer-cache
+      - .npm-cache
   script:
     - sed 's/# DEPLOY //g' Dockerfile > Dockerfile.deploy
     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" . -f Dockerfile.deploy
