@@ -26,8 +26,6 @@
                                         v-model.number="search.name"
                                         label="Spelnamn, Platform"
                                         clearable
-                                        single-line
-                                        hide-details
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="2">
@@ -36,8 +34,6 @@
                                         type="number"
                                         :min="0"
                                         label="Antal spelare"
-                                        single-line
-                                        hide-details
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="2">
@@ -46,8 +42,6 @@
                                         type="number"
                                         :min="0"
                                         label="Speltid"
-                                        single-line
-                                        hide-details
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
@@ -101,6 +95,7 @@ export default {
                     align: 'start',
                     filterable: true,
                     value: 'name',
+                    width: '60%',
                     groupable: false,
                 },
                 {
@@ -115,6 +110,7 @@ export default {
                     align: 'center',
                     sortable: false,
                     value: 'num_players',
+                    width: '10%',
                     filter: (value, search, item) => !this.search.players || (this.search.players >= item.min_players && this.search.players <= item.max_players),
                 },
                 {
@@ -122,6 +118,7 @@ export default {
                     align: 'end',
                     sortable: false,
                     value: 'playtime',
+                    width: '30%',
                     filter: (value, search, item) => !this.search.playtime || (this.search.playtime >= item.min_playtime && this.search.playtime <= item.max_playtime),
                 }
             ],
