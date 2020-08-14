@@ -7,95 +7,62 @@
 
 @section('content')
     <?php $counter = 0; ?>
-    <div class="container bg-light pb-1">
-        @if(Auth::check())
-            <div class="row">
-                <div class="col-12 text-center">
-                    <nav class="navbar navbar-light">
-                        <ul class="navbar-nav mx-auto">
-                            <li class="nav-item active">
-                                <a href="{{route("committee.edit", ['committee' => $active_year->id])}}" class="nav-link">Redigera</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mx-auto">
-                            <li class="nav-item active">
-                                <a href="{{route("committee.create")}}" class="nav-link">Nytt</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        @endif
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1>HD {{($active_year->year)}}/{{$active_year->year+1}}</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 text-center">
-                @if($active_year->group_photo !== '' && $active_year->group_photo !== NULL )
-                    <img src="{{Storage::url($active_year->group_photo)}}" class="rounded mx-auto d-block img-fluid">
-                @else
-                    <img src="/img/unknown_group.png" alt="unknown_group"
-                         class="rounded mx-auto d-block img-fluid">
-                @endif
-                {{$active_year->description}}
-            </div>
-        </div>
-        @foreach($active_year->committee_members as $member)
-            @if(!($counter % 2))
-                <div class="row mb-3">
-                    @endif
-                    <div class="col-lg-6 col-12">
-                        @if($member->image)
-                            <img src="{{Storage::url($member->image)}}" class="rounded mx-auto d-block img-fluid" style="max-width: 70%">
-                        @else
-                            <img src="/img/unknown_profile.png" alt="unknown_profile" style="max-height: 200px"
-                                 class="rounded mx-auto d-block  img-fluid">
-                        @endif
-                        <div class="row">
-                            <div class="col-12 text-center">
-                                <h3>{{$member->name}}</h3>
-                                <div class="text-muted font-weight-bold">{{ucfirst($member->role)}}</div>
-                            </div>
-                        </div>
-                        @if($member->quote !== '' && $member->quote !== NULL)
-                            <div class="row small">
-                                <div class="col-12 text-center">
-                                    <span class="text-muted">"{{$member->quote}}"</span>
-                                </div>
-                            </div>
-                        @endif
-                        <div class="row">
-                            <div class="col-12">
-                                {{$member->description}}<br/><br/>
-                                @if($member->favourite_game !== '' && $member->favourite_game !== NULL)
-                                    <div class="row">
-                                        <div class="col-12">
+    <v-container>
+        <v-card>
+            <v-card-text>
+                <v-row>
+                    <v-col cols="12" class="text-center">
+                        <h1>HD {{($active_year->year)}}/{{$active_year->year+1}}</h1>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12" class="text-center">
+                        <v-img src="{{$active_year->group_photo ? Storage::url($active_year->group_photo) : '/img/unknown_group.png'}}" class="mx-auto" max-height="400px" contain></v-img>
+                        {{$active_year->description}}
+                    </v-col>
+                </v-row>
+                <v-row class="mb-3 text-center">
+                    @foreach($active_year->committee_members as $member)
+                        <v-col cols="12" md="6" lg="4" xl="3">
+                            <v-img src="{{$member->image ? Storage::url($member->image) : "/img/unknown_profile.png"}}" class="mx-auto" max-height="200px" contain></v-img>
+                            <v-row>
+                                <v-col cols="12" class="text-center">
+                                    <h3>{{$member->name}}</h3>
+                                    <div class="subtitle-1 font-weight-bold">{{ucfirst($member->role)}}</div>
+                                </v-col>
+                            </v-row>
+                            @if($member->quote)
+                                <v-row>
+                                    <v-col cols="12" class="text-center">
+                                        <span class="subtitle-2">"{{$member->quote}}"</span>
+                                    </v-col>
+                                </v-row>
+                            @endif
+                            <v-row>
+                                <v-col cols="12">
+                                    {{$member->description}}<br/><br/>
+                                    @if($member->favourite_game)
+                                        <v-row>
+                                            <v-col cols="12">
                                             <span
                                                 class="font-weight-bold">Favorit Spel: </span>{{$member->favourite_game}}
-                                        </div>
-                                    </div>
-                                @endif
-                                @if($member->favourite_sugar !== '' && $member->favourite_sugar !== NULL)
-                                    <div class="row">
-                                        <div class="col-12">
+                                            </v-col>
+                                        </v-row>
+                                    @endif
+                                    @if($member->favourite_sugar)
+                                        <v-row>
+                                            <v-col cols="12">
                                         <span
                                             class="font-weight-bold">Favorit Socker: </span>{{$member->favourite_sugar}}
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    @if(($counter % 2))
-                </div>
-            @endif
-            <?php $counter++; ?>
-        @endforeach
-        @if(($counter % 2))
-    </div>
-    @endif
-    </div>
-
+                                            </v-col>
+                                        </v-row>
+                                    @endif
+                                </v-col>
+                            </v-row>
+                        </v-col>
+                    @endforeach
+                </v-row>
+            </v-card-text>
+        </v-card>
+    </v-container>
 @endsection
