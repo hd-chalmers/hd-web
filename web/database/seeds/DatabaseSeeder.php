@@ -24,10 +24,7 @@ class DatabaseSeeder extends Seeder
         $year->save();
         $this->call(CommitteeMemberSeeder::class);
         $this->call(StrecklistaSeeder::class);
-        factory(\App\Models\GamePlatform::class, 5)->create();
-        foreach (\App\Models\GamePlatform::all() as $platform) {
-            $platform->games()->saveMany(factory(\App\Models\Game::class, 10)->make());
-        }
+        $this->call(GameSeeder::class);
         //factory(\App\Models\DoorStatus::class, 20)->create();
     }
 }
