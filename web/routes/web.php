@@ -25,9 +25,9 @@ Route::post('/games/save', 'GameController@save');
 Route::resource('/games', 'GameController');
 Route::get('/contact', 'ContactController@index')->name('contact');
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('/door', 'IndexController@door')->name('door');
+
+Route::get('/contact', 'ContactController@index')->name('contact');
 
 Route::name('bgg.')->prefix('bgg')->group(static function() {
     Route::post('/search', 'BoardGameGeekController@search')->name('search');
