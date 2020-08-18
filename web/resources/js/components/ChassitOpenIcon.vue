@@ -37,7 +37,7 @@ export default {
                 }).then(res => {
                 this.state = res.data.status;
                 this.date = res.data.updated;
-                if (res.data.status) {
+                if (res.data.status && res.data.status !== '0') {
                     this.icon = 'mdi-lock-open-variant';
                     this.color = 'green';
                 } else {

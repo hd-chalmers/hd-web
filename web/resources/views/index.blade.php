@@ -12,9 +12,9 @@
             @endif
             <v-card-text>
                 <v-row>
-                    <v-col>
-                        <img src="{{$active_year->front_image ? Storage::url($active_year->front_image): "/img/unknown_group.png"}}" alt="unknown_group"
-                             class="rounded mx-auto d-block img-fluid">
+                    <v-col class="hidden-sm-and-down" cols="2"></v-col>
+                    <v-col cols="12" md="8" lg="8" xl="8">
+                        <v-img src="{{$active_year->front_image ? Storage::url($active_year->front_image) : "/img/unknown_group.png"}}" alt="unknown_group" contain></v-img>
                     </v-col>
                 </v-row>
 

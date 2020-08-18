@@ -8,6 +8,8 @@
     docker-compose up hd -d
     docker-compose exec -T hd php artisan optimize
     docker-compose exec -T hd php artisan migrate --force
+    docker-compose exec -T hd php artisan storage:link
+    echo "Done"
 @endtask
 
 @task('staging-deploy', ['on' => 'staging'])
@@ -18,4 +20,6 @@
     docker-compose up -d
     docker-compose exec -T hd php artisan optimize
     docker-compose exec -T hd php artisan migrate:fresh --force --seed
+    docker-compose exec -T hd php artisan storage:link
+    echo "Done"
 @endtask
