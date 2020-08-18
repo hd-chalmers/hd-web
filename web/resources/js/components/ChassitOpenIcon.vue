@@ -1,5 +1,5 @@
 <template>
-    <v-btn fab bottom right fixed :color="color" :loading="loading" @click="showDate">
+    <v-btn fab bottom right fixed :color="color" :large="$vuetify.breakpoint.mobile" :loading="loading" @click="showDate">
         <v-icon>{{icon}}</v-icon>
     </v-btn>
 </template>
