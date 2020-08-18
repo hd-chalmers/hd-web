@@ -7,6 +7,7 @@ font-family: 'Numans', sans-serif;">
 <head>
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>H-Sektionens Datorförening</title>
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
