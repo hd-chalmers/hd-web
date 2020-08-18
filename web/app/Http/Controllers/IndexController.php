@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActiveYear;
 use App\Models\DoorStatus;
 use App\Models\Event;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -15,7 +16,9 @@ class IndexController extends Controller
     }
 
     public function door(Request $request) {
-        $door = DoorStatus::latest()->firstOrFail();
-        return response()->json($door);
+        //$door = DoorStatus::latest()->firstOrFail();
+        //return response()->json($door);
+        $client = new Client();
+        return response()->json(\GuzzleHttp\json_decode($client->get('https://hd.chalmers.se/getstatus/')->getBody()->getContents()));
     }
 }
