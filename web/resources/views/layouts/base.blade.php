@@ -22,6 +22,7 @@ font-family: 'Numans', sans-serif;">
         <v-main>
             @yield('content')
         </v-main>
+    <Chassit-Open-Icon></Chassit-Open-Icon>
     @yield('footer', View::make('common.footer'))
 </v-app>
 <script src="https://kit.fontawesome.com/458d5475f8.js" crossorigin="anonymous"></script>
