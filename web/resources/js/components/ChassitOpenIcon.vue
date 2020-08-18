@@ -19,7 +19,7 @@ export default {
         },
         getStatus() {
             axios(
-                "/door",
+                "https://hd.chalmers.se/getstatus/",
                 {
                     method:
                         'get',
