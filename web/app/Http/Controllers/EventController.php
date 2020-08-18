@@ -13,7 +13,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        return response(view('events.list'));
     }
 
     /**
