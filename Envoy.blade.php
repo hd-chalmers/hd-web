@@ -4,11 +4,10 @@
     cd hdweb
     docker login -u "{{$docker_user}}" -p "{{$docker_password}}" {{$docker_registry}}
     docker-compose pull
-    docker-compose down hd
     docker-compose up hd -d
+    docker-compose exec -T hd php artisan storage:link
     docker-compose exec -T hd php artisan optimize
     docker-compose exec -T hd php artisan migrate --force
-    docker-compose exec -T hd php artisan storage:link
     echo "Done"
 @endtask
 
@@ -16,10 +15,9 @@
     cd hdweb-staging
     docker login -u "{{$docker_user}}" -p "{{$docker_password}}" {{$docker_registry}}
     docker-compose pull
-    docker-compose down
     docker-compose up -d
+    docker-compose exec -T hd php artisan storage:link
     docker-compose exec -T hd php artisan optimize
     docker-compose exec -T hd php artisan migrate:fresh --force --seed
-    docker-compose exec -T hd php artisan storage:link
     echo "Done"
 @endtask
