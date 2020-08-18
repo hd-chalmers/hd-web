@@ -16,8 +16,7 @@
                               show-expand
                               :search="search.name"
                               @click:row="expandRow"
-                              :expanded="expanded"
-                              :mobile-breakpoint="$vuetify.breakpoint.mobile ? 'md' : 'xs'">
+                              :expanded="expanded">
                     <template v-slot:top>
                         <v-toolbar flat>
                             <v-row>
