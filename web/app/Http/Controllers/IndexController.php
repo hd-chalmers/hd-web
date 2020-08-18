@@ -15,11 +15,7 @@ class IndexController extends Controller
     }
 
     public function door(Request $request) {
-        $door = DoorStatus::latest()->first();
-        if ($request->acceptsJson() && !$request->acceptsHtml()) {
-            return $door;
-        } else {
-            return view('door')->with(['door' => $door]);
-        }
+        $door = DoorStatus::latest()->firstOrFail();
+        return response()->json($door);
     }
 }
