@@ -16,13 +16,15 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-md-and-down">
-        <v-btn text href="{{route('committee.index')}}">Sittande</v-btn>
-        <v-btn text href="{{route('event.index')}}">Evenemang</v-btn>
-        <v-btn text href="{{route('products.index')}}">Prislista</v-btn>
-        @if (\Illuminate\Support\Facades\Auth::check())
-            <v-btn text href="{{route('account.index')}}">Strecklista</v-btn>
+        @if(false)
+            <v-btn text href="{{route('committee.index')}}">Sittande</v-btn>
+            <v-btn text href="{{route('event.index')}}">Evenemang</v-btn>
+            <v-btn text href="{{route('products.index')}}">Prislista</v-btn>
+            @if (\Illuminate\Support\Facades\Auth::check())
+                <v-btn text href="{{route('account.index')}}">Strecklista</v-btn>
+            @endif
+            <v-btn text href="{{route('games.index')}}">Våra Spel</v-btn>
         @endif
-        <v-btn text href="{{route('games.index')}}">Våra Spel</v-btn>
         <v-btn text href="{{route('contact')}}">Kontakta Oss</v-btn>
         <v-btn text href="https://www.facebook.com/HsektionenChalmers/"><span
                 style="color: #E0218A">H</span>-Sektionen

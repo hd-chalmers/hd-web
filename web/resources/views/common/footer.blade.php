@@ -1,7 +1,7 @@
 <v-footer app
           color="white"
           padless
-          elevation="1"
+          elevation="5"
 >
     <v-row
         justify="center"
