@@ -12,7 +12,7 @@
             @endif
             <v-card-text>
                 <v-row>
-                    <v-col class="hidden-sm-and-down" cols="2" md="1"></v-col>
+                    <v-col class="hidden-sm-and-down" cols="2" md="1" lg="2" xl="2"></v-col>
                     <v-col cols="12" md="10" lg="8" xl="8">
                         <v-img src="{{$active_year->front_image ? Storage::url($active_year->front_image) : "/img/unknown_group.png"}}" alt="unknown_group" contain></v-img>
                     </v-col>
