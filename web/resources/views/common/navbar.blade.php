@@ -18,8 +18,8 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-md-and-down">
+        <v-btn text href="{{route('committee.index')}}">Sittande</v-btn>
         @if(false)
-            <v-btn text href="{{route('committee.index')}}">Sittande</v-btn>
             <v-btn text href="{{route('event.index')}}">Evenemang</v-btn>
             <v-btn text href="{{route('products.index')}}">Prislista</v-btn>
             @if (\Illuminate\Support\Facades\Auth::check())
@@ -37,10 +37,10 @@
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
     <v-toolbar-items class="hidden-lg-and-up">
-        @if(false)
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="{{route('committee.index')}}">
             <v-icon title="Sittande">mdi-account-group</v-icon>
         </v-btn>
+        @if(false)
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="{{route('event.index')}}">
             <v-icon title="Evenemang">mdi-calendar-star</v-icon>
         </v-btn>
