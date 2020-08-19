@@ -51,7 +51,7 @@
                                             </v-list-item>
                                         @endif
                                         @if($member->favourite_game)
-                                            <v-list-item class="mx-0 py-0 text-left" style="min-height: 20px">
+                                            <v-list-item class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
                                                 <v-list-item-title>
                                                     Favoritspel
                                                 </v-list-item-title>
@@ -60,8 +60,8 @@
                                                 </v-list-item-subtitle>
                                             </v-list-item>
                                         @endif
-                                        @if($member->favourite_game)
-                                            <v-list-item class="mx-0 py-0 text-left" style="min-height: 20px">
+                                        @if($member->favourite_sugar)
+                                            <v-list-item class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
                                                 <v-list-item-title>
                                                     Favoritsocker
                                                 </v-list-item-title>
