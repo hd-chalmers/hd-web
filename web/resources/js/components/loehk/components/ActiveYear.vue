@@ -316,6 +316,9 @@ export default {
             })
         },
         updateCommitteeMember(id, fieldname, value, index) {
+            if (value === undefined) {
+                return;
+            }
             let data = new FormData();
             if (fieldname === 'image') {
                 data.append(fieldname, value, fieldname);
