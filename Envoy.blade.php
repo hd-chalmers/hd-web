@@ -5,9 +5,7 @@
     docker login -u "{{$docker_user}}" -p "{{$docker_password}}" {{$docker_registry}}
     docker-compose pull
     docker-compose up -d
-    docker-compose exec -T hd php artisan storage:link
-    docker-compose exec -T hd php artisan optimize
-    docker-compose exec -T hd php artisan migrate --force
+    docker-compose exec -T hd php artisan storage:link && docker-compose exec -T hd php artisan optimize && docker-compose exec -T hd php artisan migrate --force;
     echo "Done"
 @endtask
 
@@ -16,8 +14,8 @@
     docker login -u "{{$docker_user}}" -p "{{$docker_password}}" {{$docker_registry}}
     docker-compose pull
     docker-compose up -d
-    docker-compose exec -T hd php artisan storage:link
-    docker-compose exec -T hd php artisan optimize
-    docker-compose exec -T hd php artisan migrate:fresh --force --seed
+    docker-compose exec -T hd php artisan storage:link;
+    docker-compose exec -T hd php artisan optimize;
+    docker-compose exec -T hd php artisan migrate:fresh --force --seed;
     echo "Done"
 @endtask

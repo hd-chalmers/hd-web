@@ -58,7 +58,7 @@ class Game extends Model
 
     public function getPlatformAttribute ()
     {
-        return ucfirst($this->game_platform->name);
+        return ucfirst($this->game_platform->name ?? '');
     }
 
     public function getNumPlayersAttribute ()

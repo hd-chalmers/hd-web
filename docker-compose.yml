@@ -15,6 +15,7 @@ services:
       - /var/www/html/bootstrap/cache
       - ./web/storage/logs:/opt/app/logs
       - ./web/storage/logs/docker:/var/www/html/storage/logs
+      - ./web/storage/app/public:/var/www/html/public/storage
     restart: on-failure:3
     depends_on:
     - hd-db

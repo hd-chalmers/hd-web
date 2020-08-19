@@ -42,18 +42,29 @@ class ActiveYear extends Model
 
     protected $dates = ['year'];
 
+    protected $appends = ['displayed_year'];
+
     public function committee_members()
     {
         return $this->hasMany(CommitteeMember::class)->orderBy('id');
+    }
+
+    public function getDisplayedYearAttribute() {
+        return $this->year . '/' . ($this->year+1);
     }
 
     public function getYearAttribute($value) {
         return Carbon::parse($value)->year;
     }
 
-    public function getLatest() {
-        return Cache::remember('active_year', 30*24*60*60, static function() {
-            return ActiveYear::latest()->get();
-        });
+    static function getLatest($cache = true) {
+        Cache::forget('active_year');
+        if ($cache) {
+            return Cache::remember('active_year', 30 * 24 * 60 * 60, static function () {
+                return ActiveYear::latest()->with(['committee_members'])->first();
+            });
+        }
+
+        return ActiveYear::latest()->with(['committee_members'])->first();
     }
 }

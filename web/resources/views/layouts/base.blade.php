@@ -14,12 +14,13 @@ font-family: 'Numans', sans-serif;">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('img/favicon.ico')}}"/>
 </head>
 <body>
-<v-app id="app" style="background-image: url('/img/back5.jpg');
+<v-app id="app" style="background-image: url({{\App\Models\ActiveYear::getLatest()->background_image ? Storage::url(\App\Models\ActiveYear::getLatest()->background_image) : "/img/back5.jpg"}});
           background-repeat: no-repeat;
           background-position: center;
           background-attachment: fixed;
           background-size: cover ;">
         @yield('navbar', View::make('common.navbar'))
+    @yield('loehk')
         <v-main>
             @yield('content')
         </v-main>

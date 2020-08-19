@@ -4,23 +4,24 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import Vue from 'vue';
-import Snotify, {SnotifyPosition} from 'vue-snotify'
+import Vue from 'vue'
 import VModal from 'vue-js-modal'
-
+import Vuetify from 'vuetify'
+import VueRouter from 'vue-router'
+import ActiveYear from "./components/loehk/components/ActiveYear";
+import Prices from "./components/loehk/components/Prices";
+import InvestmentAccounts from "./components/loehk/components/InvestmentAccounts";
+import Games from "./components/loehk/components/Games";
+import Front from "./components/loehk/components/Front";
+import Events from "./components/loehk/components/Events";
 require('./bootstrap');
 
 window.Vue = require('vue');
+
 Vue.config.productionTip = false;
-const options = {
-    toast: {
-        position: SnotifyPosition.rightBottom
-    }
-};
-Vue.use(Snotify, options);
 Vue.use(VModal);
-import Vuetify from 'vuetify';
 Vue.use(Vuetify);
+Vue.use(VueRouter)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -32,6 +33,43 @@ Vue.use(Vuetify);
 const files = require.context('./components', true, /\.vue$/i);
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+const routes = [
+    {
+        path: '/',
+        component: Front,
+        name: 'loehk'
+    },
+    {
+        path: '/active_year',
+        component: ActiveYear,
+        name: 'active_year'
+    },
+    {
+        path: '/events',
+        component: Events,
+        name: 'events'
+    },
+    {
+        path: '/prices',
+        component: Prices,
+        name: 'priecs'
+    },
+    {
+        path: '/investments',
+        component: InvestmentAccounts,
+        name: 'investments'
+    },
+    {
+        path: '/games',
+        component: Games,
+        name: 'games'
+    },
+]
+
+const router = new VueRouter({
+    routes // short for `routes: routes`
+})
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -40,5 +78,6 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 
 const app = new Vue({
     el: '#app',
+    router,
     vuetify: new Vuetify(),
 });
