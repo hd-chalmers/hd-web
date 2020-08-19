@@ -31,7 +31,7 @@ Route::middleware('auth')->prefix('loehk')->name('loehk.')->group(function() {
     Route::get('/stats', 'LoehkController@stats')->name('stats');
     Route::get('/active_year', 'LoehkController@active_year')->name('active_year');
     Route::post('/active_year/new', 'LoehkController@newActiveYear')->name('new_active_year');
-    Route::post('/active_year/{active_year}/update', 'LoehkController@update')->name('active_year');
+    Route::post('/active_year/{active_year}/update', 'LoehkController@update')->name('update_active_year');
     Route::post('/committee_member', 'LoehkController@newCommitteeMember')->name('new_committee_member');
     Route::post('/committee_member/{committee_member}', 'LoehkController@updateCommitteeMember')->name('committee_member');
     Route::delete('/committee_member/{committee_member}', 'LoehkController@deleteCommitteeMember')->name('delete_committee_member');
