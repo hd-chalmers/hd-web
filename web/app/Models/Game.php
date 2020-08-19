@@ -43,6 +43,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game wherePublishedYear($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read mixed $num_players
+ * @property-read mixed $platform
+ * @property-read mixed $playtime
  */
 class Game extends Model
 {

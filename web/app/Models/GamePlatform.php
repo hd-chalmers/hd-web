@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\GamePlatform whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\GamePlatform whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $bgg_type
+ * @method static \Illuminate\Database\Eloquent\Builder|GamePlatform whereBggType($value)
  */
 class GamePlatform extends Model
 {

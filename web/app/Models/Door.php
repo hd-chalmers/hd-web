@@ -24,8 +24,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Door extends Model
 {
-    protected $connection = 'door';
-
     protected $fillable = [
         'status',
     ];

@@ -33,12 +33,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CommitteeMember whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CommitteeMember whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $image
+ * @property string|null $quote
+ * @property-read \App\Models\ActiveYear $active_year
+ * @method static \Illuminate\Database\Eloquent\Builder|CommitteeMember whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CommitteeMember whereQuote($value)
  */
 class CommitteeMember extends Model
 {
     protected $fillable = ['name', 'role', 'active_year_id', 'favourite_game', 'favourite_sugar'];
 
     public function active_year() {
-        return $this->belongsTo('active_year');
+        return $this->belongsTo(ActiveYear::class);
     }
 }
