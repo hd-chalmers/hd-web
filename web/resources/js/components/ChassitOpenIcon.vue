@@ -27,6 +27,7 @@ export default {
                         true,
                     responseType:
                         'json',
+                    timeout: 3000,
                     headers:
                         {
                             'Content-Type':
