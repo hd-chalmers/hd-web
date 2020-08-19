@@ -1,6 +1,7 @@
 @servers(['prod' => ['gitlab_deploy@129.16.220.7'],  'staging' => ['gitlab_deploy@129.16.220.7']])
 
 @task('prod-deploy', ['on' => 'prod'])
+    export IMAGE_TAG={{$tag ?: 'latest'}}
     cd hdweb
     docker login -u "{{$docker_user}}" -p "{{$docker_password}}" {{$docker_registry}}
     docker-compose pull
