@@ -24,7 +24,7 @@
                 <v-row class="mb-3 text-center justify-center">
                     @foreach($active_year->committee_members as $member)
                         <v-col cols="12" md="6" lg="4" xl="3">
-                            <v-avatar size="200px" class="elevation-1 mb-2">
+                            <v-avatar size="200px" class="elevation-4 mb-2">
                                 <v-img lazy-src="/img/unknown_profile.png" src="{{$member->image ? Storage::url($member->image) : "/img/unknown_profile.png"}}" class="mx-auto" max-height="200px" contain></v-img>
                             </v-avatar>
                             <v-card elevation="1" rounded>
