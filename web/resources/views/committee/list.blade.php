@@ -21,7 +21,7 @@
                         {{$active_year->description}}
                     </v-col>
                 </v-row>
-                <v-row class="mb-3 text-center">
+                <v-row class="mb-3 text-center justify-center">
                     @foreach($active_year->committee_members as $member)
                         <v-col cols="12" md="6" lg="4" xl="3">
                             <v-avatar size="200px" class="elevation-1 mb-2">
