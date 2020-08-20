@@ -6,7 +6,6 @@
 ?>
 
 @section('content')
-    <?php $counter = 0; ?>
     <v-container>
         <v-card>
             <v-card-text>
