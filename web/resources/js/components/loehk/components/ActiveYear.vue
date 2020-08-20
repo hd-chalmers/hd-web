@@ -316,7 +316,7 @@ export default {
             })
         },
         updateCommitteeMember(id, fieldname, value, index) {
-            if (value === undefined) {
+            if (value === undefined || value === null) {
                 return;
             }
             let data = new FormData();
