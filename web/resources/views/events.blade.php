@@ -8,7 +8,7 @@
                 Kommande Arrangemang
             </v-card-title>
             <v-card-text>
-                @foreach($events as $event)
+                @forelse($events as $event)
                     <v-card class="mb-3" elevation="5">
                         <v-card-title>
                             {{$event->date}} {{$event->time}} - {{$event->title}}
@@ -26,7 +26,9 @@
                             {{$event->description}}
                         </v-card-text>
                     </v-card>
-                @endforeach
+                    @empty
+                        Inga arrangemang är just nu inlagda
+                @endforelse
             </v-card-text>
         </v-card>
     </v-container>
