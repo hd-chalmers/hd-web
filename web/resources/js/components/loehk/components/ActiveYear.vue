@@ -31,7 +31,7 @@
                                       :success="load.christmas_image === 'success'" v-model="form.christmas_image"></v-file-input>
                     </v-col>
                     <v-col cols="12">
-                        <v-textarea @input="message.description = ''; load.description = false" @focusout="saveDescription" :success-messages="message.description" counter label="Beskrivande text" :loading="load.description === true"
+                        <v-textarea @input="saveDescriptionDebounced" :success-messages="message.description" counter label="Beskrivande text" :loading="load.description === true"
                                     :success="load.description === 'success'" v-model="active_year.description"></v-textarea>
                     </v-col>
                 </v-row>
@@ -50,31 +50,31 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="6" lg="4">
-                                    <v-text-field label="Namn" @focusout="updateCommitteeMember(committee_member.id, 'name', committee_member.name, index)" v-model="committee_member.name"
+                                    <v-text-field label="Namn" @input="updateCommitteeMemberDebounced(committee_member.id, 'name', committee_member.name, index)" v-model="committee_member.name"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'name')"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" lg="4">
-                                    <v-text-field label="Post" @focusout="updateCommitteeMember(committee_member.id, 'role', committee_member.role, index)" v-model="committee_member.role"
+                                    <v-text-field label="Post" @input="updateCommitteeMemberDebounced(committee_member.id, 'role', committee_member.role, index)" v-model="committee_member.role"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'role')"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" lg="4">
-                                    <v-text-field label="Beskrivning" @focusout="updateCommitteeMember(committee_member.id, 'description', committee_member.description, index)" v-model="committee_member.description"
+                                    <v-text-field label="Beskrivning" @input="updateCommitteeMemberDebounced(committee_member.id, 'description', committee_member.description, index)" v-model="committee_member.description"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'description')"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" lg="4">
-                                    <v-text-field label="Citat" @focusout="updateCommitteeMember(committee_member.id, 'quote', committee_member.quote, index)" v-model="committee_member.quote"
+                                    <v-text-field label="Citat" @input="updateCommitteeMemberDebounced(committee_member.id, 'quote', committee_member.quote, index)" v-model="committee_member.quote"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'quote')"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" lg="4">
-                                    <v-text-field label="Favoritspel" @focusout="updateCommitteeMember(committee_member.id, 'favourite_game', committee_member.favourite_game, index)" v-model="committee_member.favourite_game"
+                                    <v-text-field label="Favoritspel" @input="updateCommitteeMemberDebounced(committee_member.id, 'favourite_game', committee_member.favourite_game, index)" v-model="committee_member.favourite_game"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'favourite_game')"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" lg="4">
-                                    <v-text-field label="Favoritsocker" @focusout="updateCommitteeMember(committee_member.id, 'favourite_sugar', committee_member.favourite_sugar, index)" v-model="committee_member.favourite_sugar"
+                                    <v-text-field label="Favoritsocker" @input="updateCommitteeMemberDebounced(committee_member.id, 'favourite_sugar', committee_member.favourite_sugar, index)" v-model="committee_member.favourite_sugar"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'favourite_sugar')"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-file-input label="Profilbild" @change="updateCommitteeMember(committee_member.id, 'image', committee_member.image_upload, index)" :messages="committee_member.image"
+                                    <v-file-input label="Profilbild" @change="updateCommitteeMemberDebounced(committee_member.id, 'image', committee_member.image_upload, index)" :messages="committee_member.image"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'image')" v-model="committee_member.image_upload"></v-file-input>
                                 </v-col>
                             </v-row>
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+
 export default {
     name: "ActiveYear",
     created() {
@@ -315,8 +316,15 @@ export default {
             }).finally(() => {
             })
         },
+        updateCommitteeMemberDebounced(id, fieldname, value, index) {
+            clearTimeout(this._updateCommitteeDebounce);
+            this.$set(this.message.committee_member, id + fieldname, '')
+            this._updateCommitteeDebounce = setTimeout(() => {
+                this.updateCommitteeMember(id, fieldname, value, index)
+            }, 500);
+        },
         updateCommitteeMember(id, fieldname, value, index) {
-            if (value === undefined || value === null) {
+            if (value === undefined || value === null || value === 'null') {
                 return;
             }
             let data = new FormData();
@@ -413,6 +421,13 @@ export default {
             }).finally(() => {
                 this.loading = false;
             })
+        },
+        saveDescriptionDebounced() {
+            clearTimeout(this._SaveDescriptionDebounce);
+            this.message.description = '';
+            this._SaveDescriptionDebounce = setTimeout(() => {
+                this.saveDescription()
+            }, 500);
         },
         saveDescription() {
             if (this.loading) {
