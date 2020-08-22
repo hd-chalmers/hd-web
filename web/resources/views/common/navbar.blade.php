@@ -19,8 +19,8 @@
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-md-and-down">
         <v-btn text href="{{route('committee.index')}}">Sittande</v-btn>
+        <v-btn text href="{{route('event.index')}}">Evenemang</v-btn>
         @if(false)
-            <v-btn text href="{{route('event.index')}}">Evenemang</v-btn>
             <v-btn text href="{{route('products.index')}}">Prislista</v-btn>
             @if (\Illuminate\Support\Facades\Auth::check())
                 <v-btn text href="{{route('account.index')}}">Strecklista</v-btn>
@@ -40,10 +40,10 @@
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="{{route('committee.index')}}">
             <v-icon title="Sittande">mdi-account-group</v-icon>
         </v-btn>
-        @if(false)
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="{{route('event.index')}}">
             <v-icon title="Evenemang">mdi-calendar-star</v-icon>
         </v-btn>
+        @if(false)
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="{{route('products.index')}}">
             <v-icon title="Prislista">mdi-cash</v-icon>
         </v-btn>

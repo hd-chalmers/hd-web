@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -13,7 +14,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        return response(view('events.list'));
+        return response(view('events')->with('events', Event::whereShowOnFrontpage(true)->where('date', '>', 'NOW()')->get(['title', 'description', 'location', 'show_on_frontpage', 'facebook_event_link', 'date'])));
     }
 
     /**
