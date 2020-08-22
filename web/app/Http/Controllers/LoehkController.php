@@ -134,4 +134,27 @@ class LoehkController extends Controller
         $active_year->save();
         return $active_year;
     }
+
+    public function newEvent(Request $request) {
+        Log::debug(print_r($request->toArray(),true));
+        $event = new Event($request->toArray());
+        Log::debug($event->toJson());
+        $event->save();
+        return response()->json($event);
+    }
+
+    public function getEvents() {
+        return response()->json(Event::orderBy('date', 'asc')->get());
+    }
+
+    public function updateEvent(Request $request, Event $event) {
+        foreach ($request->toArray() as $field => $value) {
+            $event->$field = $value;
+        }
+        $event->save();
+    }
+
+    public function deleteEvent(Event $event) {
+        $event->delete();
+    }
 }

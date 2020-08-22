@@ -35,6 +35,10 @@ Route::middleware('auth')->prefix('loehk')->name('loehk.')->group(function() {
     Route::post('/committee_member', 'LoehkController@newCommitteeMember')->name('new_committee_member');
     Route::post('/committee_member/{committee_member}', 'LoehkController@updateCommitteeMember')->name('committee_member');
     Route::delete('/committee_member/{committee_member}', 'LoehkController@deleteCommitteeMember')->name('delete_committee_member');
+    Route::post('/event/new', 'LoehkController@newEvent')->name('new_event');
+    Route::post('/event', 'LoehkController@getEvents')->name('events');
+    Route::delete('/event/{event}', 'LoehkController@deleteEvent')->name('delete_event');
+    Route::post('/event/{event}/update', 'LoehkController@updateEvent')->name('update_event');
 });
 
 Route::get('/counter', 'CounterController@index');
