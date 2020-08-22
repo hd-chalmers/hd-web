@@ -14,7 +14,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        return response(view('events')->with('events', Event::whereShowOnFrontpage(true)->where('date', '>', 'NOW()')->get(['title', 'description', 'location', 'show_on_frontpage', 'facebook_event_link', 'date'])));
+        return response(view('events')->with('events', Event::whereShowOnFrontpage(true)->where('date', '>', 'NOW()')->orderBy('date', 'asc')->get(['title', 'description', 'location', 'show_on_frontpage', 'facebook_event_link', 'date'])));
     }
 
     /**
