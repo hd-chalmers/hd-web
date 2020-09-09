@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row v-for="(row,key) in rows" :key="key" style="page-break-after: always" dense>
-            <v-col cols="4" class="text-center" v-for="(user, key) in row" :key="user.id">
+            <v-col cols="4" class="text-center" v-for="(user, key) in row" :key="user.uid">
                 <strong v-if="user.name !== ''" style="overflow: hidden">{{ user.name.substr(0, 20) }}</strong>
                 <strong v-else><span style="color: transparent">Empty</span></strong>
                 <VueBarcode :value="user.uid" height="30">
@@ -13,7 +13,7 @@
             <v-col cols="12">
                 <h5>INACTIVE</h5>
             </v-col>
-            <v-col cols="4" class="text-center" v-for="(user, key) in row" :key="user.id">
+            <v-col cols="4" class="text-center" v-for="(user, key) in row" :key="user.uid">
                 <strong v-if="user.name !== ''" style="overflow: hidden">{{ user.name.substr(0, 20) }}</strong>
                 <strong v-else><span style="color: transparent">Empty</span></strong>
                 <VueBarcode :value="user.uid" height="25">
@@ -40,13 +40,13 @@ export default {
     },
     created() {
         if (!(this.users.length % 30)) {
-            this.users.push({'uid': 'USL' + (this.last.length < 3 ? '0' : '') + this.last, 'name': ''})
+            this.users.push({'uid': 'USL' + (this.last < 100 ? '0' : '') + this.last, 'name': ''})
         }
         while (this.users.length > 0) {
             const howMany = 30
             while (this.users.length < 30) {
                 this.last++;
-                this.users.push({'uid': 'USL' + (this.last.length < 3 ? '0' : '') + this.last, 'name': ''})
+                this.users.push({'uid': 'USL' + (this.last < 100 ? '0' : '') + this.last, 'name': ''})
             }
             const row = this.users.splice(0, howMany)
             this.rows.push(row)
