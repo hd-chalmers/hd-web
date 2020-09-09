@@ -42,7 +42,7 @@ Route::middleware('auth')->prefix('loehk')->name('loehk.')->group(function() {
     Route::get('/prices', 'LoehkController@getPrices')->name('prices');
     Route::post('/prices', 'ProductController@newProduct')->name('newProduct');
     Route::patch('/prices/{product}', 'ProductController@updateProduct')->name('updateProduct');
-    Route::delete('/prices/{product}', "Productcontroller@deleteProduct");
+    Route::delete('/prices/{product}', "ProductController@deleteProduct");
     Route::get('/streck/print', 'StreckController@print')->name('streckPrint');
     Route::get('/accounts', 'StreckController@getAccounts');
     Route::post('/accounts', 'StreckController@newAccount');
