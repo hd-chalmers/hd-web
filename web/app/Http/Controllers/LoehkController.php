@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\ActiveYear;
+use App\Models\Barcode;
+use App\Models\Category;
 use App\Models\CommitteeMember;
 use App\Models\Event;
 use App\Models\Game;
@@ -11,6 +13,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -97,7 +100,7 @@ class LoehkController extends Controller
         $committee_member->load('active_year');
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $path = $file->storePubliclyAs('public/' . $committee_member->active_year->year.'/members', $committee_member->name . '_profile.' . $file->extension());
+            $path = $file->storePubliclyAs('public/' . $committee_member->active_year->year . '/members', $committee_member->name . '_profile.' . $file->extension());
             $committee_member->image = str_replace('public/', '', $path);
         } else {
             foreach ($request->all() as $field => $value) {
@@ -108,13 +111,18 @@ class LoehkController extends Controller
         return $committee_member;
     }
 
-    public function deleteCommitteeMember(CommitteeMember $committee_member) {
+    public function deleteCommitteeMember (CommitteeMember $committee_member)
+    {
         Cache::forget('active_year');
-        Storage::delete([$committee_member->image, 'public/'.$committee_member->image]);
+        Storage::delete([
+                            $committee_member->image,
+                            'public/' . $committee_member->image,
+                        ]);
         $committee_member->delete();
     }
 
-    public function newCommitteeMember(Request $request) {
+    public function newCommitteeMember (Request $request)
+    {
         Cache::forget('active_year');
         $committee_member = new CommitteeMember();
         $committee_member->name = '';
@@ -127,7 +135,8 @@ class LoehkController extends Controller
         return $committee_member;
     }
 
-    public function newActiveYear() {
+    public function newActiveYear ()
+    {
         Cache::forget('active_year');
         $active_year = new ActiveYear();
         $active_year->year = Carbon::now();
@@ -135,26 +144,102 @@ class LoehkController extends Controller
         return $active_year;
     }
 
-    public function newEvent(Request $request) {
-        Log::debug(print_r($request->toArray(),true));
+    public function newEvent (Request $request)
+    {
+        Log::debug(print_r($request->toArray(), true));
         $event = new Event($request->toArray());
         Log::debug($event->toJson());
         $event->save();
         return response()->json($event);
     }
 
-    public function getEvents() {
+    public function getEvents ()
+    {
         return response()->json(Event::orderBy('date', 'asc')->get());
     }
 
-    public function updateEvent(Request $request, Event $event) {
+    public function updateEvent (Request $request, Event $event)
+    {
         foreach ($request->toArray() as $field => $value) {
             $event->$field = $value;
         }
         $event->save();
     }
 
-    public function deleteEvent(Event $event) {
+    public function deleteEvent (Event $event)
+    {
         $event->delete();
+    }
+
+    public function getPrices ()
+    {
+        return response()->json([
+                                    'products'   => Product::with([
+                                                                      'barcodes',
+                                                                      'category',
+                                                                  ])->orderBy('name')->get(),
+                                    'categories' => Category::all(),
+                                ]);
+    }
+
+    public function deleteProduct (Product $product)
+    {
+        $product->delete();
+    }
+
+    public function newProduct (Request $request)
+    {
+        return DB::transaction(function () use ($request) {
+                $product = new Product();
+                $product->name = $request->input('name');
+                $product->active = $request->input('active');
+                $product->purchase_price = $request->input('purchase_price');
+                $product->package_size = $request->input('package_size');
+                $product->adjustment = $request->input('adjustment');
+                $product->pant = $request->input('pant');
+                $product->discount = $request->input('discount') ?? 0;
+                $product->category_id = $request->input('category_id');
+                $product->price = $request->input('price') ?? 0;
+                $product->save();
+                foreach ($request->input('barcodes') as $code) {
+                    $barcode = new Barcode();
+                    if (count($vars = explode('=', $code)) === 2) {
+                        $barcode->variant_name = $vars[0];
+                        $barcode->barcode = $vars[1];
+                    } else {
+                        $barcode->barcode = $vars[0];
+                    }
+                    $product->barcodes()->save($barcode);
+                }
+
+                return $product;
+            }) ?? response('', 500);
+    }
+
+    public function updateProduct (Request $request, Product $product)
+    {
+        DB::transaction(function () use ($request, $product) {
+            $product->name = $request->input('name');
+            $product->active = $request->input('active');
+            $product->purchase_price = $request->input('purchase_price');
+            $product->package_size = $request->input('package_size');
+            $product->adjustment = $request->input('adjustment');
+            $product->pant = $request->input('pant');
+            $product->discount = $request->input('discount') ?? 0;
+            $product->category_id = $request->input('category_id');
+            $product->price = $request->input('price');
+            foreach ($request->input('combobox_barcodes') as $code) {
+                if (count($vars = explode('=', $code)) === 2) {
+                    $barcode = Barcode::whereBarcode($vars[1])->firstOrNew();
+                    $barcode->variant_name = $vars[0];
+                    $barcode->barcode = $vars[1];
+                } else {
+                    $barcode = Barcode::whereBarcode($vars[0])->firstOrNew();
+                    $barcode->barcode = $vars[0];
+                }
+                $product->barcodes()->save($barcode);
+            }
+            $product->save();
+        });
     }
 }

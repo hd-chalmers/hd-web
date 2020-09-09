@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Event whereTitle( $value )
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Event whereUpdatedAt( $value )
  * @mixin \Eloquent
+ * @property mixed $time
  */
 class Event extends Model
 {

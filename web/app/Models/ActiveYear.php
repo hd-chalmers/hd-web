@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Cache;
  * @mixin Eloquent
  * @property-read Collection|CommitteeMember[] $committee_members
  * @property-read int|null                     $committee_members_count
+ * @property-read mixed $displayed_year
  */
 class ActiveYear extends Model
 {

@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Product
@@ -19,30 +21,60 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Barcode[] $barcodes
  * @property-read int|null                                                       $barcodes_count
  * @property-read \App\Models\Category                                           $category
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product wherePurchasePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereUpdatedAt($value)
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereActive($value)
+ * @method static Builder|Product whereCategoryId($value)
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereDiscount($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereName($value)
+ * @method static Builder|Product wherePrice($value)
+ * @method static Builder|Product wherePurchasePrice($value)
+ * @method static Builder|Product whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property int $package_size
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product wherePackageSize($value)
+ * @method static Builder|Product wherePackageSize($value)
  * @property bool $pant
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product wherePant($value)
+ * @method static Builder|Product wherePant($value)
+ * @property int $adjustment
+ * @property-read mixed $category_name
+ * @property-read mixed $combobox_barcodes
+ * @method static Builder|Product whereAdjustment($value)
  */
 class Product extends Model
 {
+    protected $appends = ['category_name', 'combobox_barcodes'];
+
+    public function getCategoryNameAttribute() {
+        return $this->category->name;
+    }
+
+    public function getComboboxBarcodesAttribute() {
+        $ret = [];
+        foreach ($this->barcodes as $barcode) {
+            if ($barcode->variant_name) {
+                $ret[] = "{$barcode->variant_name}={$barcode->barcode}";
+            } else {
+                $ret[] = (string) $barcode->barcode;
+            }
+        }
+        return $ret;
+    }
+
+    public function getPurchasePriceAttribute($value) {
+        return $value/100;
+    }
+
+    public function setPurchasePriceAttribute($value) {
+        $this->attributes['purchase_price'] = $value*100;
+    }
+
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function barcodes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function barcodes(): HasMany
     {
         return $this->hasMany(Barcode::class);
     }
@@ -50,10 +82,5 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function updatePrice()
-    {
-        $this->price = ceil(($this->purchase_price/100 - ($this->discount/100 ?? 0)) / $this->package_size * 1.25 + ($this->pant ? 100 : 0));
     }
 }

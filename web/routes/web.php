@@ -39,7 +39,10 @@ Route::middleware('auth')->prefix('loehk')->name('loehk.')->group(function() {
     Route::post('/event', 'LoehkController@getEvents')->name('events');
     Route::delete('/event/{event}', 'LoehkController@deleteEvent')->name('delete_event');
     Route::post('/event/{event}/update', 'LoehkController@updateEvent')->name('update_event');
-    Route::post('/prices', 'LoehkController@getPrices')->name('prices');
+    Route::get('/prices', 'LoehkController@getPrices')->name('prices');
+    Route::post('/prices', 'LoehkController@newProduct')->name('newProduct');
+    Route::patch('/prices/{product}', 'LoehkController@updateProduct')->name('updateProduct');
+    Route::delete('/prices/{product}', "LoehkController@deleteProduct");
     Route::get('/streck/print', 'StreckController@print')->name('streckPrint');
 });
 
