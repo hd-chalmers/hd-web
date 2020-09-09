@@ -37,11 +37,17 @@ use Illuminate\Support\Carbon;
  */
 class Account extends Model
 {
+    protected $appends = ['active_text'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function purchase_history () : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PurchaseHistory::class);
+    }
+
+    public function getActiveTextAttribute() {
+        return $this->active ? "Aktiv" : "Inaktiv";
     }
 }

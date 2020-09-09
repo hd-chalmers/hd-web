@@ -40,10 +40,14 @@ Route::middleware('auth')->prefix('loehk')->name('loehk.')->group(function() {
     Route::delete('/event/{event}', 'LoehkController@deleteEvent')->name('delete_event');
     Route::post('/event/{event}/update', 'LoehkController@updateEvent')->name('update_event');
     Route::get('/prices', 'LoehkController@getPrices')->name('prices');
-    Route::post('/prices', 'LoehkController@newProduct')->name('newProduct');
-    Route::patch('/prices/{product}', 'LoehkController@updateProduct')->name('updateProduct');
-    Route::delete('/prices/{product}', "LoehkController@deleteProduct");
+    Route::post('/prices', 'ProductController@newProduct')->name('newProduct');
+    Route::patch('/prices/{product}', 'ProductController@updateProduct')->name('updateProduct');
+    Route::delete('/prices/{product}', "Productcontroller@deleteProduct");
     Route::get('/streck/print', 'StreckController@print')->name('streckPrint');
+    Route::get('/accounts', 'StreckController@getAccounts');
+    Route::post('/accounts', 'StreckController@newAccount');
+    Route::patch('/accounts/{account}', 'StreckController@updateAccount');
+    Route::delete('/accounts/{account}', 'StreckController@deleteAccount');
 });
 
 Route::get('/counter', 'CounterController@index');
