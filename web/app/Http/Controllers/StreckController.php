@@ -12,8 +12,8 @@ class StreckController extends Controller
     {
         $last = Account::whereActive(1)->where('uid', 'LIKE', 'USL%')->orderBy('uid', 'desc')->first();
         $last = (int) substr($last->uid ?? '000000', 3);
-        return view('streck.print')->with('users', Account::whereActive(1)->orderBy('id')->get())
-            ->with('last', $last)->with('inactive', Account::whereActive(0)->orderBy('id')->get());
+        return view('streck.print')->with('users', Account::whereActive(1)->where('print', '=', 'true')->orderBy('id')->get())
+            ->with('last', $last)->with('inactive', Account::whereActive(0)->where('print', '=', 'true')->orderBy('id')->get());
     }
 
     public function getAccounts ()
