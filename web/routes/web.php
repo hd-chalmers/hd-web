@@ -39,6 +39,8 @@ Route::middleware('auth')->prefix('loehk')->name('loehk.')->group(function() {
     Route::post('/event', 'LoehkController@getEvents')->name('events');
     Route::delete('/event/{event}', 'LoehkController@deleteEvent')->name('delete_event');
     Route::post('/event/{event}/update', 'LoehkController@updateEvent')->name('update_event');
+    Route::post('/prices', 'LoehkController@getPrices')->name('prices');
+    Route::get('/streck/print', 'StreckController@print')->name('streckPrint');
 });
 
 Route::get('/counter', 'CounterController@index');
