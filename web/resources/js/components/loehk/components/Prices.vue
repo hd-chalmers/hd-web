@@ -264,6 +264,9 @@ export default {
             if (!this.$refs.newProduct.validate()) {
                 return
             }
+
+            this.item.price = (Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0)))
+
             axios(
                 "/loehk/prices",
                 {
@@ -319,6 +322,7 @@ export default {
         },
         updateProduct(item) {
             this.$set(this.save_loading, item.id, true)
+            item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)));
             axios(
                 "/loehk/prices/" + item.id,
                 {
