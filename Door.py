@@ -4,9 +4,9 @@ import requests
 # INIT
 # hd_door = db_door.init_db()
 # cursor = hd_door.cursor()
-#Made by kjelle
-#Slaughtered by sid
-#Revised by penta
+# Made by kjelle
+# Slaughtered by sid
+# Revised by penta
 
 try:
     import RPi.GPIO as GPIO
