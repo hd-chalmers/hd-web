@@ -1,7 +1,22 @@
 <template>
-    <v-btn fab bottom right fixed :color="color" :large="$vuetify.breakpoint.mobile" :loading="loading" @click="showDate">
-        <v-icon>{{icon}}</v-icon>
-    </v-btn>
+    <div>
+        <v-btn fab bottom right fixed :color="color" :large="$vuetify.breakpoint.mobile" :loading="loading" @click="showDate">
+            <v-icon>{{ icon }}</v-icon>
+        </v-btn>
+
+        <v-snackbar
+            v-model="snackbar"
+            :timeout="2000"
+            shaped
+            top
+        >
+            <center>
+                {{ date }}
+                <br/>
+                {{ duration }}
+            </center>
+        </v-snackbar>
+    </div>
 </template>
 
 <script>
@@ -13,9 +28,9 @@ export default {
     },
     methods: {
         showDate() {
-          if (this.state !== -1) {
-
-          }
+            if (this.state !== -1) {
+                this.snackbar = true
+            }
         },
         getStatus() {
             axios(
@@ -36,18 +51,19 @@ export default {
                                 'application/json',
                         },
                 }).then(res => {
-                this.state = res.data.status;
-                this.date = res.data.updated;
-                if (parseInt(res.data.status)) {
-                    this.icon = 'mdi-lock-open-variant';
+                this.state    = res.data.status;
+                this.date     = res.data.updated;
+                this.duration = res.data.duration_str
+                if (res.data.status) {
+                    this.icon  = 'mdi-lock-open-variant';
                     this.color = 'green';
                 } else {
-                    this.icon = 'mdi-lock'
+                    this.icon  = 'mdi-lock'
                     this.color = 'red';
                 }
             }).catch(() => {
                 this.state = -1;
-                this.icon = 'mdi-alert-circle';
+                this.icon  = 'mdi-alert-circle';
                 this.color = "yellow";
             }).finally(() => {
                 this.loading = false;
@@ -56,8 +72,10 @@ export default {
     },
     data() {
         return {
+            snackbar: false,
             loading: true,
             state: true,
+            duration: "",
             date: '0000-00-00 00:00:00',
             icon: 'mdi-alert-circle',
             color: 'white',

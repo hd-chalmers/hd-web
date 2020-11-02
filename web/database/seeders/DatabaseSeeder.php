@@ -1,6 +1,7 @@
 <?php
-
+namespace Database\Seeders;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,8 +17,9 @@ class DatabaseSeeder extends Seeder
         $user->password = \Illuminate\Support\Facades\Hash::make('password');
         $user->name = 'test';
         $user->remember_token = '';
+        $user->api_token = Str::random(60);
         $user->save();
-        factory(App\Models\Event::class, 10)->create();
+        factory(\App\Models\Event::class, 10)->create();
         $year = new \App\Models\ActiveYear();
         $year->year = '2016-05-01';
         $year->description = 'Det är vi som är HD';

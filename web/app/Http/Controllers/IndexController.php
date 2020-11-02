@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateDoor;
 use App\Models\ActiveYear;
 use App\Models\DoorStatus;
 use App\Models\Event;
 use GuzzleHttp\Client;
+use GuzzleHttp\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -17,12 +19,24 @@ class IndexController extends Controller
     }
 
     public function door(Request $request) {
-        //$door = DoorStatus::latest()->firstOrFail();
-        //return response()->json($door);
-        $client = new Client();
-        if (env('APP_ENV') === 'local') {
-            return '{"status":"'.Cache::remember('random-door', 15, static function() {return random_int(0, 1);}).'","updated":"2020-08-21 09:38:15.759791"}';
+//        if (env('APP_ENV') === 'local') {
+//            return '{"status":"'.Cache::remember('random-door', 15, static function() {return random_int(0, 1);}).'","updated":"2020-08-21 09:38:15.759791"}';
+//        }
+
+
+        return response(DoorStatus::orderBy('created_at', 'desc')->first());
+    }
+
+    public function updateDoor(UpdateDoor $request) {
+        /** @var DoorStatus $latest */
+        $latest = DoorStatus::orderBy('created_at', 'desc')->first();
+        if ($latest->status === $request->boolean('status')) {
+            return $latest;
         }
-        return response()->json(\GuzzleHttp\json_decode($client->get('https://hd.chalmers.se/getstatus/')->getBody()->getContents()));
+
+        $door = new DoorStatus();
+        $door->status = $request->input('status');
+        $door->save();
+        return $door;
     }
 }
