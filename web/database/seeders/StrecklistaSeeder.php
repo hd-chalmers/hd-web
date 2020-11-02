@@ -1,5 +1,5 @@
 <?php
-
+namespace Database\Seeders;
 use App\Models\Account;
 use App\Models\Barcode;
 use App\Models\Category;
