@@ -37,6 +37,7 @@ Route::resource('/games', GameController::class);
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
 Route::get('/door', [IndexController::class, 'door'])->name('door');
+Route::get('/getstatus', [IndexController::class, 'door'])->name('door_old');
 Route::middleware('auth')->prefix('loehk')->name('loehk.')->group(function() {
     Route::get('/', [LoehkController::class, 'index'])->name('index');
     Route::get('/stats', [LoehkController::class, 'stats'])->name('stats');
