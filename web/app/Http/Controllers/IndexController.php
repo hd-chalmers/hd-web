@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
@@ -30,8 +31,12 @@ class IndexController extends Controller
     public function updateDoor(UpdateDoor $request) {
         /** @var DoorStatus $latest */
         $latest = DoorStatus::orderBy('created_at', 'desc')->first();
-        if ($latest->status === $request->boolean('status')) {
-            return $latest;
+        try {
+            if ($latest->status === $request->boolean('status')) {
+                return $latest;
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
 
         $door = new DoorStatus();
