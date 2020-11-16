@@ -16,7 +16,7 @@
                                     {{ stats.games }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item v-if="stats.games_latest !== null">
                                 <v-list-item-title>
                                     Senaste Spel:
                                 </v-list-item-title>
@@ -24,7 +24,7 @@
                                     {{ stats.games_latest.name }} - {{ stats.games_latest.created_at.substr(0, 10) }} {{ stats.games_latest.created_at.substr(11, 8) }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item  v-if="stats.games_updated !== null">
                                 <v-list-item-title>
                                     Senast uppdaterade Spel:
                                 </v-list-item-title>
@@ -41,7 +41,7 @@
                                     {{ stats.products }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item  v-if="stats.product_latest !== null">
                                 <v-list-item-title>
                                     Senaste Produkt:
                                 </v-list-item-title>
@@ -49,7 +49,7 @@
                                     {{ stats.product_latest.name }} - {{ stats.product_latest.created_at.substr(0, 10) }} {{ stats.product_latest.created_at.substr(11, 8) }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item  v-if="stats.product_updated !== null">
                                 <v-list-item-title>
                                     Senast uppdaterade Spel:
                                 </v-list-item-title>
