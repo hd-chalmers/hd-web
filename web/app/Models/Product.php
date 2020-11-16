@@ -48,7 +48,7 @@ class Product extends Model
     protected $appends = ['category_name', 'combobox_barcodes'];
 
     public function getCategoryNameAttribute() {
-        return $this->category->name;
+        return $this->category->name ?? '';
     }
 
     public function getComboboxBarcodesAttribute() {

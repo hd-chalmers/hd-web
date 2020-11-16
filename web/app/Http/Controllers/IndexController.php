@@ -32,7 +32,7 @@ class IndexController extends Controller
         /** @var DoorStatus $latest */
         $latest = DoorStatus::orderBy('created_at', 'desc')->first();
         try {
-            if ($latest->status === $request->boolean('status')) {
+            if ($latest->exists && $latest->status === $request->boolean('status')) {
                 return $latest;
             }
         } catch (\Exception $e) {
