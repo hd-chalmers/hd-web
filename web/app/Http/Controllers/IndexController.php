@@ -28,6 +28,13 @@ class IndexController extends Controller
         return response(DoorStatus::orderBy('created_at', 'desc')->first());
     }
 
+    public function door_old(Request $request) {
+        /** @var DoorStatus $status */
+        $status = DoorStatus::orderBy('created_at', 'desc')->first();
+
+        return response(['status' => $status->status ? 1 : 0, 'updated' => $status->updated, 'notice' => 'This endpoint is deprecated, please use /api/door instead']);
+    }
+
     public function updateDoor(UpdateDoor $request) {
         /** @var DoorStatus $latest */
         $latest = DoorStatus::orderBy('created_at', 'desc')->first();
