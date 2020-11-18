@@ -199,7 +199,7 @@ export default {
                 name: '',
                 purchase_price: null,
                 discount: null,
-                adjustment: null,
+                adjustment: 0,
                 price: null,
                 active: true,
                 pant: false,

@@ -55,7 +55,7 @@ class ProductController extends Controller
                 $product->active = $request->input('active');
                 $product->purchase_price = $request->input('purchase_price');
                 $product->package_size = $request->input('package_size');
-                $product->adjustment = $request->input('adjustment');
+                $product->adjustment = $request->input('adjustment') ?? 0;
                 $product->pant = $request->input('pant');
                 $product->discount = $request->input('discount') ?? 0;
                 $product->category_id = $request->input('category_id');
@@ -83,7 +83,7 @@ class ProductController extends Controller
             $product->active = $request->input('active');
             $product->purchase_price = $request->input('purchase_price');
             $product->package_size = $request->input('package_size');
-            $product->adjustment = $request->input('adjustment');
+            $product->adjustment = $request->input('adjustment') ?? 0;
             $product->pant = $request->input('pant');
             $product->discount = $request->input('discount') ?? 0;
             $product->category_id = $request->input('category_id');
