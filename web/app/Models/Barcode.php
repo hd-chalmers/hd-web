@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Barcode
@@ -27,13 +29,25 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Barcode extends Model
 {
-    protected $fillable = ['barcode', 'variant_name'];
+    protected $fillable = [
+        'barcode',
+        'variant_name',
+    ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function product () : BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function setVariantNameAttribute($value) : void
+    {
+        $exp = "/^\"(.*?)\"/";
+        if (preg_match($exp, $value)) {
+            $value = substr($value, 1, -1);
+        }
+        $this->attributes['variant_name'] = $value;
     }
 }
