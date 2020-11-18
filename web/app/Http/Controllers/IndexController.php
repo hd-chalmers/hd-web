@@ -6,20 +6,22 @@ use App\Http\Requests\UpdateDoor;
 use App\Models\ActiveYear;
 use App\Models\DoorStatus;
 use App\Models\Event;
-use GuzzleHttp\Client;
-use GuzzleHttp\Utils;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
-    public function index() {
+    public function index ()
+    {
         $event = Event::where('date', '>', 'now')->where('show_on_frontpage', 1)->orderBy('date')->get()->first();
-        return view('index')->with(['event' => $event, 'active_year' => ActiveYear::latest()->first(['front_image'])]);
+        return view('index')->with([
+                                       'event'       => $event,
+                                       'active_year' => ActiveYear::latest()->first(['front_image']),
+                                   ]);
     }
 
-    public function door(Request $request) {
+    public function door (Request $request)
+    {
 //        if (env('APP_ENV') === 'local') {
 //            return '{"status":"'.Cache::remember('random-door', 15, static function() {return random_int(0, 1);}).'","updated":"2020-08-21 09:38:15.759791"}';
 //        }
@@ -28,14 +30,20 @@ class IndexController extends Controller
         return response(DoorStatus::orderBy('created_at', 'desc')->first());
     }
 
-    public function door_old(Request $request) {
+    public function door_old (Request $request)
+    {
         /** @var DoorStatus $status */
         $status = DoorStatus::orderBy('created_at', 'desc')->first();
 
-        return response(['status' => $status->status ? 1 : 0, 'updated' => $status->updated, 'notice' => 'This endpoint is deprecated, please use /api/door instead']);
+        return response([
+                            'status'  => $status->status ? 1 : 0,
+                            'updated' => $status->updated,
+                            'notice'  => 'This endpoint is deprecated, please use /api/door instead',
+                        ]);
     }
 
-    public function updateDoor(UpdateDoor $request) {
+    public function updateDoor (UpdateDoor $request)
+    {
         /** @var DoorStatus $latest */
         $latest = DoorStatus::orderBy('created_at', 'desc')->first();
         try {
