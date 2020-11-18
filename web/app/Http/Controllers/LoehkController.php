@@ -32,12 +32,12 @@ class LoehkController extends Controller
                                                                                                                'name',
                                                                                                                'updated_at',
                                                                                                            ]),
-                                    'product_latest'      => Product::latest()->first([
+                                    'product_latest'      => Product::whereNotNull('created_at')->latest()->first([
                                                                                           'name',
                                                                                           'created_at',
                                                                                       ]),
                                     'investment_accounts' => Account::all()->count(),
-                                    'investment_latest'   => Account::latest()->first([
+                                    'investment_latest'   => Account::whereNotNull('created_at')->latest()->first([
                                                                                           'uid',
                                                                                           'name',
                                                                                           'created_at',
@@ -48,7 +48,7 @@ class LoehkController extends Controller
                                                                                                                'updated_at',
                                                                                                            ]),
                                     'events'              => Event::all()->count(),
-                                    'event_latest'        => Event::latest()->first([
+                                    'event_latest'        => Event::whereNotNull('created_at')->latest()->first([
                                                                                         'title',
                                                                                         'created_at',
                                                                                         'date',
@@ -59,7 +59,7 @@ class LoehkController extends Controller
                                                                                                              'date',
                                                                                                          ]),
                                     'games'               => Game::all()->count(),
-                                    'games_latest'        => Game::latest()->first([
+                                    'games_latest'        => Game::whereNotNull('created_at')->latest()->first([
                                                                                        'name',
                                                                                        'created_at',
                                                                                    ]),
