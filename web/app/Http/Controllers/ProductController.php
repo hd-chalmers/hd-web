@@ -63,7 +63,7 @@ class ProductController extends Controller
                 $product->save();
                 foreach ($request->input('barcodes') as $code) {
                     $barcode = new Barcode();
-                    if (count($vars = explode('=', $code)) === 2) {
+                    if (count($vars = explode('=', $code)) >= 2) {
                         $barcode->variant_name = $vars[0];
                         $barcode->barcode = $vars[1];
                     } else {
@@ -72,7 +72,13 @@ class ProductController extends Controller
                     $product->barcodes()->save($barcode);
                 }
 
-                return $product;
+                return response()->json([
+                                            'products'   => Product::with([
+                                                                              'barcodes',
+                                                                              'category',
+                                                                          ])->orderBy('name')->get(),
+                                            'categories' => Category::all(),
+                                        ]);
             }) ?? response('', 500);
     }
 
@@ -89,7 +95,7 @@ class ProductController extends Controller
             $product->category_id = $request->input('category_id');
             $product->price = $request->input('price');
             foreach ($request->input('combobox_barcodes') as $code) {
-                if (count($vars = explode('=', $code)) === 2) {
+                if (count($vars = explode('=', $code)) >= 2) {
                     $barcode = Barcode::whereBarcode($vars[1])->firstOrNew();
                     $barcode->variant_name = $vars[0];
                     $barcode->barcode = $vars[1];
