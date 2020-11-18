@@ -28,7 +28,7 @@ class LoehkController extends Controller
     {
         return response()->json([
                                     'products'            => Product::all()->count(),
-                                    'product_updated'     => Product::orderBy('updated_at', 'desc')->first([
+                                    'product_updated'     => Product::whereNotNull('updated_at')->orderBy('updated_at', 'desc')->first([
                                                                                                                'name',
                                                                                                                'updated_at',
                                                                                                            ]),
@@ -42,7 +42,7 @@ class LoehkController extends Controller
                                                                                           'name',
                                                                                           'created_at',
                                                                                       ]),
-                                    'investment_updated'  => Account::orderBy('updated_at', 'desc')->first([
+                                    'investment_updated'  => Account::whereNotNull('updated_at')->orderBy('updated_at', 'desc')->first([
                                                                                                                'uid',
                                                                                                                'name',
                                                                                                                'updated_at',
@@ -53,7 +53,7 @@ class LoehkController extends Controller
                                                                                         'created_at',
                                                                                         'date',
                                                                                     ]),
-                                    'event_updated'       => Event::orderBy('updated_at', 'desc')->first([
+                                    'event_updated'       => Event::whereNotNull('updated_at')->orderBy('updated_at', 'desc')->first([
                                                                                                              'title',
                                                                                                              'updated_at',
                                                                                                              'date',
@@ -63,7 +63,7 @@ class LoehkController extends Controller
                                                                                        'name',
                                                                                        'created_at',
                                                                                    ]),
-                                    'games_updated'       => Game::orderBy('updated_at', 'desc')->first([
+                                    'games_updated'       => Game::whereNotNull('updated_at')->orderBy('updated_at', 'desc')->first([
                                                                                                             'name',
                                                                                                             'updated_at',
                                                                                                         ]),
