@@ -66,14 +66,14 @@
                                     </v-col>
                                     <v-col cols="12" md="10">
                                         <v-combobox hint="Skriv antingen in bara artikelnumret eller som 'extra_name=article_no'" persistent-hint label="Streckkoder/Artikelnummer" v-model="item.barcodes" multiple deletable-chips
-                                                    :delimiters="[' ', ',', '.']" chips>
+                                                    :delimiters="[',']" chips>
                                         </v-combobox>
                                     </v-col>
                                     <v-col cols="12" v-if="new_price">
                                         Försäljningspris: <strong>{{ item.purchase_price }}</strong>/<strong>{{ item.package_size }}</strong>
                                         <template v-if="item.axfood">+<strong>12%</strong></template>
                                         <template v-if="item.pant">+<strong>1</strong></template>
-                                        +Öresavrundning=<strong>{{ new_price }}</strong><br/>
+                                        +{{ (1 - (item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)) % 1).toFixed(2) }}(Öresavrundning)=<strong>{{ new_price }}</strong><br/>
                                         Vinst per enhet: {{ (new_price - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)).toFixed(2) }}<br/>
                                         Vinst per förpackning: {{ ((new_price - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)) * item.package_size).toFixed(2) }}
                                     </v-col>
@@ -288,6 +288,27 @@ export default {
                 }).then(res => {
                 this.$set(this, "items", res.data.products);
                 this.$set(this, "categories", res.data.categories);
+                this.$set(this, "item", {
+                    valid: false,
+                    name: '',
+                    purchase_price: null,
+                    discount: null,
+                    adjustment: 0,
+                    price: null,
+                    active: true,
+                    pant: false,
+                    package_size: null,
+                    created_at: '',
+                    updated_at: '',
+                    axfood: true,
+                    barcodes: [],
+                    category_id: null,
+                    category: {
+                        name: '',
+                        created_at: '',
+                        updated_at: '',
+                    }
+                })
             }).catch(() => {
             }).finally(() => {
                 this.$set(this, "loading", false);
@@ -314,7 +335,7 @@ export default {
                         },
                     data: JSON.stringify(item),
                 }).then(res => {
-                    this.$set(item, 'name', "DELETED")
+                this.$set(item, 'name', "DELETED")
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.trash_loading, item.id, "success")
