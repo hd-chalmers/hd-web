@@ -26,7 +26,6 @@ class IndexController extends Controller
 //            return '{"status":"'.Cache::remember('random-door', 15, static function() {return random_int(0, 1);}).'","updated":"2020-08-21 09:38:15.759791"}';
 //        }
 
-
         return response(DoorStatus::orderBy('created_at', 'desc')->first());
     }
 
