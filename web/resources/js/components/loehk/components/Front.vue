@@ -51,7 +51,7 @@
                             </v-list-item>
                             <v-list-item  v-if="stats.product_updated !== null">
                                 <v-list-item-title>
-                                    Senast uppdaterade Spel:
+                                    Senast uppdaterade Produkt:
                                 </v-list-item-title>
                                 <v-list-item-subtitle>
                                     {{ stats.product_updated.name }} - {{ stats.product_updated.updated_at.substr(0, 10) }} {{ stats.product_updated.updated_at.substr(11, 8) }}
