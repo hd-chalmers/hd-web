@@ -144,3 +144,4 @@ deploy:staging:
   script:
     - ssh-add <(echo "$HD_SSH_PRIV_KEY")
     - /root/.composer/vendor/bin/envoy run staging-deploy --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry="$CI_REGISTRY"
+    - curl -X http://hdgw.hd.chalmers.se:9000/api/webhooks/e7986dc9-2ec7-4325-bb00-53ac1302716b
