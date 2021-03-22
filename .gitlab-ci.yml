@@ -1,6 +1,6 @@
 # This file is a template, and might need editing before it works on your project.
 # Select image from https://hub.docker.com/_/php/
-image: registry.pentacore.se/toolbox/php-7.4-build
+image: git.hd.chalmers.se/images/php-7.4-build
 
 stages:
   - build
@@ -114,15 +114,8 @@ deploy:prod:
     url: https://hd.chalmers.se
   needs:
     - docker:web
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - mkdir -p ~/.ssh
-    - eval $(ssh-agent -s)
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
-    - /root/.composer/vendor/bin/envoy run prod-deploy --tag="$CI_COMMIT_SHA" --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry=$CI_REGISTRY
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
 deploy:staging:
   stage: deploy
@@ -135,13 +128,5 @@ deploy:staging:
     - docker:dind
   needs:
     - docker:web
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - mkdir -p ~/.ssh
-    - eval $(ssh-agent -s)
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - ssh-add <(echo "$HD_SSH_PRIV_KEY")
-    - /root/.composer/vendor/bin/envoy run staging-deploy --docker_user="$CI_REGISTRY_USER" --docker_password="$CI_REGISTRY_PASSWORD" --docker_registry="$CI_REGISTRY"
-    - curl -X http://hdgw.hd.chalmers.se:9000/api/webhooks/e7986dc9-2ec7-4325-bb00-53ac1302716b
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
