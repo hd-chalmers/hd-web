@@ -1,4 +1,4 @@
-FROM git.hd.chalmers.se/hd/images/web:latest
+FROM git.hd.chalmers.se:5050/hd/images/web:latest
 
 ENV DB_HOST=hd-db DB_PORT=5432 DB_DATABASE=hd DB_USERNAME=hd DB_PASSWORD=hd DB_CONNECTIOn=pgsql \
     DOOR_DB_HOST=hd-door-db DOOR_DB_PORT=5432 DOOR_DB_DATABASE=hd DOOR_DB_USERNAME=hd DOOR_DB_PASSWORD=hd \
