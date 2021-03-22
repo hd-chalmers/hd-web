@@ -24,8 +24,6 @@ build:resources:
 
 docker:web:
   stage: docker
-  services:
-    - docker:dind
   dependencies:
     - build:resources
   needs:
@@ -47,8 +45,6 @@ docker:web:
 
 docker:db:
   stage: docker
-  services:
-    - docker:dind
   only:
     refs:
       - master
@@ -65,8 +61,6 @@ docker:db:
 
 docker:branch-web:
   stage: docker
-  services:
-    - docker:dind
   except:
     - master
   dependencies:
@@ -86,8 +80,6 @@ docker:branch-web:
 
 docker:branch-db:
   stage: docker
-  services:
-    - docker:dind
   except:
     - master
   only:
@@ -104,8 +96,6 @@ docker:branch-db:
 
 deploy:prod:
   stage: deploy
-  services:
-    - docker:dind
   only:
     - master
   when: manual
@@ -124,8 +114,6 @@ deploy:staging:
   environment:
     name: staging
     url: https://staging.hd.chalmers.se
-  services:
-    - docker:dind
   needs:
     - docker:web
   script:
