@@ -17,7 +17,7 @@ ENTRYPOINT [ "docker-entrypoint" ]
 
 WORKDIR /var/www/html
 #COPY php.ini /usr/local/etc/php/
-COPY laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
+#COPY laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
 
 
 # DEPLOY COPY --chown=www-data:www-data /web/ /var/www/html/

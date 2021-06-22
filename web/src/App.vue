@@ -7,8 +7,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 // import HelloWorld from './components/HelloWorld.vue'
-import Base from '../resources/views/layouts/base.vue'
-import IndexPage from '../resources/views/index.vue'
+import Base from './views/layouts/base.vue'
+import IndexPage from './views/index.vue'
 
 interface eventType {
   title: string;
