@@ -3,9 +3,9 @@ module.exports = {
   env: {
     node: true
   },
-  extends: [
-    'plugin:vue/vue3-essential',
-    '@vue/standard',
+  'extends': [
+    'plugin:vue/essential',
+    'eslint:recommended',
     '@vue/typescript/recommended'
   ],
   parserOptions: {
