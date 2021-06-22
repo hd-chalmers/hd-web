@@ -19,68 +19,71 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import axios from 'axios'
+
 export default {
-    name: "ChassitOpenIcon",
-    created() {
-        this.getStatus();
-        setInterval(this.getStatus, 3000)
+  name: 'ChassitOpenIcon',
+  created ():void {
+    this.getStatus()
+    setInterval(this.getStatus, 3000)
+  },
+  methods: {
+    showDate ():void {
+      if (this.state !== -1) {
+        this.snackbar = true
+      }
     },
-    methods: {
-        showDate() {
-            if (this.state !== -1) {
-                this.snackbar = true
-            }
-        },
-        getStatus() {
-            axios(
-                "/door",
-                {
-                    method:
+    getStatus ():void {
+      axios(
+        '/door',
+        {
+          method:
                         'get',
-                    withCredentials:
+          withCredentials:
                         true,
-                    responseType:
+          responseType:
                         'json',
-                    timeout: 3000,
-                    headers:
+          timeout: 3000,
+          headers:
                         {
-                            'Content-Type':
+                          'Content-Type':
                                 'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
-                this.state    = res.data.status;
-                this.date     = res.data.updated;
-                this.duration = res.data.duration_str
-                if (res.data.status) {
-                    this.icon  = 'mdi-lock-open-variant';
-                    this.color = 'green';
-                } else {
-                    this.icon  = 'mdi-lock'
-                    this.color = 'red';
-                }
-            }).catch(() => {
-                this.state = -1;
-                this.icon  = 'mdi-alert-circle';
-                this.color = "yellow";
-            }).finally(() => {
-                this.loading = false;
-            })
+                          Accept:
+                                'application/json'
+                        }
+        }).then(res => {
+        this.state = res.data.status
+        this.date = res.data.updated
+        this.duration = res.data.duration_str
+        if (res.data.status) {
+          this.icon = 'mdi-lock-open-variant'
+          this.color = 'green'
+        } else {
+          this.icon = 'mdi-lock'
+          this.color = 'red'
         }
-    },
-    data() {
-        return {
-            snackbar: false,
-            loading: true,
-            state: true,
-            duration: "",
-            date: '0000-00-00 00:00:00',
-            icon: 'mdi-alert-circle',
-            color: 'white',
-        }
+      }).catch(() => {
+        this.state = -1
+        this.icon = 'mdi-alert-circle'
+        this.color = 'yellow'
+      }).finally(() => {
+        this.loading = false
+      })
     }
+  },
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  data (): object {
+    return {
+      snackbar: false,
+      loading: true,
+      state: true,
+      duration: '',
+      date: '0000-00-00 00:00:00',
+      icon: 'mdi-alert-circle',
+      color: 'white'
+    }
+  }
 }
 </script>
 

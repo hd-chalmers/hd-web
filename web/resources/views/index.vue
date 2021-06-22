@@ -1,20 +1,15 @@
-@extends('layouts.base')
-
-
-@section('content')
+<template>
     <v-container>
         <v-card tile>
-            @if($event)
-                <v-alert text color="#e0218a" tile elevation="2">
+                <v-alert v-if="eventObj" text color="#e0218a" tile elevation="2">
                     <strong>Nästa Event: </strong>
-                    {{substr($event->date, 0, 16) . ' - ' . $event->title}}
+                    {{eventObj.date + ' - ' + eventObj.title}}
                 </v-alert>
-            @endif
             <v-card-text>
                 <v-row>
                     <v-col class="hidden-sm-and-down" cols="2" md="1" lg="2" xl="3"></v-col>
                     <v-col cols="12" md="10" lg="8" xl="6">
-                        <v-img src="{{$active_year->front_image ? Storage::url($active_year->front_image) : "/img/unknown_group.png"}}" alt="unknown_group" contain></v-img>
+                        <v-img v-bind:src="frontpageImg" alt="unknown_group" contain></v-img>
                     </v-col>
                 </v-row>
 
@@ -35,4 +30,19 @@
             </v-card-text>
         </v-card>
     </v-container>
-@endsection
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+
+interface eventType {
+  title: string;
+  date: string;
+}
+
+@Component
+export default class IndexPage extends Vue {
+  eventObj: eventType = { date: '9999-99-9', title: 'Chilla med HD 3000' }
+  frontpageImg = '/img/unknown_group.png'
+}
+</script>
