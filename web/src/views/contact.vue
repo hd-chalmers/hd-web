@@ -1,6 +1,4 @@
-@extends('src.views.layouts.base')
-
-@section('content')
+<template>
     <v-container>
         <v-card>
             <v-card-title>
@@ -22,4 +20,11 @@
             </v-card-text>
         </v-card>
     </v-container>
-@endsection
+</template>
+
+<script lang="ts">
+    import {Component, Vue} from 'vue-property-decorator'
+
+    @Component
+    export default class ContactPage extends Vue{}
+</script>

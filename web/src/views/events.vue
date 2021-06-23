@@ -38,7 +38,7 @@
     import { eventType } from '@/assets/ts/interfaces'
 
     @Component
-    export default class eventPage extends Vue{
+    export default class EventPage extends Vue{
       events: Array<eventType> = [
         {
         id: 1,
