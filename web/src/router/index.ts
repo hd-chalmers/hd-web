@@ -16,6 +16,11 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "events" */ '../views/events.vue')
   },
   {
+    path: '/committee',
+    name: 'Committee',
+    component: () => import(/* webpackChunkName: "Committee" */ '../views/committee/members.vue')
+  },
+  {
     path: '/contact',
     name: 'Contact',
     component: () => import(/* webpackChunkName: "contact" */ '../views/contact.vue')

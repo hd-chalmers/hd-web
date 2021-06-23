@@ -19,7 +19,7 @@
   </router-link>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-md-and-down">
-      <router-link to="comittee">
+      <router-link to="committee">
         <v-btn text>Sittande</v-btn>
       </router-link>
       <router-link to="events">
@@ -46,7 +46,7 @@
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
     <v-toolbar-items class="hidden-lg-and-up">
-      <router-link to="comittee">
+      <router-link to="committee">
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
             <v-icon title="Sittande">mdi-account-group</v-icon>
         </v-btn>
