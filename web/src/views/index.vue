@@ -3,7 +3,10 @@
         <v-card tile>
                 <v-alert v-if="eventObj" text color="#e0218a" tile elevation="2">
                     <strong>Nästa Event: </strong>
-                    {{eventObj.date + ' - ' + eventObj.title}}
+                    {{
+                      eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', day: '2-digit', month: 'long'})
+                      + ' - ' + eventObj.title
+                  }}
                 </v-alert>
             <v-card-text>
                 <v-row>
@@ -34,15 +37,18 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-
-interface eventType {
-  title: string;
-  date: string;
-}
+import { eventType } from '@/assets/ts/interfaces'
 
 @Component
 export default class IndexPage extends Vue {
-  eventObj: eventType = { date: '9999-99-9', title: 'Chilla med HD 3000' }
+  eventObj: eventType = {
+    id: 1,
+    date: new Date('2021-11-24 20:43'),
+    title: 'Chilla med HD x3000',
+    description: '',
+    location: '',
+    facebookLink: ''
+  }
   frontpageImg = '/img/unknown_group.png'
 }
 </script>
