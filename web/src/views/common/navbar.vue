@@ -1,26 +1,30 @@
 <template>
 <v-app-bar app elevate-on-scroll>
     <v-img src="/img/HD_logo.png" max-width="100"></v-img>
+  <router-link to="/">
     <v-toolbar-title>
         <v-btn
             :hidden="$vuetify.breakpoint.mobile"
             class="hidden-sm-and-down"
-            text
-            href="index">
+            text>
             <span style="color: #E0218A">H</span>-Sektionens Datorförening
         </v-btn>
         <v-btn
             :hidden="$vuetify.breakpoint.mobile"
             class="hidden-md-and-up"
-            text
-            href="index">
+            text>
             <span style="color: #E0218A">H</span><span style="color: black">D</span>
         </v-btn>
     </v-toolbar-title>
+  </router-link>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-md-and-down">
-        <v-btn text href="Comittee">Sittande</v-btn>
-        <v-btn text href="event">Evenemang</v-btn>
+      <router-link to="comittee">
+        <v-btn text>Sittande</v-btn>
+      </router-link>
+      <router-link to="events">
+        <v-btn text>Evenemang</v-btn>
+      </router-link>
         <!--
         @if(false)
             <v-btn text href="products">Prislista</v-btn>
@@ -30,7 +34,9 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-        <v-btn text href="contact">Kontakta Oss</v-btn>
+      <router-link to="contact">
+        <v-btn text>Kontakta Oss</v-btn>
+      </router-link>
         <v-btn text href="https://www.facebook.com/HsektionenChalmers/"><span
                 style="color: #E0218A">H</span>-Sektionen
         </v-btn>
@@ -40,12 +46,16 @@
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
     <v-toolbar-items class="hidden-lg-and-up">
-        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="comittee">
+      <router-link to="comittee">
+        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
             <v-icon title="Sittande">mdi-account-group</v-icon>
         </v-btn>
-        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="event">
+      </router-link>
+      <router-link to="events">
+        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
             <v-icon title="Evenemang">mdi-calendar-star</v-icon>
         </v-btn>
+      </router-link>
       <!--
         @if(false)
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="products">
@@ -61,9 +71,11 @@
         </v-btn>
         @endif
         -->
-        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="contact">
+      <router-link to="contact">
+        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
             <v-icon title="Kontakta Oss">mdi-phone</v-icon>
         </v-btn>
+      </router-link>
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" href="https://www.facebook.com/HsektionenChalmers/">
             <span style="color: #E0218A">H</span>
         </v-btn>
@@ -74,6 +86,15 @@
     </v-toolbar-items>
 </v-app-bar>
 </template>
+
+<style>
+  .v-toolbar a > .v-btn{
+    height: 100% !important;
+  }
+  .v-toolbar a{
+  text-decoration: none;
+  }
+</style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'

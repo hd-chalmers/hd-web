@@ -217,7 +217,7 @@ export default {
             },
             rules: {
                 required: value => {
-                    return !!value ? true : "Fältet är obligatoriskt"
+                    return value ? true : "Fältet är obligatoriskt"
                 },
                 positive: value => {
                     return value > 0 ? true : "Måste vara större än 0"
