@@ -25,10 +25,19 @@ import FooterElement from '../common/footer.vue'
     }
   })
 export default class Base extends Vue {
-    private backgroundProperties: string = 'background-image: url("/img/background_image.jpg");' +
-      'background-repeat: no-repeat;' +
-      'background-position: center;' +
-      'background-attachment: fixed;' +
-      'background-size: cover ;"'
+    constructor () {
+      super();
+      this.getData()
+    }
+    backgroundProperties = ''
+    async getData(): Promise<void>{
+      fetch('http://localhost:8000/background').then(res =>res.json()).then(res => {
+        this.backgroundProperties = `background-image: url(${res});` +
+          'background-repeat: no-repeat;' +
+          'background-position: center;' +
+          'background-attachment: fixed;' +
+          'background-size: cover ;"'
+      })
+    }
 }
 </script>
