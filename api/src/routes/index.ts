@@ -1,4 +1,4 @@
 import ApiCall from '../interfaces'
-import { test } from './test'
+import { events } from './events'
 
-export const routes : Array<ApiCall> = [new test]
+export const routes : Array<ApiCall> = [new events]

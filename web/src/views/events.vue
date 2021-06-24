@@ -36,34 +36,28 @@
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator'
     import { eventType } from '@/assets/ts/interfaces'
+    //import axios from 'axios'
 
     @Component
-    export default class EventPage extends Vue{
-      events: Array<eventType> = [
-        {
-        id: 1,
-        date: new Date('2021-11-24 20:43'),
-        title: 'Chilla med HD x3000',
-        description: 'description',
-        location: '',
-        facebookLink: ''
-      },
-        {
-          id: 2,
-          date: new Date('2021-11-24 20:43'),
-          title: 'Chilla med HD x3000',
-          description: 'description',
-          location: 'svea',
-          facebookLink: 'link'
-        },
-        {
-          id: 3,
-          date: new Date('2021-11-24 20:43'),
-          title: 'Chilla med HD x3000',
-          description: 'description',
-          location: 'inte svea',
-          facebookLink: ''
-        }
-      ]
+    export default class EventPage extends Vue {
+      constructor () {
+        super();
+        this.getEvents()
+      }
+      events: eventType[] = []
+      getEvents (): void {
+        fetch('http://localhost:8000/events').then(res =>res.json()).then(res => {
+          for (const item of res){
+            this.events.push({
+              id: item.id,
+              title: item.title,
+              description: item.description,
+              location: item.location,
+              facebookLink: item.facebookLink,
+              date: new Date(item.date)
+            })
+          }
+        })
+      }
     }
 </script>
