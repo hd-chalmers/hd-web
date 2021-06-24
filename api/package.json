@@ -5,7 +5,8 @@
   "main": "app.ts",
   "scripts": {
     "test": "nodemon app.ts",
-    "build": "tsc --project ./"
+    "build": "tsc --project ./",
+    "lint": "eslint . --ext .ts"
   },
   "author": "",
   "license": "ISC",
