@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-card tile>
-                <v-alert v-if="eventObj" text color="#e0218a" tile elevation="2">
+                <v-alert v-if="eventObj.title" text color="#e0218a" tile elevation="2">
                     <strong>Nästa Event: </strong>
                     {{
                       eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', day: '2-digit', month: 'long'})
@@ -41,14 +41,20 @@ import { eventType } from '@/assets/ts/interfaces'
 
 @Component
 export default class IndexPage extends Vue {
-  eventObj: eventType = {
-    id: 1,
-    date: new Date('2021-11-24 20:43'),
-    title: 'Chilla med HD x3000',
-    description: '',
-    location: '',
-    facebookLink: ''
+  constructor () {
+    super();
+    this.getData()
   }
-  frontpageImg = '/img/unknown_group.png'
+  eventObj: eventType = {}
+  frontpageImg = ''
+  async getData(): Promise<void>{
+    fetch('http://localhost:8000/frontpage').then(res =>res.json()).then(res => {
+        this.eventObj = {
+          title: res.event.title,
+          date: new Date(res.event.date)
+      }
+      this.frontpageImg = res.frontpageImg ?? '/img/unknown_group.png'
+    })
+  }
 }
 </script>
