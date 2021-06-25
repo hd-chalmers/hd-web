@@ -10,7 +10,8 @@ export class events implements ApiCall{
 
     app.get('/events', async (req, res) =>{
       console.log('[API] ' + this.processName + ' was accessed')
-      const events: Events[] = await db.query(sql`SELECT * FROM events WHERE date > now() ORDER BY date`)
+      const events: Events[] = await db.query(sql`SELECT * FROM events WHERE date > now()
+                       AND show_on_frontpage = true ORDER BY date`)
 
       const formattedEvents: eventType[] = [];
 
