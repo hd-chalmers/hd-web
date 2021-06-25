@@ -4,7 +4,7 @@ import { ConnectionPool } from '@databases/pg'
 import { SQL } from '@databases/sql'
 import ActiveYears from '../__generated__/active_years'
 
-export default class background implements ApiCall{
+export class background implements ApiCall{
   processName = 'Background'
 
   async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {

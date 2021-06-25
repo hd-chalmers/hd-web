@@ -5,7 +5,7 @@ import { SQL } from '@databases/sql'
 import Events from '../__generated__/events'
 import ActiveYears from '../__generated__/active_years'
 
-export default class frontPage implements ApiCall{
+export class frontPage implements ApiCall{
   processName = 'Front-page'
   async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {
     app.get('/frontpage', async (req, res) =>{
