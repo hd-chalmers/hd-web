@@ -91,7 +91,9 @@
                         </v-card>
                     </v-form>
                 </template>
-                <template v-slot:group.header="{group,groupBy,items,headers,isOpen,toggle,remove}">
+                <template v-slot="
+                /* eslint-disable-next-line vue/no-unused-vars */
+                {group,groupBy,items,headers,isOpen,toggle,remove}">
                     <td :colspan="headers.length" @click="toggle">
                         <v-btn small icon v-if="isOpen">
                             <v-icon>mdi-menu-up</v-icon>
@@ -182,6 +184,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: "Prices",
     data() {
@@ -309,6 +313,7 @@ export default {
                         updated_at: '',
                     }
                 })
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this, "loading", false);
@@ -336,6 +341,7 @@ export default {
                     data: JSON.stringify(item),
                 }).then(res => {
                 this.$set(item, 'name', "DELETED")
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.trash_loading, item.id, "success")
@@ -366,6 +372,7 @@ export default {
                 this.$set(this.save_loading, item.id, "success")
             }).catch(() => {
                 this.$set(this.save_loading, item.id, "failed")
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).finally(() => {
             })
         },
@@ -394,6 +401,7 @@ export default {
                 }).then(res => {
                 this.$set(this, "items", res.data.products);
                 this.$set(this, "categories", res.data.categories);
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this, "loading", false);

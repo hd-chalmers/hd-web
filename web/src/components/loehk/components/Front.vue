@@ -116,6 +116,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: "Front",
     created() {
@@ -191,6 +193,7 @@ export default {
                         },
                 }).then(res => {
                 this.stats = res.data
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.loading = false;

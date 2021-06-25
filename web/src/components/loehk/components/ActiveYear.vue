@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
     name: "ActiveYear",
@@ -122,6 +123,7 @@ export default {
                 }).then(res => {
                 this.load.front_image    = 'success'
                 this.message.front_image = 'Sparat!'
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.loading = false;
@@ -155,6 +157,7 @@ export default {
                 }).then(res => {
                 this.load.background_image    = 'success'
                 this.message.background_image = 'Sparat!'
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.loading = false;
@@ -188,6 +191,7 @@ export default {
                 }).then(res => {
                 this.load.group_photo    = 'success'
                 this.message.group_photo = 'Sparat!'
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.loading = false;
@@ -221,6 +225,7 @@ export default {
                 }).then(res => {
                 this.load.christmas_image    = 'success'
                 this.message.christmas_image = 'Sparat!'
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.loading = false;
@@ -313,6 +318,7 @@ export default {
                 this.$set(this.all_years, this.all_years.length, res.data)
                 this.active_year = res.data;
             }).catch(() => {
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).finally(() => {
             })
         },
@@ -363,6 +369,7 @@ export default {
                 } else {
                     this.$set(this.message.committee_member, id + fieldname, 'Success!')
                 }
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.load.committee_member, id + fieldname, false)
@@ -391,6 +398,7 @@ export default {
                 }).then(res => {
                 this.$set(this.message.committee_member, member.id + 'delete', false)
                 this.active_year.committee_members.splice(index, 1);
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.load.committee_member, member.id + 'delete', false)
@@ -417,6 +425,7 @@ export default {
                 }).then(res => {
                 this.active_year = res.data.current;
                 this.all_years   = res.data.all_years;
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.loading = false;
@@ -456,6 +465,7 @@ export default {
                 }).then(res => {
                 this.load.description    = 'success'
                 this.message.description = 'Sparat!'
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.loading = false;

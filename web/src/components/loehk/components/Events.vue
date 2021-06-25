@@ -4,10 +4,14 @@
             <v-row>
                 <v-col cols="12" md="8" lg="8">
                     <v-select label="Event" :loading="this.isLoading('newEvent')" :items="allEvents" v-model="event" item-text="title" item-value="id" return-object @input="reset">
-                        <template v-slot:item="{parent, item, on, attrs}">
+                        <template v-slot:item="
+                          // eslint-disable-next-line vue/no-unused-vars
+                          {parent, item, on, attrs}">
                             {{ item.date }} {{item.time}} - {{ item.title }}
                         </template>
-                        <template v-slot:selection="{parent, item, index, select, selected, disabled}">
+                        <template v-slot:selection="
+                          /* eslint-disable-next-line vue/no-unused-vars */
+                          {parent, item, index, select, selected, disabled}">
                             {{ item.date }} {{item.time}} - {{ item.title }}
                         </template>
                         <template v-slot:append-outer>
@@ -112,6 +116,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: "Events",
     created() {
@@ -176,6 +182,7 @@ export default {
                         },
                 }).then(res => {
                 this.$set(this.message, 'time', 'Success!');
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.load, 'time', false);
@@ -203,6 +210,7 @@ export default {
                         },
                 }).then(res => {
                 this.$set(this.message, 'date', 'Success!');
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.load, 'date', false);
@@ -259,6 +267,7 @@ export default {
                         },
                 }).then(res => {
                 this.$set(this.message, fieldname, 'Success!')
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.load, fieldname, false);
@@ -286,6 +295,7 @@ export default {
                 }).then(res => {
                 this.$set(this, "allEvents", res.data);
                 this.event = this.allEvents[this.allEvents.length-1];
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this, "loading", false);
@@ -314,6 +324,7 @@ export default {
                 }).then(res => {
                 this.$set(this.message, "deleteEvent", 'Success!');
                 this.getEvents();
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.load, "deleteEvent", false);
@@ -344,6 +355,7 @@ export default {
                 this.$set(this.message, "newEvent", 'Success!');
                 let i = this.allEvents.push(res.data);
                 this.event = this.allEvents[i-1];
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
                 this.$set(this.load, "newEvent", false);
