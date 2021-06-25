@@ -3,7 +3,7 @@
         <v-navigation-drawer v-model="nav" app :temporary="$vuetify.breakpoint.mobile">
             <v-list>
                 <v-list-item-group>
-                    <v-list-item to="/">
+                    <v-list-item to="/loehk">
                         <v-list-item-icon>
                             <v-icon>
                                 mdi-home
@@ -13,7 +13,7 @@
                             Loehk
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item to="active_year">
+                    <v-list-item to="/loehk/active-year">
                         <v-list-item-icon>
                             <v-icon>
                                 mdi-image
@@ -23,7 +23,7 @@
                             Sittande
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item to="events">
+                    <v-list-item to="/loehk/events">
                         <v-list-item-icon>
                             <v-icon>
                                 mdi-calendar
@@ -33,7 +33,7 @@
                             Events
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item to="investments">
+                    <v-list-item to="/loehk/investments">
                         <v-list-item-icon>
                             <v-icon>
                                 mdi-playlist-edit
@@ -43,7 +43,7 @@
                             Strecklista
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item to="prices">
+                    <v-list-item to="/loehk/prices">
                         <v-list-item-icon>
                             <v-icon>
                                 mdi-playlist-edit
@@ -53,7 +53,7 @@
                             Prislista
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item to="games">
+                    <v-list-item to="/loehk/games">
                         <v-list-item-icon>
                             <v-icon>
                                 mdi-playlist-edit
