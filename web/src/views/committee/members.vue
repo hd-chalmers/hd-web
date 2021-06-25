@@ -69,40 +69,21 @@
 
   @Component
   export default class CommitteePage extends Vue{
-    displayedYear = '2020/2021'
-    groupPhoto = '/img/unknown_group.png'
-    description = 'This is the HD'
-    committeeMembers: Array<memberType> = [
-      {
-        id: 0,
-        name: 'Pneta',
-        role: 'sysad',
-        description: 'Very special boio',
-        quote: 'Quote',
-        favouriteGame: 'Factorio troligtvis',
-        favouriteSugar: 'Sockeeeerr',
-        profilePic: '/img/unknown_profile.png'
-      },
-      {
-        id: 1,
-        name: 'Pneeta',
-        role: 'sosad',
-        description: '',
-        quote: 'Quote',
-        favouriteGame: 'Factorio troligtvis',
-        favouriteSugar: 'Sockeeeerr',
-        profilePic: '/img/background_image.jpg'
-      },
-      {
-        id: 2,
-        name: 'Pneeetaa',
-        role: 'sus-ad',
-        description: 'Very special boio',
-        quote: '',
-        favouriteGame: '',
-        favouriteSugar: '',
-        profilePic: ''
-      }
-    ]
+    constructor () {
+      super();
+      this.getData()
+    }
+    displayedYear = ''
+    groupPhoto = ''
+    description = ''
+    committeeMembers: Array<memberType> = []
+    async getData(): Promise<void>{
+      fetch('http://localhost:8000/committee').then(res =>res.json()).then(res =>{
+        this.displayedYear = res.displayedYear
+        this.groupPhoto = res.groupPhoto
+        this.description = res.description
+        this.committeeMembers = res.committeeMembers
+      })
+    }
   }
 </script>
