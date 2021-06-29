@@ -26,3 +26,11 @@ export interface memberType{
   favouriteGame: string
   favouriteSugar: string
 }
+
+// Interface merging for custom properties in session object
+declare module 'express-session'
+{
+  export interface SessionData {
+    login: string | null
+  }
+}

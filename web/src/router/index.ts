@@ -26,6 +26,11 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "contact" */ '../views/contact.vue')
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/auth/login.vue')
+  },
+  {
     path: '/loehk',
     component: () => import(/* webpackChunkName: "loehkMain" */ '../components/loehk/LoehkMain.vue'),
     children: [

@@ -2,12 +2,26 @@ import express from 'express';
 import db, {sql} from './src/database'
 import { routes } from './src/routes'
 import Cors from 'cors'
+import expressSession, { MemoryStore } from 'express-session'
 
 const app = express()
 const PORT = 8000
 app.use(Cors())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+export const store = new MemoryStore()
+app.use(expressSession({
+  secret: 'hd',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: false
+  },
+  store: store
+}))
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('X-Powered-By', 'HD-API')
