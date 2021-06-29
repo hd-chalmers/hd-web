@@ -16,7 +16,7 @@
                                     {{ stats.games }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item v-if="stats.games_latest !== null">
+                            <v-list-item v-if="stats.games_latest">
                                 <v-list-item-title>
                                     Senaste Spel:
                                 </v-list-item-title>
@@ -24,7 +24,7 @@
                                     {{ stats.games_latest.name }} - {{ stats.games_latest.created_at.substr(0, 10) }} {{ stats.games_latest.created_at.substr(11, 8) }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item  v-if="stats.games_updated !== null">
+                            <v-list-item  v-if="stats.games_updated">
                                 <v-list-item-title>
                                     Senast uppdaterade Spel:
                                 </v-list-item-title>
@@ -41,7 +41,7 @@
                                     {{ stats.products }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item  v-if="stats.product_latest !== null">
+                            <v-list-item  v-if="stats.product_latest">
                                 <v-list-item-title>
                                     Senaste Produkt:
                                 </v-list-item-title>
@@ -49,7 +49,7 @@
                                     {{ stats.product_latest.name }} - {{ stats.product_latest.created_at.substr(0, 10) }} {{ stats.product_latest.created_at.substr(11, 8) }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item  v-if="stats.product_updated !== null">
+                            <v-list-item  v-if="stats.product_updated">
                                 <v-list-item-title>
                                     Senast uppdaterade Produkt:
                                 </v-list-item-title>
@@ -66,7 +66,7 @@
                                     {{ stats.investment_accounts }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item v-if="stats.investment_latest">
                                 <v-list-item-title>
                                     Senaste Strecklista:
                                 </v-list-item-title>
@@ -74,7 +74,7 @@
                                     {{ stats.investment_latest.name }} - {{ stats.investment_latest.created_at.substr(0, 10) }} {{ stats.investment_latest.created_at.substr(11, 8) }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item v-if="stats.investment_updated">
                                 <v-list-item-title>
                                     Senast uppdaterade Strecklista:
                                 </v-list-item-title>
@@ -91,7 +91,7 @@
                                     {{ stats.events }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item v-if="stats.event_latest">
                                 <v-list-item-title>
                                     Senaste Event:
                                 </v-list-item-title>
@@ -99,7 +99,7 @@
                                     {{ stats.event_latest.title }} - {{ stats.event_latest.created_at.substr(0, 10) }} {{ stats.event_latest.created_at.substr(11, 8) }}
                                 </v-list-item-subtitle>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item v-if="stats.event_updated">
                                 <v-list-item-title>
                                     Senast uppdaterade Event:
                                 </v-list-item-title>
@@ -174,25 +174,8 @@ export default {
     },
     methods: {
         getStatistics() {
-            axios(
-                "/loehk/stats",
-                {
-                    method:
-                        'get',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
-                this.stats = res.data
+          fetch('http://localhost:8000/loehk/front').then(res =>res.json()).then(res => {
+                this.stats = res
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
