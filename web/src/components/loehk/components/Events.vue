@@ -188,7 +188,6 @@ export default {
         },
         saveDate: function() {
             this.$set(this.load, 'date', true);
-            console.log(this.event.date)
           fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
 
             // Adding method type
@@ -242,8 +241,6 @@ export default {
             // Prepare for conversion to json
             let dataObj = {};
             dataObj[fieldname] = this.event[fieldname]
-
-            console.log(dataObj)
           /*
             if (fieldname === 'image') {
                 data.append(fieldname, this.event[fieldname], fieldname);
@@ -275,7 +272,6 @@ export default {
         getEvents() {
             this.$set(this, "loading", true);
           fetch('http://localhost:8000/loehk/events').then(res =>res.json()).then((res) => {
-                console.log(res)
                 this.$set(this, "allEvents", res);
                 this.event = this.allEvents[this.allEvents.length-1];
               // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -330,7 +326,6 @@ export default {
                 this.$set(this.message, "newEvent", 'Success!');
                 let i = this.allEvents.push(res);
                 this.event = this.allEvents[i-1];
-                console.log(this.event)
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
