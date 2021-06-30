@@ -56,7 +56,7 @@ import {Component, Vue} from 'vue-property-decorator'
       })
         // Converting to JSON
         .then(response => response.json())
-        // Displaying results to console
+        // Handling the results
         .then((res) => {
           if(res.status === 'success'){
             location.href = 'loehk'
