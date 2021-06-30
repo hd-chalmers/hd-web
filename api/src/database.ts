@@ -8,7 +8,9 @@ const db = createConnectionPool('postgres://hd:hd@localhost:1081/hd');
 export default db;
 
 // You can list whatever tables you actually have here:
-const {active_years, committee_members, events, users} = tables<DatabaseSchema>({
+const {accounts, active_years, barcodes, categories, committee_members, events, game_owners, game_platforms, games,
+  products, purchase_histories, purchase_history_products, users} = tables<DatabaseSchema>({
   serializeValue,
 });
-export {active_years, committee_members, events, users};
+export {accounts, active_years, barcodes, categories, committee_members, events, game_owners, game_platforms, games,
+        products, purchase_histories, purchase_history_products, users};
