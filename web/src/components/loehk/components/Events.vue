@@ -134,7 +134,7 @@ export default {
                 show_on_frontpage: false,
                 google_event_id: '',
                 facebook_event_link: '',
-                date: new Date(),
+                date: new Date().toLocaleString('se-SV', {year: 'numeric', month: '2-digit', day: '2-digit'}),
                 time: '17:00',
             },
             event: {
@@ -162,25 +162,23 @@ export default {
     methods: {
         saveTime: function() {
             this.$set(this.load, 'time', true);
-            axios(
-                "/loehk/event/"+this.event.id+"/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: JSON.stringify({time: this.event.time}),
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
+
+            // Adding method type
+            method: "PUT",
+
+            // Adding body or contents to send
+            body: JSON.stringify({
+              time: this.event.time
+            }),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          // Convey success
+          .then(res => {
                 this.$set(this.message, 'time', 'Success!');
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
@@ -190,25 +188,24 @@ export default {
         },
         saveDate: function() {
             this.$set(this.load, 'date', true);
-            axios(
-                "/loehk/event/"+this.event.id+"/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: JSON.stringify({date: this.event.date}),
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+            console.log(this.event.date)
+          fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
+
+            // Adding method type
+            method: "PUT",
+
+            // Adding body or contents to send
+            body: JSON.stringify({
+              date: this.event.date
+            }),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+            // Convey success
+            .then(res => {
                 this.$set(this.message, 'date', 'Success!');
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
@@ -241,31 +238,33 @@ export default {
             if (value === undefined || value === null || value === 'null') {
                 return;
             }
-            let data = new FormData();
+
+            // Prepare for conversion to json
+            let dataObj = {};
+            dataObj[fieldname] = this.event[fieldname]
+
+            console.log(dataObj)
+          /*
             if (fieldname === 'image') {
                 data.append(fieldname, this.event[fieldname], fieldname);
             } else {
                 data.append(fieldname, this.event[fieldname]);
+            }*/
+          fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
+
+            // Adding method type
+            method: "PUT",
+
+            // Convert to JSON and send
+            body: JSON.stringify(dataObj),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
             }
-            axios(
-                "/loehk/event/"+this.event.id+"/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    data: data,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+          })
+          // Convey success
+                .then(res => {
                 this.$set(this.message, fieldname, 'Success!')
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
@@ -275,25 +274,9 @@ export default {
         },
         getEvents() {
             this.$set(this, "loading", true);
-            axios(
-                "/loehk/event",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
-                this.$set(this, "allEvents", res.data);
+          fetch('http://localhost:8000/loehk/events').then(res =>res.json()).then((res) => {
+                console.log(res)
+                this.$set(this, "allEvents", res);
                 this.event = this.allEvents[this.allEvents.length-1];
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
@@ -304,24 +287,21 @@ export default {
         deleteEvent() {
             this.$set(this.load, "deleteEvent", true);
             this.$set(this.message, "deleteEvent", '');
-            axios(
-                "/loehk/event/"+this.event.id,
-                {
-                    method:
-                        'delete',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/events`, {
+
+            // Adding method type
+            method: "DELETE",
+
+            // Convert to JSON and send
+            body: JSON.stringify({id: this.event.id}),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          // Convey success
+                .then(res => {
                 this.$set(this.message, "deleteEvent", 'Success!');
                 this.getEvents();
               // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -331,30 +311,26 @@ export default {
             })
         },
         addNewEvent() {
-            this.$set(this.load, "newEvent", true);
-            this.$set(this.message, "newEvent", '');
-            axios(
-                "/loehk/event/new",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: JSON.stringify(this.defaultEvent),
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/events`, {
+
+            // Adding method type
+            method: "POST",
+
+            // Convert to JSON and send
+            body: JSON.stringify(this.defaultEvent),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+                // Convert to JSON and convey success
+                .then(res => res.json())
+                .then(res => {
                 this.$set(this.message, "newEvent", 'Success!');
-                let i = this.allEvents.push(res.data);
+                let i = this.allEvents.push(res);
                 this.event = this.allEvents[i-1];
+                console.log(this.event)
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {

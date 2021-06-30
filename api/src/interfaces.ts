@@ -34,3 +34,9 @@ declare module 'express-session'
     login: string | null
   }
 }
+
+declare module 'express'{
+  export interface RouteParameters{
+    eventId: number
+  }
+}
