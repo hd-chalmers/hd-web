@@ -91,7 +91,7 @@
                         </v-card>
                     </v-form>
                 </template>
-                <template v-slot="
+                <template v-slot:group.header="
                 /* eslint-disable-next-line vue/no-unused-vars */
                 {group,groupBy,items,headers,isOpen,toggle,remove}">
                     <td :colspan="headers.length" @click="toggle">
@@ -202,7 +202,7 @@ export default {
                 valid: false,
                 name: '',
                 purchase_price: null,
-                discount: null,
+                discount: 0,
                 adjustment: 0,
                 price: null,
                 active: true,
@@ -264,39 +264,36 @@ export default {
         this.getItems();
     },
     methods: {
-        createProduct(e) {
+        createProduct() {
             if (!this.$refs.newProduct.validate()) {
                 return
             }
 
             this.item.price = (Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0)))
 
-            axios(
-                "/loehk/prices",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                    data: JSON.stringify(this.item),
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/prices`, {
+
+            // Adding method type
+            method: "POST",
+
+            // Convert to JSON and send
+            body: JSON.stringify(this.item),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          // Convert to JSON nad convey success
+            .then(res => res.json())
+                .then(res => {
                 this.$set(this, "items", res.data.products);
                 this.$set(this, "categories", res.data.categories);
                 this.$set(this, "item", {
                     valid: false,
                     name: '',
                     purchase_price: null,
-                    discount: null,
+                    discount: 0,
                     adjustment: 0,
                     price: null,
                     active: true,
@@ -321,25 +318,21 @@ export default {
         },
         deleteProduct(item) {
             this.$set(this.trash_loading, item.id, true)
-            axios(
-                "/loehk/prices/" + item.id,
-                {
-                    method:
-                        'DELETE',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                    data: JSON.stringify(item),
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/prices`, {
+
+            // Adding method type
+            method: "DELETE",
+
+            // Convert to JSON and send
+            body: JSON.stringify({ itemId: item.id }),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          // Convey success
+                .then(res => {
                 this.$set(item, 'name', "DELETED")
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
@@ -350,25 +343,21 @@ export default {
         updateProduct(item) {
             this.$set(this.save_loading, item.id, true)
             item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)));
-            axios(
-                "/loehk/prices/" + item.id,
-                {
-                    method:
-                        'PATCH',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                    data: JSON.stringify(item),
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/prices?itemId=${item.id}`, {
+
+            // Adding method type
+            method: "PUT",
+
+            // Convert to JSON and send
+            body: JSON.stringify(item),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          // Convey success
+                .then(res => {
                 this.$set(this.save_loading, item.id, "success")
             }).catch(() => {
                 this.$set(this.save_loading, item.id, "failed")
@@ -378,29 +367,15 @@ export default {
         },
         expandRow(row) {
             this.expanded = row === this.expanded[0] ? [] : [row]
+            console.log(this.items[row])
+            console.log(this.categories)
         },
         getItems() {
             this.$set(this, "loading", true);
-            axios(
-                "/loehk/prices",
-                {
-                    method:
-                        'get',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
-                this.$set(this, "items", res.data.products);
-                this.$set(this, "categories", res.data.categories);
+          fetch('http://localhost:8000/loehk/prices').then(res =>res.json())
+                .then(res => {
+                this.$set(this, "items", res.products);
+                this.$set(this, "categories", res.categories);
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
