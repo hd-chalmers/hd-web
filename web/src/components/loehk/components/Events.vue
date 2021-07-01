@@ -165,7 +165,7 @@ export default {
           fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
 
             // Adding method type
-            method: "PUT",
+            method: "PATCH",
 
             // Adding body or contents to send
             body: JSON.stringify({
@@ -191,7 +191,7 @@ export default {
           fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
 
             // Adding method type
-            method: "PUT",
+            method: "PATCH",
 
             // Adding body or contents to send
             body: JSON.stringify({
@@ -250,7 +250,7 @@ export default {
           fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
 
             // Adding method type
-            method: "PUT",
+            method: "PATCH",
 
             // Convert to JSON and send
             body: JSON.stringify(dataObj),

@@ -9,7 +9,7 @@ export class loehkEvents implements ApiCall{
   processName = 'Loehk Events'
 
   async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {
-    app.put('/loehk/events', async (req, res) => {
+    app.patch('/loehk/events', async (req, res) => {
 
       if(!req.query.eventId){
         console.log('missing id')
