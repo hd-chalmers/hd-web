@@ -52,7 +52,7 @@
                         ></v-text-field>
                     </v-toolbar>
                 </template>
-                <template v-slot="
+                <template v-slot:group.header="
                      /* eslint-disable-next-line vue/no-unused-vars */
                     {group,groupBy,items,headers,isOpen,toggle,remove}">
                     <td :colspan="headers.length" @click="toggle">
@@ -184,24 +184,21 @@ export default {
         },
         deleteAccount(item) {
             this.$set(this.trash_loading, item.id, true)
-            axios(
-                "/loehk/accounts/" + item.id,
-                {
-                    method:
-                        'DELETE',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+            fetch(`http://localhost:8000/loehk/investments`, {
+
+            // Adding method type
+            method: "DELETE",
+
+            // Convert to JSON and send
+            body: JSON.stringify({accountId: item.id}),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+              // Convey success
+                .then(res => {
                 this.$set(item, 'name', "DELETED")
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
@@ -211,27 +208,23 @@ export default {
         },
         createAccount(item) {
             this.$set(this.save_loading, 'new', true)
-            axios(
-                "/loehk/accounts",
-                {
-                    method:
-                        'POST',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                    data: JSON.stringify(item),
-                }).then(res => {
+            fetch(`http://localhost:8000/loehk/investments`, {
+
+            // Adding method type
+            method: "POST",
+
+            // Convert to JSON and send
+            body: JSON.stringify(item),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+              // Convert to json and convey success
+                .then(res => res.json()).then(res => {
                 this.$set(this.save_loading, 'new', "success")
-                this.$set(this.accounts, this.accounts.length, res.data)
+                this.$set(this.accounts, this.accounts.length, res)
                 this.account =  {
                     name: null,
                     uid: null,
@@ -248,25 +241,21 @@ export default {
         },
         updateAccount(item) {
             this.$set(this.save_loading, item.id, true)
-            axios(
-                "/loehk/accounts/" + item.id,
-                {
-                    method:
-                        'PATCH',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                    data: JSON.stringify(item),
-                }).then(res => {
+            fetch(`http://localhost:8000/loehk/investments?accountId=${item.id}`, {
+
+            // Adding method type
+            method: "PUT",
+
+            // Convert to JSON and send
+            body: JSON.stringify(item),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          // Convey success
+                .then(res => {
                 this.$set(this.save_loading, item.id, "success")
                 item = res.data;
             }).catch(() => {
@@ -277,26 +266,10 @@ export default {
         },
         getItems() {
             this.$set(this, "loading", true);
-            axios(
-                "/loehk/accounts",
-                {
-                    method:
-                        'get',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
-                this.$set(this, "accounts", res.data.active);
-                this.$set(this, "accounts", this.accounts.concat(res.data.inactive));
+            fetch('http://localhost:8000/loehk/investments').then(res =>res.json())
+                .then(res => {
+                this.$set(this, "accounts", res.active);
+                this.$set(this, "accounts", this.accounts.concat(res.inactive));
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {

@@ -7,6 +7,7 @@ import { login } from './loehk/login'
 import {loehkFrontpage} from './loehk/leohkFrontpage'
 import { loehkEvents } from './loehk/loehkEvents'
 import { loehkPrices } from './loehk/loehkPrices'
+import { loehkInvestAcc } from './loehk/loehkInvestAcc'
 
 export const routes : Array<ApiCall> = [
   new events,
@@ -16,5 +17,6 @@ export const routes : Array<ApiCall> = [
   new login,
   new loehkFrontpage,
   new loehkEvents,
-  new loehkPrices
+  new loehkPrices,
+  new loehkInvestAcc
 ]
