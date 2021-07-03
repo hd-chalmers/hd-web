@@ -3,7 +3,7 @@
         <v-card-title>
             <v-row>
                 <v-col cols="12" sm="4" md="3">
-                    <v-select :loading="loading" :items="all_years" v-model="active_year" item-text="displayed_year" item-value="year"></v-select>
+                    <v-select :loading="loading" :items="all_years" v-model="active_year" item-text="displayed_year" item-value="id" return-object></v-select>
                     <v-btn v-if="all_years[0] && all_years[0].year !== (new Date().getFullYear())"
                            @click="addNewYear()">
                         Nytt år
@@ -405,24 +405,24 @@ export default {
             })
         },
         getActiveYear() {
-            axios(
-                "/loehk/active_year",
+          axios(
+            "/loehk/active_year",
+            {
+              method:
+                'get',
+              withCredentials:
+                true,
+              responseType:
+                'json',
+              timeout: 3000,
+              headers:
                 {
-                    method:
-                        'get',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+                  'Content-Type':
+                    'application/json',
+                  'Accept':
+                    'application/json',
+                },
+            }).then(res => {
                 this.active_year = res.data.current;
                 this.all_years   = res.data.all_years;
               // eslint-disable-next-line @typescript-eslint/no-empty-function
