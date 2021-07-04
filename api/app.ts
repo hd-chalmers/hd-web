@@ -3,12 +3,20 @@ import db, {sql} from './src/database'
 import { routes } from './src/routes'
 import Cors from 'cors'
 import expressSession, { MemoryStore } from 'express-session'
+import expressFileUpload from 'express-fileupload'
 
 const app = express()
 const PORT = 8000
 app.use(Cors())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+app.use(expressFileUpload({
+  createParentPath: true,
+  debug: true,
+  safeFileNames: true,
+  preserveExtension: true
+}))
+app.use('/static',express.static('./storage/public'))
 export const store = new MemoryStore()
 app.use(expressSession({
   secret: 'hd',
