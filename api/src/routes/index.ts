@@ -8,6 +8,7 @@ import {loehkFrontpage} from './loehk/leohkFrontpage'
 import { loehkEvents } from './loehk/loehkEvents'
 import { loehkPrices } from './loehk/loehkPrices'
 import { loehkInvestAcc } from './loehk/loehkInvestAcc'
+import { loehkActiveYear } from './loehk/loehkActiveYear'
 
 export const routes : Array<ApiCall> = [
   new events,
@@ -18,5 +19,6 @@ export const routes : Array<ApiCall> = [
   new loehkFrontpage,
   new loehkEvents,
   new loehkPrices,
-  new loehkInvestAcc
+  new loehkInvestAcc,
+  new loehkActiveYear
 ]

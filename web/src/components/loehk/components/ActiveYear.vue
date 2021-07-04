@@ -102,25 +102,16 @@ export default {
             this.load.front_image = true;
             let data              = new FormData();
             data.append('front_image', $value, 'front_image');
-            axios(
-                "/loehk/active_year/" + this.active_year.id + "/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: data,
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+
+            // Adding method type
+            method: "PATCH",
+
+            // Adding body or contents to send
+            body: data
+          })
+          // Convey success
+                .then(res => {
                 this.load.front_image    = 'success'
                 this.message.front_image = 'Sparat!'
               // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -136,25 +127,17 @@ export default {
             this.load.background_image = true;
             let data                   = new FormData();
             data.append('background_image', $value, 'background_image');
-            axios(
-                "/loehk/active_year/" + this.active_year.id + "/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: data,
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+            console.log($value)
+          fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+
+            // Adding method type
+            method: "PATCH",
+
+            // Adding body or contents to send
+            body: data
+          })
+          // Convey success
+                .then(res => {
                 this.load.background_image    = 'success'
                 this.message.background_image = 'Sparat!'
               // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -170,25 +153,16 @@ export default {
             this.load.group_photo = true;
             let data              = new FormData();
             data.append('group_photo', $value, 'group_photo');
-            axios(
-                "/loehk/active_year/" + this.active_year.id + "/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: data,
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+            fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+
+            // Adding method type
+            method: "PATCH",
+
+            // Adding body or contents to send
+            body: data
+          })
+          // Convey success
+                .then(res => {
                 this.load.group_photo    = 'success'
                 this.message.group_photo = 'Sparat!'
               // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -204,25 +178,16 @@ export default {
             this.load.christmas_image = true;
             let data                  = new FormData();
             data.append('christmas_image', $value, 'christmas_image');
-            axios(
-                "/loehk/active_year/" + this.active_year.id + "/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: data,
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+             fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+
+            // Adding method type
+            method: "PATCH",
+
+            // Adding body or contents to send
+            body: data
+          })
+          // Convey success
+                .then(res => {
                 this.load.christmas_image    = 'success'
                 this.message.christmas_image = 'Sparat!'
               // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -297,26 +262,21 @@ export default {
             return false;
         },
         addNewYear() {
-            axios(
-                "/loehk/active_year/new",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
-                this.$set(this.all_years, this.all_years.length, res.data)
-                this.active_year = res.data;
+          fetch(`http://localhost:8000/loehk/active_year`, {
+
+            // Adding method type
+            method: "POST",
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          // Convey success
+                .then(res => res.json()).then(res => {
+                this.$set(this.all_years, this.all_years.length, res)
+                this.active_year = res
+                console.log(res)
             }).catch(() => {
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).finally(() => {
@@ -405,26 +365,9 @@ export default {
             })
         },
         getActiveYear() {
-          axios(
-            "/loehk/active_year",
-            {
-              method:
-                'get',
-              withCredentials:
-                true,
-              responseType:
-                'json',
-              timeout: 3000,
-              headers:
-                {
-                  'Content-Type':
-                    'application/json',
-                  'Accept':
-                    'application/json',
-                },
-            }).then(res => {
-                this.active_year = res.data.current;
-                this.all_years   = res.data.all_years;
+          fetch('http://localhost:8000/loehk/active_year').then(res =>res.json()).then((res) =>{
+                this.active_year = res.current;
+                this.all_years   = res.all_years;
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).catch(() => {
             }).finally(() => {
@@ -444,25 +387,21 @@ export default {
             }
             this.load.description    = true;
             this.message.description = ''
-            axios(
-                "/loehk/active_year/" + this.active_year.id + "/update",
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    data: JSON.stringify({'description': this.active_year.description}),
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'application/json',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+          fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+
+            // Adding method type
+            method: "PATCH",
+
+            // Adding body or contents to send
+            body: JSON.stringify({ description: this.active_year.description }),
+
+            // Adding headers to the request
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+              // Convey success
+                .then(res => {
                 this.load.description    = 'success'
                 this.message.description = 'Sparat!'
               // eslint-disable-next-line @typescript-eslint/no-empty-function
