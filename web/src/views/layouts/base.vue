@@ -4,7 +4,9 @@
 <Navbar></Navbar>
     <!--@yield('loehk') -->
         <v-main>
-          <router-view/>
+          <v-scroll-y-reverse-transition leave-absolute>
+            <router-view/>
+          </v-scroll-y-reverse-transition>>
         </v-main>
     <!--ChassitOpenIcon></ChassitOpenIcon-->
 <FooterElement></FooterElement>

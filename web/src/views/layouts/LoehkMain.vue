@@ -86,7 +86,9 @@
                         Loehk
                     </v-card-title>
                     <v-card-text>
+                      <v-scroll-x-transition leave-absolute>
                         <router-view></router-view>
+                      </v-scroll-x-transition>
                     </v-card-text>
                 </v-card>
             </v-container>
