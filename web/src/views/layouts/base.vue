@@ -4,7 +4,7 @@
 <Navbar></Navbar>
     <!--@yield('loehk') -->
         <v-main>
-          <slot style="width: 70%; margin: auto;"></slot>
+          <router-view/>
         </v-main>
     <!--ChassitOpenIcon></ChassitOpenIcon-->
 <FooterElement></FooterElement>
@@ -13,8 +13,8 @@
 <!--script src="/resources/js/app.js"></script-->
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import Navbar from '../common/navbar.vue'
-import FooterElement from '../common/footer.vue'
+import Navbar from '../../components/common/navbar.vue'
+import FooterElement from '../../components/common/footer.vue'
 //  import ChassitOpenIcon from '../../js/components/ChassitOpenIcon.vue'
 
   @Component({

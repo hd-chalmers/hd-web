@@ -1,9 +1,5 @@
 <template>
-  <Base>
-    <transition name="slide-fade">
       <router-view/>
-    </transition>
-  </Base>
 </template>
 
 <script lang="ts">

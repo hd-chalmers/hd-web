@@ -7,65 +7,71 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/events',
-    name: 'Events',
-    component: () => import(/* webpackChunkName: "events" */ '../views/events.vue')
-  },
-  {
-    path: '/committee',
-    name: 'Committee',
-    component: () => import(/* webpackChunkName: "Committee" */ '../views/committee/members.vue')
-  },
-  {
-    path: '/contact',
-    name: 'Contact',
-    component: () => import(/* webpackChunkName: "contact" */ '../views/contact.vue')
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/auth/login.vue')
-  },
-  {
-    path: '/loehk',
-    component: () => import(/* webpackChunkName: "loehkMain" */ '../components/loehk/LoehkMain.vue'),
+    component: () => import(/* webpackChunkName: "base" */ '../views/layouts/base.vue'),
     children: [
       {
         path: '',
-        name: 'loehk',
-        component: () => import(/* webpackChunkName: "loehkFront" */ '../components/loehk/components/Front.vue')
+        name: 'Home',
+        component: Home
       },
       {
-        path: '/loehk/active-year',
-        name: 'loehk-active-year',
-        component: () => import(/* webpackChunkName: "loehkActiveYear" */ '../components/loehk/components/ActiveYear.vue')
+        path: '/events',
+        name: 'Events',
+        component: () => import(/* webpackChunkName: "events" */ '../views/events.vue')
       },
       {
-        path: '/loehk/events',
-        name: 'loehk-events',
-        component: () => import(/* webpackChunkName: "loehkEvents" */ '../components/loehk/components/Events.vue')
+        path: '/committee',
+        name: 'Committee',
+        component: () => import(/* webpackChunkName: "committee" */ '../views/committee/members.vue')
       },
       {
-        path: '/loehk/investments',
-        name: 'loehk-investments',
-        component: () => import(/* webåackChunkName: "loehkInvestments" */ '../components/loehk/components/InvestmentAccounts.vue')
+        path: '/contact',
+        name: 'Contact',
+        component: () => import(/* webpackChunkName: "contact" */ '../views/contact.vue')
       },
       {
-        path: '/loehk/prices',
-        name: 'loehk-prices',
-        component: () => import(/* webpackChunkName: "loehkPrices" */ '../components/loehk/components/Prices.vue')
+        path: '/login',
+        name: 'Login',
+        component: () => import(/* webpackChunkName: "login" */ '../views/auth/login.vue')
       },
       {
-        path: '/loehk/games',
-        name: 'loehk-games',
-        component: () => import(/* webpackChunkName: "loehkGames" */ '../components/loehk/components/Games.vue')
+        path: '/loehk',
+        component: () => import(/* webpackChunkName: "loehkMain" */ '../views/layouts/LoehkMain.vue'),
+        children: [
+          {
+            path: '',
+            name: 'loehk',
+            component: () => import(/* webpackChunkName: "loehkFront" */ '../views/loehk/Front.vue')
+          },
+          {
+            path: '/loehk/active-year',
+            name: 'loehk-active-year',
+            component: () => import(/* webpackChunkName: "loehkActiveYear" */ '../views/loehk/ActiveYear.vue')
+          },
+          {
+            path: '/loehk/events',
+            name: 'loehk-events',
+            component: () => import(/* webpackChunkName: "loehkEvents" */ '../views/loehk/Events.vue')
+          },
+          {
+            path: '/loehk/investments',
+            name: 'loehk-investments',
+            component: () => import(/* webåackChunkName: "loehkInvestments" */ '../views/loehk/InvestmentAccounts.vue')
+          },
+          {
+            path: '/loehk/prices',
+            name: 'loehk-prices',
+            component: () => import(/* webpackChunkName: "loehkPrices" */ '../views/loehk/Prices.vue')
+          },
+          {
+            path: '/loehk/games',
+            name: 'loehk-games',
+            component: () => import(/* webpackChunkName: "loehkGames" */ '../views/loehk/Games.vue')
+          }
+        ]
       }
     ]
-  }
+  },
 ]
 
 const router = new VueRouter({
