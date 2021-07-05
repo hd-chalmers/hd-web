@@ -19,12 +19,8 @@
   </router-link>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-md-and-down">
-      <router-link to="committee">
-        <v-btn text>Sittande</v-btn>
-      </router-link>
-      <router-link to="events">
-        <v-btn text>Evenemang</v-btn>
-      </router-link>
+        <v-btn to="/committee" text>Sittande</v-btn>
+        <v-btn to="/events" text>Evenemang</v-btn>
         <!--
         @if(false)
             <v-btn text href="products">Prislista</v-btn>
@@ -34,9 +30,7 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-      <router-link to="contact">
-        <v-btn text>Kontakta Oss</v-btn>
-      </router-link>
+        <v-btn to="/contact" text>Kontakta Oss</v-btn>
         <v-btn text href="https://www.facebook.com/HsektionenChalmers/"><span
                 style="color: #E0218A">H</span>-Sektionen
         </v-btn>
@@ -46,16 +40,12 @@
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
     <v-toolbar-items class="hidden-lg-and-up">
-      <router-link to="committee">
-        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
+        <v-btn to="/committee" icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
             <v-icon title="Sittande">mdi-account-group</v-icon>
         </v-btn>
-      </router-link>
-      <router-link to="events">
-        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
+        <v-btn to="/events" icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
             <v-icon title="Evenemang">mdi-calendar-star</v-icon>
         </v-btn>
-      </router-link>
       <!--
         @if(false)
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="products">
@@ -71,11 +61,9 @@
         </v-btn>
         @endif
         -->
-      <router-link to="contact">
-        <v-btn icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
+        <v-btn to="/contact" icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile">
             <v-icon title="Kontakta Oss">mdi-phone</v-icon>
         </v-btn>
-      </router-link>
         <v-btn icon :x-large="!$vuetify.breakpoint.mobile" href="https://www.facebook.com/HsektionenChalmers/">
             <span style="color: #E0218A">H</span>
         </v-btn>
@@ -88,9 +76,6 @@
 </template>
 
 <style>
-  .v-toolbar a > .v-btn{
-    height: 100% !important;
-  }
   .v-toolbar a{
   text-decoration: none;
   }
