@@ -243,8 +243,8 @@ export default {
                 favourite_sugar: '',
                 quote: '',
                 image_upload: null,
-                created_at: '',
-                updated_at: '',
+                created_at: null,
+                updated_at: null,
             }
         }
     },
@@ -299,33 +299,24 @@ export default {
             } else {
                 data.append(fieldname, value);
             }
-            if (!id) {
-                data.append('active_year_id', this.active_year.id);
-            }
+            data.append('active_year_id', this.active_year.id);
+
             this.$set(this.load.committee_member, id + fieldname, true)
             this.$set(this.message.committee_member, id + fieldname, '')
-            axios(
-                "/loehk/committee_member" + (id ? '/' + id : ''),
-                {
-                    method:
-                        'post',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    data: data,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+            fetch(`http://localhost:8000/loehk/active_year/committee_members${id? '?memberId=' + id : ''}`, {
+
+            // Adding method type
+            method: "PATCH",
+
+            // Adding body or contents to send
+            body: data
+          })
+          // Convert to JSON and convey success
+                .then(res=> res.json()).then(res => {
+                  console.log(res)
                 if (!id) {
-                    this.$set(this.active_year.committee_members, index, res.data)
-                    this.$set(this.message.committee_member, res.data.id + fieldname, 'Success!')
+                    this.$set(this.active_year.committee_members, index, res)
+                    this.$set(this.message.committee_member, res.id + fieldname, 'Success!')
                 } else {
                     this.$set(this.message.committee_member, id + fieldname, 'Success!')
                 }
@@ -338,24 +329,21 @@ export default {
         deleteCommitteeMember(member, index) {
             this.$set(this.load.committee_member, member.id + 'delete', true)
             this.$set(this.message.committee_member, member.id + 'delete', '')
-            axios(
-                "/loehk/committee_member/" + member.id,
-                {
-                    method:
-                        'delete',
-                    withCredentials:
-                        true,
-                    responseType:
-                        'json',
-                    timeout: 3000,
-                    headers:
-                        {
-                            'Content-Type':
-                                'multipart/form-data',
-                            'Accept':
-                                'application/json',
-                        },
-                }).then(res => {
+            fetch(`http://localhost:8000/loehk/active_year/committee_members`, {
+
+              // Adding method type
+              method: "DELETE",
+
+              // Adding headers to request
+              headers: {
+              "content-type": "application/json"
+              },
+
+            // Adding body or contents to send
+            body: JSON.stringify({id: member.id})
+          })
+          // Convey success
+                .then(res => {
                 this.$set(this.message.committee_member, member.id + 'delete', false)
                 this.active_year.committee_members.splice(index, 1);
               // eslint-disable-next-line @typescript-eslint/no-empty-function
