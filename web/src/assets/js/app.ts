@@ -8,12 +8,12 @@ import Vue from 'vue'
 import VModal from 'vue-js-modal'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
-import ActiveYear from "../../components/loehk/components/ActiveYear";
-import Prices from "../../components/loehk/components/Prices";
-import InvestmentAccounts from "../../components/loehk/components/InvestmentAccounts";
-import Games from "../../components/loehk/components/Games";
-import Front from "../../components/loehk/components/Front";
-import Events from "../../components/loehk/components/Events";
+import ActiveYear from "../../views/loehk/ActiveYear.vue";
+import Prices from "../../views/loehk/Prices.vue";
+import InvestmentAccounts from "../../views/loehk/InvestmentAccounts.vue";
+import Games from "../../views/loehk/Games.vue";
+import Front from "../../views/loehk/Front.vue";
+import Events from "../../views/loehk/Events.vue";
 require('./bootstrap');
 
 window.Vue = require('vue');
