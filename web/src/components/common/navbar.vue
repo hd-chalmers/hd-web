@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app elevate-on-scroll>
+<v-app-bar app elevate-on-scroll clipped-left>
     <v-img src="/img/HD_logo.png" max-width="100"></v-img>
   <router-link to="/">
     <v-toolbar-title>

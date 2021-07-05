@@ -35,11 +35,15 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "login" */ '../views/auth/login.vue')
       },
       {
-        path: '/loehk',
+        path: '',
         component: () => import(/* webpackChunkName: "loehkMain" */ '../views/layouts/LoehkMain.vue'),
         children: [
           {
-            path: '',
+            path: '/loehk',
+            redirect: '/loehk/home'
+          },
+          {
+            path: '/loehk/home',
             name: 'loehk',
             component: () => import(/* webpackChunkName: "loehkFront" */ '../views/loehk/Front.vue')
           },

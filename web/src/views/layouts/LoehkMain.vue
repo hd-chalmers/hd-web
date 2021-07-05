@@ -1,9 +1,9 @@
 <template>
     <div>
-        <v-navigation-drawer v-model="nav" app :temporary="$vuetify.breakpoint.mobile">
-            <v-list>
+        <v-navigation-drawer v-model="nav" app :mini-variant="$vuetify.breakpoint.lgOnly" :expand-on-hover="$vuetify.breakpoint.lgOnly" :temporary="$vuetify.breakpoint.mobile" clipped>
+            <v-list shaped>
                 <v-list-item-group>
-                    <v-list-item to="/loehk">
+                    <v-list-item to="/loehk/home">
                         <v-list-item-icon>
                             <v-icon>
                                 mdi-home
@@ -16,7 +16,7 @@
                     <v-list-item to="/loehk/active-year">
                         <v-list-item-icon>
                             <v-icon>
-                                mdi-image
+                                mdi-account-group
                             </v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
@@ -36,7 +36,7 @@
                     <v-list-item to="/loehk/investments">
                         <v-list-item-icon>
                             <v-icon>
-                                mdi-playlist-edit
+                                mdi-receipt
                             </v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
@@ -46,7 +46,7 @@
                     <v-list-item to="/loehk/prices">
                         <v-list-item-icon>
                             <v-icon>
-                                mdi-playlist-edit
+                                mdi-cart
                             </v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
@@ -56,7 +56,7 @@
                     <v-list-item to="/loehk/games">
                         <v-list-item-icon>
                             <v-icon>
-                                mdi-playlist-edit
+                                mdi-gamepad-square
                             </v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
@@ -67,11 +67,14 @@
             </v-list>
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn block color="purple" dark>Logout</v-btn>
+                    <v-btn block color="purple" dark>
+                      <v-icon style="margin-right: 7px">mdi-logout</v-icon>
+                        Logout
+                    </v-btn>
                 </div>
             </template>
         </v-navigation-drawer>
-        <v-main>
+        <v-main style="padding-left: 0">
             <v-container fluid>
                 <v-card>
                     <v-card-title>
