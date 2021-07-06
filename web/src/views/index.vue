@@ -18,7 +18,11 @@
 
                 <v-row>
                     <v-col>
-                        <h2><strong>Vad är <span style="color: #E0218A">H</span><span style="color: black">D</span>?</strong></h2>
+                        <h2><strong>Vad är <span style="color: #E0218A">H</span><span style="
+                            color: black;
+                            -webkit-text-stroke-width: 0.5px;
+                            -webkit-text-stroke-color: white;
+                          ">D</span>?</strong></h2>
                         <p>Vi arrar dator- och spelrelaterade (självklart även datorspelrelaterade) aktiviteter. Vårt paradnummer är 'Chilla med HD', ett event som hålls minst två gånger per läsperiod. Då spelar vi spel (brädspel, tv-spel,
                             datorspel)
                             och intar socker i olika former.</p>
@@ -45,13 +49,24 @@ export default class IndexPage extends Vue {
     super();
     this.getData()
   }
-  eventObj: eventType = {}
+  eventObj: eventType = {
+    date: new Date(),
+    description: '',
+    facebookLink: '',
+    id: 0,
+    location: '',
+    title: ''
+  }
   frontpageImg = ''
   async getData(): Promise<void>{
     fetch('http://localhost:8000/frontpage').then(res =>res.json()).then(res => {
         this.eventObj = {
           title: res.event.title,
-          date: new Date(res.event.date)
+          date: new Date(res.event.date),
+          description: '',
+          facebookLink: '',
+          id: 0,
+          location: ''
       }
       this.frontpageImg = res.frontpageImg ?? '/img/unknown_group.png'
     })

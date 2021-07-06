@@ -1,6 +1,5 @@
 <template>
 <v-footer app
-          color="white"
           padless
           elevation="5"
 >

@@ -6,7 +6,7 @@
         <v-main>
           <v-scroll-y-reverse-transition leave-absolute>
             <router-view/>
-          </v-scroll-y-reverse-transition>>
+          </v-scroll-y-reverse-transition>
         </v-main>
     <!--ChassitOpenIcon></ChassitOpenIcon-->
 <FooterElement></FooterElement>

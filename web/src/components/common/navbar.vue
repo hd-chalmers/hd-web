@@ -34,9 +34,13 @@
         <v-btn text href="https://www.facebook.com/HsektionenChalmers/"><span
                 style="color: #E0218A">H</span>-Sektionen
         </v-btn>
-        <v-btn color="blue" icon href="https://www.facebook.com/HDChalmers/">
+        <v-btn color="blue" icon href="https://www.facebook.com/HDChalmers/" :small="$vuetify.breakpoint.mobile">
             <v-icon>mdi-facebook</v-icon>
         </v-btn>
+
+      <v-btn @click="$vuetify.theme.dark = !$vuetify.theme.dark" icon  :small="$vuetify.breakpoint.mobile">
+        <v-icon>icon-ic_fluent_dark_theme_24_regular</v-icon>
+      </v-btn>
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
     <v-toolbar-items class="hidden-lg-and-up">
@@ -70,6 +74,9 @@
         <v-btn color="blue" icon :x-large="!$vuetify.breakpoint.mobile" :small="$vuetify.breakpoint.mobile" href="https://www.facebook.com/HDChalmers/">
             <v-icon>mdi-facebook</v-icon>
         </v-btn>
+      <v-btn @click="$vuetify.theme.dark = !$vuetify.theme.dark" icon  :small="$vuetify.breakpoint.mobile">
+        <v-icon>mdi-brightness-6</v-icon>
+      </v-btn>
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
 </v-app-bar>
