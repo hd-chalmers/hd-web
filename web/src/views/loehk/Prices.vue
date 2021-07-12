@@ -84,7 +84,8 @@
                                 <v-row>
                                     <v-col>
                                         <v-spacer></v-spacer>
-                                        <v-btn type="submit" :disabled="!item.valid" color="green" :loading="save_loading[item.id] === true">Spara</v-btn>
+                                        <v-btn type="submit" :disabled="!item.valid" :color="errors['new'] ? 'error' : 'success'" :loading="save_loading[item.id] === true">Spara</v-btn>
+                                        <span :style="`color: ${$vuetify.theme.currentTheme.error}; margin: 5px;`" v-if="errors['new']">{{errors['new']}}</span>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -110,8 +111,11 @@
                             <v-card-title>
                                 {{ item.name }}
                                 <v-spacer></v-spacer>
-                                <v-btn icon @click="deleteProduct(item)" :loading="trash_loading[item.id] === true">
+                                <v-btn icon @click="deleteProduct(item)" :loading="trash_loading[item.id] === true" :color="errors['delete' + item.id] ? 'error' : 'inherit'">
                                     <v-icon>mdi-delete</v-icon>
+                                    <span style="position: absolute; right: 40px;" v-if="errors['delete' + item.id]">
+                                      {{errors['delete' + item.id]}}
+                                    </span>
                                 </v-btn>
                             </v-card-title>
                             <v-card-text>
@@ -170,8 +174,9 @@
                                 <v-row>
                                     <v-col>
                                         <v-spacer></v-spacer>
-                                        <v-btn type="submit" color="green" @click="updateProduct(item)">Spara</v-btn>
-                                        <span v-if="save_loading[item.id] === 'success'">Sparad!</span>
+                                        <v-btn type="submit" :color="errors[item.id] ? 'error' : 'success'" @click="updateProduct(item)">Spara</v-btn>
+                                        <span v-if="save_loading[item.id] === 'success'" style="margin: 5px;">Sparad!</span>
+                                        <span :style="`color: ${$vuetify.theme.currentTheme.error}; margin: 5px;`" v-if="errors[item.id]">{{errors[item.id]}}</span>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -184,14 +189,14 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
     name: "Prices",
     data() {
         return {
+            state: import('@/assets/ts/sessionStore'),
             trash_loading: [],
             save_loading: [],
+            errors: [],
             search: '',
             categories: [],
             expanded: [],
@@ -269,101 +274,147 @@ export default {
                 return
             }
 
+            this.$set(this.errors, 'new', '')
             this.item.price = (Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0)))
 
-          fetch(`http://localhost:8000/loehk/prices`, {
+            this.state.then(obj => {
+              fetch(`http://localhost:8000/loehk/prices`, {
 
-            // Adding method type
-            method: "POST",
+                // Adding method type
+                method: "POST",
 
-            // Convert to JSON and send
-            body: JSON.stringify(this.item),
+                // Convert to JSON and send
+                body: JSON.stringify(this.item),
 
-            // Adding headers to the request
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-          // Convert to JSON nad convey success
-            .then(res => res.json())
+                // Adding headers to the request
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                  sessionId: obj.SessionStore.getSessionId()
+                }
+              })
+                // Convert to JSON and convey success
                 .then(res => {
-                this.$set(this, "items", res.data.products);
-                this.$set(this, "categories", res.data.categories);
-                this.$set(this, "item", {
-                    valid: false,
-                    name: '',
-                    purchase_price: null,
-                    discount: 0,
-                    adjustment: 0,
-                    price: null,
-                    active: true,
-                    pant: false,
-                    package_size: null,
-                    created_at: '',
-                    updated_at: '',
-                    axfood: true,
-                    barcodes: [],
-                    category_id: null,
-                    category: {
+                  if (res.ok) {
+                    this.$set(this, 'item', {
+                      valid: false,
+                      name: '',
+                      purchase_price: null,
+                      discount: 0,
+                      adjustment: 0,
+                      price: null,
+                      active: true,
+                      pant: false,
+                      package_size: null,
+                      created_at: '',
+                      updated_at: '',
+                      axfood: true,
+                      barcodes: [],
+                      category_id: null,
+                      category: {
                         name: '',
                         created_at: '',
                         updated_at: '',
+                      }
+                    })
+                    this.getItems()
+                  } else {
+                    if (res.status === 422) {
+                      this.$set(this.errors, 'new',
+                        'det var ett problem med att hantera datan, produkten kanske redan existerar eller så är viktiga fält tomma')
+                    } else if (res.status === 403) {
+                      this.$set(this.errors, 'new', 'utloggad, refresh?')
+                    } else {
+                      this.$set(this.errors, 'new', 'servern stötte på ett problem när den hanterade datan')
                     }
+                  }
                 })
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).catch(() => {
-            }).finally(() => {
-                this.$set(this, "loading", false);
+                .catch((err) => {
+                  console.error(err)
+                  this.$set(this.errors, 'new', 'kunde inte nå servern')
+                })
+                .finally(() => {
+                  this.$set(this, "loading", false);
+                })
             })
         },
         deleteProduct(item) {
             this.$set(this.trash_loading, item.id, true)
-          fetch(`http://localhost:8000/loehk/prices`, {
+            this.$set(this.errors, 'delete' + item.id, '')
 
-            // Adding method type
-            method: "DELETE",
+          this.state.then(obj => {
+            fetch(`http://localhost:8000/loehk/prices`, {
 
-            // Convert to JSON and send
-            body: JSON.stringify({ itemId: item.id }),
+              // Adding method type
+              method: "DELETE",
 
-            // Adding headers to the request
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-          // Convey success
-                .then(res => {
-                this.$set(item, 'name', "DELETED")
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).catch(() => {
-            }).finally(() => {
-                this.$set(this.trash_loading, item.id, "success")
+              // Convert to JSON and send
+              body: JSON.stringify({ itemId: item.id }),
+
+              // Adding headers to the request
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                sessionId: obj.SessionStore.getSessionId()
+              }
             })
+              // Convey success
+              .then(res => {
+                if (res.ok) {
+                  this.$set(item, 'name', 'DELETED')
+                } else {
+                  if (res.status === 403) {
+                    this.$set(this.errors, 'delete' + item.id, 'utloggad, refresh?')
+                  } else {
+                    this.$set(this.errors, 'delete' + item.id, 'servern gick på något fel när den försökte ta bort produkten')
+                  }
+                }
+              }).catch(() => {
+              this.$set(this.errors, 'delete' + item.id, 'kunde inte nå servern')
+            }).finally(() => {
+              this.$set(this.trash_loading, item.id, "success")
+            })
+          })
         },
         updateProduct(item) {
             this.$set(this.save_loading, item.id, true)
-            item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)));
-          fetch(`http://localhost:8000/loehk/prices?itemId=${item.id}`, {
+            this.$set(this.errors, item.id, '')
+            item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)))
 
-            // Adding method type
-            method: "PUT",
+          this.state.then(obj => {
+            fetch(`http://localhost:8000/loehk/prices?itemId=${item.id}`, {
 
-            // Convert to JSON and send
-            body: JSON.stringify(item),
+              // Adding method type
+              method: "PUT",
 
-            // Adding headers to the request
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-          // Convey success
-                .then(res => {
-                this.$set(this.save_loading, item.id, "success")
-            }).catch(() => {
-                this.$set(this.save_loading, item.id, "failed")
+              // Convert to JSON and send
+              body: JSON.stringify(item),
+
+              // Adding headers to the request
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                sessionId: obj.SessionStore.getSessionId()
+              }
+            })
+              // Convey success
+              .then(res => {
+                if (res.ok) {
+                  this.$set(this.save_loading, item.id, 'success')
+                } else {
+                  this.$set(this.save_loading, item.id, false)
+                  if (res.status === 422) {
+                    this.$set(this.errors, item.id, 'det är något fel med detan, antigen så har produkten samma namn som en annnan produkt eller så är ett viktigt fält tomt')
+                  } else if (res.status === 403) {
+                    this.$set(this.errors, item.id, 'utloggad, refresh?')
+                  } else {
+                    this.$set(this.errors, item.id, 'servern stötte på något fel när den hanterade datan')
+                  }
+                }
+              }).catch(() => {
+              this.$set(this.save_loading, item.id, false)
+              this.$set(this.errors, item.id, 'kunde inte nå servern')
               // eslint-disable-next-line @typescript-eslint/no-empty-function
             }).finally(() => {
             })
+          })
         },
         expandRow(row) {
             this.expanded = row === this.expanded[0] ? [] : [row]
@@ -372,15 +423,27 @@ export default {
         },
         getItems() {
             this.$set(this, "loading", true);
-          fetch('http://localhost:8000/loehk/prices').then(res =>res.json())
+
+            this.state.then(obj => {
+              fetch (
+              'http://localhost:8000/loehk/prices', {
+                headers: {
+                  sessionId: obj.SessionStore.getSessionId()
+                }
+              })
+                .then(res => res.json())
                 .then(res => {
-                this.$set(this, "items", res.products);
-                this.$set(this, "categories", res.categories);
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).catch(() => {
-            }).finally(() => {
-                this.$set(this, "loading", false);
+                  this.$set(this, "items", res.products);
+                  this.$set(this, "categories", res.categories);
+                })
+                .catch((err) => {
+                  console.error(err)
+                  this.$router.push('/login')
+                })
+                .finally(() => {
+              this.$set(this, "loading", false);
             })
+        })
         }
     }
 }

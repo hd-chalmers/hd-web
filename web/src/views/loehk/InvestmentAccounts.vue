@@ -29,16 +29,17 @@
                             <v-form>
                                 <v-row dense>
                                     <v-col cols="12" sm="6" md="4" lg="4">
-                                        <v-text-field label="Streckkod" v-model="account.uid"></v-text-field>
+                                        <v-text-field label="Streckkod" :rules="[function (value){return value !== ''}]" v-model="account.uid" hint="krävs" persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="4" lg="4">
-                                        <v-text-field label="Namn" v-model="account.name"></v-text-field>
+                                        <v-text-field label="Namn" :rules="[function (value){return value !== ''}]" v-model="account.name" hint="krävs" persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="4" lg="4">
                                         <v-text-field label="Lösenord" v-model="account.password"></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-btn color="success" @click="createAccount(account)">Spara</v-btn>
+                                        <v-btn :color="errors['new'] ? 'error' : 'success'" @click="createAccount(account)">Spara</v-btn>
+                                        <span :style="`color: ${$vuetify.theme.currentTheme.error}; margin: 5px;`" v-if="errors['new']">{{errors['new']}}</span>
                                     </v-col>
                                 </v-row>
                             </v-form>
@@ -71,8 +72,12 @@
                             <v-card-title>
                                 {{ item.name }}
                                 <v-spacer></v-spacer>
-                                <v-btn icon @click="deleteAccount(item)" :loading="trash_loading[item.id] === true">
+                                <v-btn icon @click="deleteAccount(item)" :loading="trash_loading[item.id] === true"
+                                       :color="errors['delete' + item.id] ? $vuetify.theme.currentTheme.error : 'inherit'">
                                     <v-icon>mdi-delete</v-icon>
+                                    <span :style="`color: ${$vuetify.theme.currentTheme.error}; position: absolute; bottom: -30px; right: 0;`" v-if="errors['delete' + item.id]">
+                                      {{errors['delete' + item.id]}}
+                                    </span>
                                 </v-btn>
                             </v-card-title>
                             <v-card-text>
@@ -99,8 +104,9 @@
                                 <v-row>
                                     <v-col>
                                         <v-spacer></v-spacer>
-                                        <v-btn type="submit" color="green" @click="updateAccount(item)">Spara</v-btn>
-                                        <span v-if="save_loading[item.id] === 'success'">Sparad!</span>
+                                        <v-btn type="submit" :color="errors[item.id] ? 'error' : 'success'" @click="updateAccount(item)">Spara</v-btn>
+                                        <span v-if="save_loading[item.id] === 'success'" :style="'color:' + $vuetify.theme.currentTheme.success">Sparad!</span>
+                                        <span v-if="errors[item.id]" :style="'color: ' + $vuetify.theme.currentTheme.error + '; margin: 5px;'">{{errors[item.id]}}</span>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -119,8 +125,10 @@ export default {
     name: "InvestmentAccounts",
     data() {
         return {
+            state: import('@/assets/ts/sessionStore'),
             trash_loading: [],
             save_loading: [],
+            errors: [],
             search: '',
             categories: [],
             expanded: [],
@@ -184,96 +192,174 @@ export default {
         },
         deleteAccount(item) {
             this.$set(this.trash_loading, item.id, true)
-            fetch(`http://localhost:8000/loehk/investments`, {
+            this.$set(this.errors, 'delete' + item.id, '')
 
-            // Adding method type
-            method: "DELETE",
+            this.state.then(obj => {
+              fetch(`http://localhost:8000/loehk/investments`, {
 
-            // Convert to JSON and send
-            body: JSON.stringify({accountId: item.id}),
+                // Adding method type
+                method: "DELETE",
 
-            // Adding headers to the request
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-              // Convey success
+                // Convert to JSON and send
+                body: JSON.stringify({ accountId: item.id }),
+
+                // Adding headers to the request
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                  sessionId: obj.SessionStore.getSessionId()
+                }
+              })
+                // Convey success
                 .then(res => {
-                this.$set(item, 'name', "DELETED")
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).catch(() => {
-            }).finally(() => {
+                  if (res.ok) {
+                    this.$set(item, 'name', "DELETED")
+                  } else {
+                    if (res.status === 403) {
+                      this.$set(this.errors, 'delete' + item.id, 'utloggad, refresh?')
+                    } else {
+                      this.$set(this.errors, 'delete' + item.id, 'något gick fel vid hanterigen av begäran')
+                    }
+                  }
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                }).catch((err) => {
+                this.$set(this.errors, 'delete' + item.id, 'kan inte nå servern')
+                console.error(err)
+              }).finally(() => {
                 this.$set(this.trash_loading, item.id, "success")
+              })
             })
         },
         createAccount(item) {
             this.$set(this.save_loading, 'new', true)
-            fetch(`http://localhost:8000/loehk/investments`, {
+            this.$set(this.errors, 'new', '')
 
-            // Adding method type
-            method: "POST",
+            this.state.then(obj => {
+              fetch(`http://localhost:8000/loehk/investments`, {
 
-            // Convert to JSON and send
-            body: JSON.stringify(item),
+                // Adding method type
+                method: "POST",
 
-            // Adding headers to the request
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-              // Convert to json and convey success
-                .then(res => res.json()).then(res => {
-                this.$set(this.save_loading, 'new', "success")
-                this.$set(this.accounts, this.accounts.length, res)
-                this.account =  {
-                    name: null,
-                    uid: null,
-                    password: null,
-                    balance: null,
-                    active: null,
-                    print: null,
-                };
-            }).catch(() => {
-                this.$set(this.save_loading, 'new', "failed")
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).finally(() => {
+                // Convert to JSON and send
+                body: JSON.stringify(item),
+
+                // Adding headers to the request
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                  sessionId: obj.SessionStore.getSessionId()
+                }
+              })
+                // Convert to json and convey success
+                .then(res => {
+                  if (res.ok) {
+                    this.$set(this.save_loading, 'new', "success")
+                    return res.json()
+                  } else {
+                    this.$set(this.save_loading, 'new', "failed")
+                    if(res.status === 422){
+                      this.$set(this.errors, 'new', 'antigen är ett fält tomt eller så existerar användaren redan')
+                    }
+                    else if(res.status === 403) {
+                      this.$set(this.errors, 'new', 'utloggad, refresh?')
+                    }
+                    else {
+                      this.$set(this.errors, 'new', 'något gick fel när uppgifterna procceserades')
+                    }
+                    return null
+                  }
+                })
+                .then(res => {
+                  if (res) {
+                    this.$set(this.accounts, this.accounts.length, res)
+                    this.account = {
+                      name: null,
+                      uid: null,
+                      password: null,
+                      balance: null,
+                      active: null,
+                      print: null,
+                    }
+                  }
+                }).catch((err) => {
+                this.$set(this.save_loading, 'new', 'failed')
+                this.$set(this.errors, 'new', 'kan inte nå servern, ta gärna en titt i inspektorn')
+                console.error(err)
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+              }).finally(() => {
+              })
             })
         },
         updateAccount(item) {
             this.$set(this.save_loading, item.id, true)
-            fetch(`http://localhost:8000/loehk/investments?accountId=${item.id}`, {
+            this.$set(this.errors, item.id, '')
 
-            // Adding method type
-            method: "PUT",
+            this.state.then(obj => {
+              fetch(`http://localhost:8000/loehk/investments?accountId=${item.id}`, {
 
-            // Convert to JSON and send
-            body: JSON.stringify(item),
+                // Adding method type
+                method: "PUT",
 
-            // Adding headers to the request
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-          // Convey success
+                // Convert to JSON and send
+                body: JSON.stringify(item),
+
+                // Adding headers to the request
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                  sessionId: obj.SessionStore.getSessionId()
+                }
+              })
+                // Convey success
                 .then(res => {
-                this.$set(this.save_loading, item.id, "success")
-                item = res.data;
-            }).catch(() => {
-                this.$set(this.save_loading, item.id, "failed")
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).finally(() => {
+                  if (res.ok) {
+                    this.$set(this.save_loading, item.id, "success")
+                    return res.json()
+                  } else {
+                    if (res.status === 422) {
+                      this.$set(this.errors, item.id, 'Datan kunde ej proccesseras kan vara p.g.a. tomma fält eller så matchar den nya datan med en annan användare')
+                    } else if (res.status === 403) {
+                      this.$set(this.errors, item.id, 'Utloggad, refresh?')
+                    } else {
+                      this.$set(this.errors, item.id, 'Något gick fel när datan hanterades')
+                    }
+                    this.$set(this.save_loading, item.id, "fail")
+                    return null
+                  }
+                })
+                .then(res => {
+                  if (res) {
+                    item = res
+                  }
+                })
+                .catch(() => {
+                  this.$set(this.save_loading, item.id, "failed")
+                  this.$set(this.errors, item.id, 'kunde inte nå servern')
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                }).finally(() => {
+              })
             })
         },
         getItems() {
             this.$set(this, "loading", true);
-            fetch('http://localhost:8000/loehk/investments').then(res =>res.json())
+
+            this.state.then(obj => {
+              fetch('http://localhost:8000/loehk/investments', {
+                headers: {
+                  sessionId: obj.SessionStore.getSessionId()
+                }
+              })
                 .then(res => {
-                this.$set(this, "accounts", res.active);
-                this.$set(this, "accounts", this.accounts.concat(res.inactive));
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).catch(() => {
-            }).finally(() => {
+                  return res.json()
+                })
+                .then(res => {
+                  this.$set(this, "accounts", res.active);
+                  this.$set(this, "accounts", this.accounts.concat(res.inactive));
+                })
+                .catch((err) => {
+                  console.error(err)
+                  this.$router.push('/login')
+              })
+                .finally(() => {
                 this.$set(this, "loading", false);
+              })
             })
         }
     }

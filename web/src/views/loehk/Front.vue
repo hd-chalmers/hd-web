@@ -116,8 +116,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
     name: "Front",
     created() {
@@ -126,6 +124,7 @@ export default {
     data() {
         return {
             loading: true,
+            state: import('@/assets/ts/sessionStore'),
             stats: {
                 products: 0,
                 product_updated: {
@@ -174,13 +173,21 @@ export default {
     },
     methods: {
         getStatistics() {
-          fetch('http://localhost:8000/loehk/front').then(res =>res.json()).then(res => {
-                this.stats = res
+          this.state.then(obj => {
+            fetch('http://localhost:8000/loehk/front', {
+              headers: {
+                sessionId: obj.SessionStore.getSessionId()
+              }
+            }).then(res =>res.json()).then(res => {
+              this.stats = res
               // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).catch(() => {
+            }).catch((err) => {
+              console.log('login failed')
+              this.$router.push('/login')
             }).finally(() => {
-                this.loading = false;
+              this.loading = false;
             })
+          })
         }
     }
 }
