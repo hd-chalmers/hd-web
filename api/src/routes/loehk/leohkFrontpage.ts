@@ -1,38 +1,41 @@
-import ApiCall from '../../interfaces'
-import { Express, Request } from 'express'
+import { Request } from 'express'
 import { ConnectionPool } from '@databases/pg'
-import { SQL, SQLQuery } from '@databases/sql'
-import Users from '../../__generated__/users'
+import { SQLQuery } from '@databases/sql'
 import Products from '../../__generated__/products'
 import Accounts from '../../__generated__/accounts'
 import { Session, SessionData } from 'express-session'
-import { store } from '../../../app'
 import Events from '../../__generated__/events'
+import ApiCall from '../../apiCallClass'
 
-// noinspection TypeScriptUnresolvedFunction
-export class loehkFrontpage implements ApiCall{
+
+export class loehkFrontpage extends ApiCall{
   processName = 'Loehk Frontpage'
 
-  async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {
-    app.get('/loehk/front', async (req, res) => {
-      console.log('[API] ' + this.processName + ' was accessed')
-//      if (await this.validate(db, sql, req)) {
-        const productCount = await  db.query(sql`SELECT count(id) AS count FROM products`)
-        const updatedProducts: Products[] = await db.query(sql`SELECT name, updated_at FROM products ORDER BY updated_at DESC LIMIT 1;`)
-        const latestProduct: Products[] = await db.query(sql`SELECT name, created_at FROM products ORDER BY created_at DESC LIMIT 1;`)
+  async run (): Promise<void> {
+    this.app.get('/loehk/front', async (req, res) => {
+      // Check if request is authorized
+        if(!await this.verify(<string> req.header('sessionId'))){
+          this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+          res.status(403).send()
+          return
+        }
 
-        const accountCount = await db.query(sql`SELECT count(id) FROM accounts`)
-        const latestAccount: Accounts[] = await db.query(sql`SELECT uid, name, created_at FROM accounts ORDER BY created_at DESC LIMIT 1;`)
-        const updatedAccount: Accounts[] = await db.query(sql`SELECT uid, name, updated_at FROM accounts ORDER BY updated_at DESC LIMIT 1;`)
+        const productCount = await  this.db.query(this.sql`SELECT count(id) AS count FROM products`)
+        const updatedProducts: Products[] = await this.db.query(this.sql`SELECT name, updated_at FROM products ORDER BY updated_at DESC LIMIT 1;`)
+        const latestProduct: Products[] = await this.db.query(this.sql`SELECT name, created_at FROM products ORDER BY created_at DESC LIMIT 1;`)
 
-        const eventCount = await  db.query(sql`SELECT count(id) FROM events`)
-        const latestEvent: Events[] = await db.query(sql`SELECT title, created_at, date FROM events ORDER BY created_at DESC  LIMIT 1`)
-        const updatedEvent: Events[] = await db.query(sql`SELECT title, updated_at, date FROM events ORDER BY updated_at DESC LIMIT 1`)
+        const accountCount = await this.db.query(this.sql`SELECT count(id) FROM accounts`)
+        const latestAccount: Accounts[] = await this.db.query(this.sql`SELECT uid, name, created_at FROM accounts ORDER BY created_at DESC LIMIT 1;`)
+        const updatedAccount: Accounts[] = await this.db.query(this.sql`SELECT uid, name, updated_at FROM accounts ORDER BY updated_at DESC LIMIT 1;`)
 
-        const gameCount =  await db.query(sql`SELECT count(id) FROM games`)
-        const latestGame = await db.query(sql`SELECT games.name, games.created_at, gp.name AS platform FROM games
+        const eventCount = await  this.db.query(this.sql`SELECT count(id) FROM events`)
+        const latestEvent: Events[] = await this.db.query(this.sql`SELECT title, created_at, date FROM events ORDER BY created_at DESC  LIMIT 1`)
+        const updatedEvent: Events[] = await this.db.query(this.sql`SELECT title, updated_at, date FROM events ORDER BY updated_at DESC LIMIT 1`)
+
+        const gameCount =  await this.db.query(this.sql`SELECT count(id) FROM games`)
+        const latestGame = await this.db.query(this.sql`SELECT games.name, games.created_at, gp.name AS platform FROM games
                             JOIN game_platforms gp on games.game_platform_id = gp.id ORDER BY games.created_at DESC LIMIT 1`)
-        const updatedGame = await db.query(sql`SELECT games.name, games.updated_at, gp.name AS platform FROM games
+        const updatedGame = await this.db.query(this.sql`SELECT games.name, games.updated_at, gp.name AS platform FROM games
                             JOIN game_platforms gp on games.game_platform_id = gp.id ORDER BY games.updated_at DESC LIMIT 1`)
 
         res.json({
@@ -79,9 +82,6 @@ export class loehkFrontpage implements ApiCall{
               platform: updatedGame[0].platform,
             } : null
           })
-      /*} else {
-        res.status(403).json({ error: 'unauthorized' })
-      }*/
     })
     return Promise.resolve(undefined);
   }
@@ -94,23 +94,6 @@ export class loehkFrontpage implements ApiCall{
     else{
       return Promise.resolve(value[0])
     }
-  }
-
-  async validate(db: ConnectionPool, sql: SQL, req: Request): Promise<boolean>{
-     const session = this.getSession(req)
-    console.log(session)
-    if(session.login){
-      const tokens: Users[] = await db.query(sql`SELECT api_token FROM users WHERE api_token = ${session.login}`)
-      if(tokens[0] === undefined){
-        console.log('[API] token mismatch')
-        return Promise.resolve(false)
-      }
-    }
-    else{
-      console.log('[API] session does not exist')
-      return Promise.resolve(false)
-    }
-    return Promise.resolve(true)
   }
 
   getSession(req:Request): (Session & Partial<SessionData>){

@@ -1,30 +1,33 @@
-import ApiCall from '../../interfaces'
-import { Express } from 'express'
-import { ConnectionPool } from '@databases/pg'
-import { SQL } from '@databases/sql'
 import { barcodes, categories, products } from '../../database'
-import Products from '../../__generated__/products'
+import ApiCall from '../../apiCallClass'
 
-export class loehkPrices implements ApiCall{
+export class loehkPrices extends ApiCall{
   processName = 'Loehk Prices'
 
-  async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {
-    app.get('/loehk/prices', async (req, res) =>{
-      const items =  await products(db).find().all() as any[]
+  async run (): Promise<void> {
+    this.app.get('/loehk/prices', async (req, res) =>{
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
+
+      const items =  await products(this.db).find().all() as any[]
       for(const item of items){
-        item.barcodes = await barcodes(db).find({product_id: item.id}).all()
+        item.barcodes = await barcodes(this.db).find({product_id: item.id}).all()
           .catch(err => console.log(err))
         item.combobox_barcodes = [] as string[]
         for(const barcode of item.barcodes){
           item.combobox_barcodes.push(`${barcode.variant_name? barcode.variant_name + '=' : ''}${barcode.barcode}`)
         }
 
-        item.category = await categories(db).findOne({id: item.category_id})
+        item.category = await categories(this.db).findOne({id: item.category_id})
           .catch(err => console.log(err))
         item.category_name = item.category.name
       }
 
-      const categoryArr = await categories(db).find().all()
+      const categoryArr = await categories(this.db).find().all()
         .catch(err => console.log(err))
 
       res.json({
@@ -33,10 +36,17 @@ export class loehkPrices implements ApiCall{
       })
     })
 
-    app.put('/loehk/prices', async (req, res) => {
+    this.app.put('/loehk/prices', async (req, res) => {
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
+
       if(!req.query.itemId){
         res.status(400).send()
-        console.log('Id is missing')
+        this.error('Id is missing')
         return
       }
       const id: number = parseInt(<string> req.query.itemId, 10)
@@ -52,60 +62,76 @@ export class loehkPrices implements ApiCall{
       delete productData.axfood
       productData.updated_at = new Date()
 
-      await products(db).update({id}, productData)
-        .catch(err => console.log(err))
-      console.log('Updated product ' + id)
+      const updatedEntry = await products(this.db).update({id}, productData)
+        .catch((err: Error) => this.error(err.message, err.stack))
 
-      const existingCodes = await barcodes(db).find({product_id: id}).all()
-      for(const barcodeStr of comboboxBarcodes){
-        // Parse barcode
-        let code: string, name : string | null
-        if(barcodeStr.includes('=')){
-          const split = barcodeStr.split('=', 2)
-          name = split[0]
-          code = split[1]
-        }
-        else{
-          code = barcodeStr
-          name = null
-        }
+        if(updatedEntry) {
+          this.log('Updated product ' + id)
+          const existingCodes = await barcodes(this.db).find({ product_id: id }).all()
 
-        // Check if barcode is already in database and update it's entry. Also removes the matched entry in array
-        let match = false
-        for(const index in existingCodes){
-          if (existingCodes[index].barcode === code){
-            await barcodes(db).update({id: existingCodes[index].id}, {barcode: code, variant_name: name})
-              .catch(err => console.log(err))
-            console.log('Updated barcode ' + existingCodes[index].barcode)
-            existingCodes.splice(parseInt(index), 1)
-            match = true
-            break
+          for (const barcodeStr of comboboxBarcodes) {
+            // Parse barcode
+            let code: string, name: string | null
+            if (barcodeStr.includes('=')) {
+              const split = barcodeStr.split('=', 2)
+              name = split[0]
+              code = split[1]
+            } else {
+              code = barcodeStr
+              name = null
+            }
+
+            // Check if barcode is already in database and update it's entry. Also removes the matched entry in array
+            let match = false
+            for (const index in existingCodes) {
+              if (existingCodes[index].barcode === code) {
+                await barcodes(this.db).update({ id: existingCodes[index].id }, {
+                  barcode: code,
+                  variant_name: name
+                })
+                  .catch(err => this.error(err))
+                this.log('Updated barcode ' + existingCodes[index].barcode)
+                existingCodes.splice(parseInt(index), 1)
+                match = true
+                break
+              }
+            }
+
+            // Add any barcodes that didn't have an match
+            if (!match) {
+              await barcodes(this.db).insertOrIgnore({
+                product_id: id,
+                barcode: code,
+                variant_name: name,
+                created_at: new Date(),
+                updated_at: new Date()
+              })
+                .catch((err: Error) => this.error(err.message, err.stack))
+              this.log('Added barcode ' + code)
+            }
           }
-        }
 
-        // Add any barcodes that didn't have an match
-        if(!match){
-          await barcodes(db).insertOrIgnore({
-            product_id: id,
-            barcode: code,
-            variant_name: name,
-            created_at: new Date(),
-            updated_at: new Date()
-          })
-            .catch(err => console.log(err))
-          console.log('Added barcode '+ code)
+          // Remove any unmatched barcodes from the database
+          for (const leftover of existingCodes) {
+            barcodes(this.db).delete({ id: leftover.id })
+              .then(() => this.log('Removed barcode ' + leftover.barcode))
+              .catch((err: Error) => this.error(err.message, err.stack))
+          }
+          res.send()
         }
-      }
-
-      // Remove any unmatched barcodes from the database
-      for (const leftover of existingCodes){
-        await barcodes(db).delete({id: leftover.id})
-          .catch(err => console.log(err))
-        console.log('Removed barcode ' + leftover.barcode)
-      }
+      else {
+        res.status(422).send()
+        }
     })
 
-    app.post('/loehk/prices', async (req, res) => {
+    this.app.post('/loehk/prices', async (req, res) => {
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
+
       const productData = req.body
       const barcodeArr: string[] = productData.barcodes
 
@@ -118,45 +144,62 @@ export class loehkPrices implements ApiCall{
       productData.created_at = new Date()
       productData.updated_at = new Date()
 
-      const newEntry = await products(db).insert(productData)
-        .catch(err => console.log(err))
-      console.log('Added product ' + productData.name)
+      const newEntry = await products(this.db).insert(productData)
+        .catch((err: Error) => this.error(err.message, err.stack))
 
-      for(const barcodeStr of barcodeArr){
-        // Parse barcode
-        let code: string, name : string | null
-        if(barcodeStr.includes('=')){
-          const split = barcodeStr.split('=', 2)
-          name = split[0]
-          code = split[1]
-        }
-        else{
-          code = barcodeStr
-          name = null
-        }
+      if(newEntry) {
+        this.log('Added product ' + productData?.name)
 
-        barcodes(db).insert({
-          product_id: (<Products[]><unknown>newEntry)[0].id,
-          barcode: code,
-          variant_name: name
-        })
-        console.log('Added barcode ' + code)
+        for (const barcodeStr of barcodeArr) {
+          // Parse barcode
+          let code: string, name: string | null
+          if (barcodeStr.includes('=')) {
+            const split = barcodeStr.split('=', 2)
+            name = split[0]
+            code = split[1]
+          } else {
+            code = barcodeStr
+            name = null
+          }
+
+          barcodes(this.db).insert({
+            product_id: newEntry[0].id,
+            barcode: code,
+            variant_name: name
+          })
+            .then(() => {
+              this.log('Added barcode ' + code)
+            })
+            .catch((err) => {
+              this.error(err)
+            })
+        }
+        res.send()
       }
-      res.send()
+      else {
+        res.status(422).send()
+      }
     })
 
-    app.delete('/loehk/prices', async (req, res) => {
+    this.app.delete('/loehk/prices', async (req, res) => {
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
+
       const id: number = req.body.itemId
-      if(typeof id != 'number' || isNaN(id)){
+      if(id === undefined || isNaN(id)){
         console.log('missing id')
         res.status(400).send()
       }
 
-      console.log('Deleted product ' + id)
-      await barcodes(db).delete({product_id: id})
+      await barcodes(this.db).delete({product_id: id})
         .catch(err => console.log(err))
-      await products(db).delete({id})
+      await products(this.db).delete({id})
         .catch(err => console.log(err))
+      this.log('Deleted product ' + id)
 
       res.send()
     })

@@ -1,19 +1,16 @@
-import ApiCall, { memberType } from '../interfaces'
-import { Express } from 'express'
-import { ConnectionPool } from '@databases/pg'
-import { SQL } from '@databases/sql'
+import { memberType } from '../interfaces'
 import ActiveYears from '../__generated__/active_years'
 import CommitteeMembers from '../__generated__/committee_members'
+import ApiCall from '../apiCallClass'
 
-export class committee implements ApiCall{
+export class committee extends ApiCall{
   processName = 'Committee'
 
-  async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {
+  async run (): Promise<void> {
 
-    app.get('/committee', async (req, res)=>{
-      console.log('[API] ' + this.processName + ' was accessed')
-      const yearList: ActiveYears[] = await db.query(sql`SELECT id, year, group_photo, description FROM active_years ORDER BY year DESC LIMIT 1`)
-      const memberList: CommitteeMembers[] = await db.query(sql`SELECT * FROM committee_members WHERE active_year_id = ${yearList[0].id}`)
+    this.app.get('/committee', async (req, res)=>{
+      const yearList: ActiveYears[] = await this.db.query(this.sql`SELECT id, year, group_photo, description FROM active_years ORDER BY year DESC LIMIT 1`)
+      const memberList: CommitteeMembers[] = await this.db.query(this.sql`SELECT * FROM committee_members WHERE active_year_id = ${yearList[0].id}`)
 
       const formattedMembers: memberType[] = []
 

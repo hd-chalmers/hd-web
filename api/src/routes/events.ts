@@ -1,16 +1,13 @@
-import ApiCall, { eventType } from '../interfaces'
-import { Express } from 'express'
-import { ConnectionPool } from '@databases/pg'
-import { SQL } from '@databases/sql'
+import { eventType } from '../interfaces'
 import Events from '../__generated__/events'
+import ApiCall from '../apiCallClass'
 
-export class events implements ApiCall{
+export class events extends ApiCall{
   processName = 'Events'
-  async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {
+  async run (): Promise<void> {
 
-    app.get('/events', async (req, res) =>{
-      console.log('[API] ' + this.processName + ' was accessed')
-      const events: Events[] = await db.query(sql`SELECT * FROM events WHERE date > now()
+    this.app.get('/events', async (req, res) =>{
+      const events: Events[] = await this.db.query(this.sql`SELECT * FROM events WHERE date > now()
                        AND show_on_frontpage = true ORDER BY date`)
 
       const formattedEvents: eventType[] = [];

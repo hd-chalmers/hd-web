@@ -1,15 +1,18 @@
-import ApiCall from '../../interfaces'
-import { Express } from 'express'
-import { ConnectionPool } from '@databases/pg'
-import { SQL } from '@databases/sql'
 import Events from '../../__generated__/events'
 import { events } from '../../database'
+import ApiCall from '../../apiCallClass'
 
-export class loehkEvents implements ApiCall{
+export class loehkEvents extends ApiCall{
   processName = 'Loehk Events'
 
-  async run (app: Express, db: ConnectionPool, sql: SQL): Promise<void> {
-    app.patch('/loehk/events', async (req, res) => {
+  async run (): Promise<void> {
+    this.app.patch('/loehk/events', async (req, res) => {
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
 
       if(!req.query.eventId){
         console.log('missing id')
@@ -26,15 +29,15 @@ export class loehkEvents implements ApiCall{
 
         switch (item){
           case 'date':
-            temp = await db.query(sql`SELECT date FROM events WHERE id = ${id};`) as Events[]
-            await db.query(sql`UPDATE events SET date = ${req.body[item] + ' ' + temp[0].date.toLocaleTimeString('se-SV', {hour: '2-digit', minute: '2-digit'})},
+            temp = await this.db.query(this.sql`SELECT date FROM events WHERE id = ${id};`) as Events[]
+            await this.db.query(this.sql`UPDATE events SET date = ${req.body[item] + ' ' + temp[0].date.toLocaleTimeString('se-SV', {hour: '2-digit', minute: '2-digit'})},
                   updated_at = current_timestamp WHERE id = ${id};`)
               .catch((err) => console.log(err))
             break;
 
           case 'time':
-            temp = await db.query(sql`SELECT to_char(date, 'YYYY-MM-DD ') AS date FROM events WHERE id = ${id};`) as Events[]
-            await db.query(sql`UPDATE events SET date = ${temp[0].date + req.body[item]}, updated_at = current_timestamp WHERE id = ${id};`)
+            temp = await this.db.query(this.sql`SELECT to_char(date, 'YYYY-MM-DD ') AS date FROM events WHERE id = ${id};`) as Events[]
+            await this.db.query(this.sql`UPDATE events SET date = ${temp[0].date + req.body[item]}, updated_at = current_timestamp WHERE id = ${id};`)
               .catch((err) => console.log(err))
             break;
 
@@ -51,7 +54,7 @@ export class loehkEvents implements ApiCall{
             // @ts-ignore
             temp[item] = req.body[item]
 
-            events(db).update({id: id}, temp)
+            events(this.db).update({id: id}, temp)
              .catch((err) => console.log(err))
             break;
 
@@ -64,14 +67,28 @@ export class loehkEvents implements ApiCall{
       res.send()
     })
 
-    app.get('/loehk/events', async (req, res) => {
-      const events: Events[] = await db.query(sql`SELECT id, title, description, location, poster, show_on_frontpage, google_event_id, facebook_event_link,
+    this.app.get('/loehk/events', async (req, res) => {
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
+
+      const events: Events[] = await this.db.query(this.sql`SELECT id, title, description, location, poster, show_on_frontpage, google_event_id, facebook_event_link,
                                 to_char(events.date, 'HH24:MI') AS time, to_char(events.date, 'YYYY-MM-DD') AS date FROM events`)
 
       res.json(events)
     })
 
-    app.post('/loehk/events', async (req, res) => {
+    this.app.post('/loehk/events', async (req, res) => {
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
+
       const eventObj = req.body
       if(eventObj.time){
         eventObj.date += ' ' + eventObj.time
@@ -80,25 +97,32 @@ export class loehkEvents implements ApiCall{
       eventObj.updated_at = new Date()
       eventObj.created_at = new Date()
 
-      await events(db).insertOrIgnore(eventObj)
+      await events(this.db).insertOrIgnore(eventObj)
         .catch((err) =>{
           console.log(err)
           res.status(400).send()
           return
         })
       console.log('[API] New event added')
-      const result: Events[] = await db.query(sql`SELECT id, title, description, location, poster, show_on_frontpage, google_event_id, facebook_event_link,
+      const result: Events[] = await this.db.query(this.sql`SELECT id, title, description, location, poster, show_on_frontpage, google_event_id, facebook_event_link,
                                 to_char(events.date, 'HH24:MI') AS time, to_char(events.date, 'YYYY-MM-DD') AS date FROM events ORDER BY id DESC LIMIT 1`)
       res.json(result[0])
     })
 
-    app.delete('/loehk/events', async (req, res) => {
+    this.app.delete('/loehk/events', async (req, res) => {
+      // Check if request is authorized
+      if(!await this.verify(<string> req.header('sessionId'))){
+        this.warn(req.header('sessionId') + ' tried to access without being loggedin')
+        res.status(403).send()
+        return
+      }
+
       if(!req.body.id){
         res.status(400).send()
         return
       }
 
-      await events(db).delete({id: req.body.id})
+      await events(this.db).delete({id: req.body.id})
         .catch((err) => {
           console.log(err)
           res.status(400).send()
