@@ -1,42 +1,42 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/index.vue'
+import BaseLayout from '@/views/layouts/base.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    component: () => import(/* webpackChunkName: "base" */ '../views/layouts/base.vue'),
+    component: BaseLayout,
     children: [
       {
         path: '',
         name: 'Home',
-        component: Home
+        component: () => import(/* webpackChunkName: "Home" */ '@/views/index.vue')
       },
       {
         path: '/events',
         name: 'Events',
-        component: () => import(/* webpackChunkName: "events" */ '../views/events.vue')
+        component: () => import(/* webpackChunkName: "events" */ '@/views/events.vue')
       },
       {
         path: '/committee',
         name: 'Committee',
-        component: () => import(/* webpackChunkName: "committee" */ '../views/committee/members.vue')
+        component: () => import(/* webpackChunkName: "committee" */ '@/views/committee/members.vue')
       },
       {
         path: '/contact',
         name: 'Contact',
-        component: () => import(/* webpackChunkName: "contact" */ '../views/contact.vue')
+        component: () => import(/* webpackChunkName: "contact" */ '@/views/contact.vue')
       },
       {
         path: '/login',
         name: 'Login',
-        component: () => import(/* webpackChunkName: "login" */ '../views/auth/login.vue')
+        component: () => import(/* webpackChunkName: "login" */ '@/views/auth/login.vue')
       },
       {
         path: '',
-        component: () => import(/* webpackChunkName: "loehkMain" */ '../views/layouts/LoehkMain.vue'),
+        component: () => import(/* webpackChunkName: "loehkMain" */ '@/views/layouts/LoehkMain.vue'),
         children: [
           {
             path: '/loehk',
@@ -45,32 +45,32 @@ const routes: Array<RouteConfig> = [
           {
             path: '/loehk/home',
             name: 'loehk',
-            component: () => import(/* webpackChunkName: "loehkFront" */ '../views/loehk/Front.vue')
+            component: () => import(/* webpackChunkName: "loehkFront" */ '@/views/loehk/Front.vue')
           },
           {
             path: '/loehk/active-year',
             name: 'loehk-active-year',
-            component: () => import(/* webpackChunkName: "loehkActiveYear" */ '../views/loehk/ActiveYear.vue')
+            component: () => import(/* webpackChunkName: "loehkActiveYear" */ '@/views/loehk/ActiveYear.vue')
           },
           {
             path: '/loehk/events',
             name: 'loehk-events',
-            component: () => import(/* webpackChunkName: "loehkEvents" */ '../views/loehk/Events.vue')
+            component: () => import(/* webpackChunkName: "loehkEvents" */ '@/views/loehk/Events.vue')
           },
           {
             path: '/loehk/investments',
             name: 'loehk-investments',
-            component: () => import(/* webåackChunkName: "loehkInvestments" */ '../views/loehk/InvestmentAccounts.vue')
+            component: () => import(/* webåackChunkName: "loehkInvestments" */ '@/views/loehk/InvestmentAccounts.vue')
           },
           {
             path: '/loehk/prices',
             name: 'loehk-prices',
-            component: () => import(/* webpackChunkName: "loehkPrices" */ '../views/loehk/Prices.vue')
+            component: () => import(/* webpackChunkName: "loehkPrices" */ '@/views/loehk/Prices.vue')
           },
           {
             path: '/loehk/games',
             name: 'loehk-games',
-            component: () => import(/* webpackChunkName: "loehkGames" */ '../views/loehk/Games.vue')
+            component: () => import(/* webpackChunkName: "loehkGames" */ '@/views/loehk/Games.vue')
           }
         ]
       }

@@ -19,22 +19,22 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import axios from 'axios'
 
 export default {
   name: 'ChassitOpenIcon',
-  created ():void {
+  created () {
     this.getStatus()
     setInterval(this.getStatus, 3000)
   },
   methods: {
-    showDate ():void {
+    showDate () {
       if (this.state !== -1) {
         this.snackbar = true
       }
     },
-    getStatus ():void {
+    getStatus () {
       axios(
         '/door',
         {
@@ -72,8 +72,7 @@ export default {
       })
     }
   },
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  data (): object {
+  data () {
     return {
       snackbar: false,
       loading: true,

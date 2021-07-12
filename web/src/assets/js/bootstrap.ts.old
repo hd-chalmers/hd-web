@@ -1,4 +1,4 @@
-window._ = require('lodash');
+(<any> window)._ = require('lodash');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -7,10 +7,12 @@ window._ = require('lodash');
  */
 
 try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
 
     //require('bootstrap');
+// eslint-disable-next-line no-empty
 } catch (e) {}
 
 /**
