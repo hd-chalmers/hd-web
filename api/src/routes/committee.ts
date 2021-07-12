@@ -8,7 +8,7 @@ export class committee extends ApiCall{
 
   async run (): Promise<void> {
 
-    this.app.get('/committee', async (req, res)=>{
+    this.app.get(process.env.API_PATH + '/committee', async (req, res)=>{
       const yearList: ActiveYears[] = await this.db.query(this.sql`SELECT id, year, group_photo, description FROM active_years ORDER BY year DESC LIMIT 1`)
       const memberList: CommitteeMembers[] = await this.db.query(this.sql`SELECT * FROM committee_members WHERE active_year_id = ${yearList[0].id}`)
 

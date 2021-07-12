@@ -46,7 +46,7 @@ import { eventType } from '@/assets/ts/interfaces'
       }
       events: eventType[] = []
       getEvents (): void {
-        fetch('http://localhost:8000/events').then(res =>res.text()).then(res => {
+        fetch(process.env.VUE_APP_API_URL + '/events').then(res =>res.text()).then(res => {
           this.events = JSON.parse(res, (key: string, value: any) => {
             if (key == 'date') {
               return new Date(value)

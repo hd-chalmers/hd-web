@@ -177,7 +177,7 @@ export default {
             this.$set(this.load, 'time', true);
             this.$set(this.errors, 'time', '')
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/events?eventId=${this.event.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -216,7 +216,7 @@ export default {
             this.$set(this.load, 'date', true);
             this.$set(this.errors, 'date', '')
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/events?eventId=${this.event.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -296,7 +296,7 @@ export default {
                 data.append(fieldname, this.event[fieldname]);
             }*/
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/events?eventId=${this.event.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/events?eventId=${this.event.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -333,7 +333,7 @@ export default {
         getEvents() {
             this.$set(this, "loading", true);
             this.state.then((obj) => {
-              fetch('http://localhost:8000/loehk/events', {
+              fetch(process.env.VUE_APP_API_URL + '/loehk/events', {
                 headers:{
                   sessionId: obj.SessionStore.getSessionId()
                 }
@@ -354,7 +354,7 @@ export default {
             this.$set(this.message, "deleteEvent", '');
             this.$set(this.errors, 'deleteEvent', '')
           this.state.then(obj => {
-            fetch (`http://localhost:8000/loehk/events`, {
+            fetch (process.env.VUE_APP_API_URL + `/loehk/events`, {
 
             // Adding method type
             method: "DELETE",
@@ -392,7 +392,7 @@ export default {
           this.$set(this.errors, 'newEvent', '')
 
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/events`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/events`, {
 
               // Adding method type
               method: "POST",

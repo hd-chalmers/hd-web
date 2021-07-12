@@ -4,7 +4,7 @@ import DatabaseSchema, {serializeValue} from './__generated__';
 
 export {sql};
 
-const db = createConnectionPool('postgres://hd:hd@localhost:1081/hd');
+const db = createConnectionPool();
 export default db;
 
 // You can list whatever tables you actually have here:

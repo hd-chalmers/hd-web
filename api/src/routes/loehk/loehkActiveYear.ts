@@ -6,7 +6,7 @@ export class loehkActiveYear extends ApiCall{
   processName = 'Loehk Active Year'
 
   async run (): Promise<void> {
-    this.app.get('/loehk/active_year', async (req, res) => {
+    this.app.get(process.env.API_PATH + '/loehk/active_year', async (req, res) => {
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')
@@ -23,7 +23,7 @@ export class loehkActiveYear extends ApiCall{
       res.json({current: all_years[0], all_years})
     })
 
-    this.app.patch('/loehk/active_year', async (req, res) => {
+    this.app.patch(process.env.API_PATH + '/loehk/active_year', async (req, res) => {
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')
@@ -90,12 +90,12 @@ export class loehkActiveYear extends ApiCall{
                 break
               default:
                 console.log(file.mimetype + ' is not an allowed filetype')
-                res.status(400).json({error: 'file is not in a accepted image format'})
+                res.status(415).send()
                 return
             }
             file.mv(`./storage/public/${(<any>year).year.getFullYear()}/` + file.name, (err) => console.log(err))
             temp = {} as any
-            temp[key] = `http://localhost:8000/static/${(<any>year).year.getFullYear()}/` + file.name
+            temp[key] = `${<string>process.env.API_FULL_URL +process.env.STATIC_PATH}/${(<any>year).year.getFullYear()}/` + file.name
             temp.updated_at = new Date()
             active_years(this.db).update({id}, temp)
               .catch(err => console.log(err))
@@ -110,7 +110,7 @@ export class loehkActiveYear extends ApiCall{
       res.send()
     })
 
-    this.app.post('/loehk/active_year', async (req, res) => {
+    this.app.post(process.env.API_PATH + '/loehk/active_year', async (req, res) => {
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')

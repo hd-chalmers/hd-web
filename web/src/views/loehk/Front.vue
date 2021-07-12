@@ -174,7 +174,7 @@ export default {
     methods: {
         getStatistics() {
           this.state.then(obj => {
-            fetch('http://localhost:8000/loehk/front', {
+            fetch(process.env.VUE_APP_API_URL + '/loehk/front', {
               headers: {
                 sessionId: obj.SessionStore.getSessionId()
               }

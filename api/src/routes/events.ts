@@ -6,7 +6,7 @@ export class events extends ApiCall{
   processName = 'Events'
   async run (): Promise<void> {
 
-    this.app.get('/events', async (req, res) =>{
+    this.app.get(process.env.API_PATH + '/events', async (req, res) =>{
       const events: Events[] = await this.db.query(this.sql`SELECT * FROM events WHERE date > now()
                        AND show_on_frontpage = true ORDER BY date`)
 

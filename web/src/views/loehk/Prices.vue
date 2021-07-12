@@ -278,7 +278,7 @@ export default {
             this.item.price = (Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0)))
 
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/prices`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
 
                 // Adding method type
                 method: "POST",
@@ -342,7 +342,7 @@ export default {
             this.$set(this.errors, 'delete' + item.id, '')
 
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/prices`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
 
               // Adding method type
               method: "DELETE",
@@ -380,7 +380,7 @@ export default {
             item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)))
 
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/prices?itemId=${item.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/prices?itemId=${item.id}`, {
 
               // Adding method type
               method: "PUT",
@@ -426,7 +426,7 @@ export default {
 
             this.state.then(obj => {
               fetch (
-              'http://localhost:8000/loehk/prices', {
+                process.env.VUE_APP_API_URL + '/loehk/prices', {
                 headers: {
                   sessionId: obj.SessionStore.getSessionId()
                 }

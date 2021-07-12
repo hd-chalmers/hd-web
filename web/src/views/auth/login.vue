@@ -40,7 +40,7 @@ import {Component, Vue} from 'vue-property-decorator'
 
     submit (): void{
       const inputs = document.getElementsByTagName('input')
-      fetch("http://localhost:8000/login", {
+      fetch(process.env.VUE_APP_API_URL + "/login", {
 
         // Adding method type
         method: "POST",

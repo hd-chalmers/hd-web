@@ -7,7 +7,7 @@ export class login extends ApiCall {
   processName = 'Login'
 
   async run (): Promise<void> {
-    this.app.post('/login', async (req, res) => {
+    this.app.post(process.env.API_PATH + '/login', async (req, res) => {
       const email = req.body.email
       const password = req.body.password
       const accounts: Users[] = await this.db.query(this.sql`SELECT email, password, api_token

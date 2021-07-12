@@ -5,7 +5,7 @@ import ApiCall from '../apiCallClass'
 export class frontPage extends ApiCall{
   processName = 'Front-page'
   async run (): Promise<void> {
-    this.app.get('/frontpage', async (req, res) =>{
+    this.app.get(process.env.API_PATH + '/frontpage', async (req, res) =>{
 
       const eventList: Events[] = await this.db.query(this.sql`SELECT title, date FROM events
             WHERE date > now() AND show_on_frontpage=true ORDER BY date LIMIT 1;`)

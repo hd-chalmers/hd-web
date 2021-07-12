@@ -59,7 +59,7 @@ export default class IndexPage extends Vue {
   }
   frontpageImg = ''
   async getData(): Promise<void>{
-    fetch('http://localhost:8000/frontpage').then(res =>res.json()).then(res => {
+    fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res =>res.json()).then(res => {
         this.eventObj = {
           title: res.event.title,
           date: new Date(res.event.date),

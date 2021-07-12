@@ -12,7 +12,7 @@ export class loehkFrontpage extends ApiCall{
   processName = 'Loehk Frontpage'
 
   async run (): Promise<void> {
-    this.app.get('/loehk/front', async (req, res) => {
+    this.app.get(process.env.API_PATH + '/loehk/front', async (req, res) => {
       // Check if request is authorized
         if(!await this.verify(<string> req.header('sessionId'))){
           this.warn(req.header('sessionId') + ' tried to access without being loggedin')

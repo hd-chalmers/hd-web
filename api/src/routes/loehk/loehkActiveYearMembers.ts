@@ -7,7 +7,7 @@ export class loehkActiveYearMembers extends ApiCall{
   processName = 'Loehk Active Year Members'
 
   async run (): Promise<void> {
-    this.app.patch('/loehk/active_year/committee_members', async (req, res) => {
+    this.app.patch(process.env.API_PATH + '/loehk/active_year/committee_members', async (req, res) => {
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')
@@ -49,7 +49,7 @@ export class loehkActiveYearMembers extends ApiCall{
           .catch((err: Error) => this.error(err.message, err.stack))
         const file = req.files.image as UploadedFile
         await file.mv(`./storage/public/${year?.year.getFullYear()}/members/${(<any>updatedMember)[0]?.name}`)
-        const image = `http://localhost:8000/static/${year?.year.getFullYear()}/members/${(<any>updatedMember)[0]?.name}`
+        const image = `${<string>process.env.API_FULL_URL + process.env.STATIC_PATH}/${year?.year.getFullYear()}/members/${(<any>updatedMember)[0]?.name}`
         updatedMember = await committee_members(this.db).update({id: (<any>updatedMember)[0].id},{image})
           .catch((err: Error) => this.error(err.message, err.stack))
       }
@@ -57,7 +57,7 @@ export class loehkActiveYearMembers extends ApiCall{
       res.json((<any>updatedMember)[0])
     })
 
-    this.app.delete('/loehk/active_year/committee_members', async (req, res) =>{
+    this.app.delete(process.env.API_PATH + '/loehk/active_year/committee_members', async (req, res) =>{
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')

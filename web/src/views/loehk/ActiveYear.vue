@@ -116,7 +116,7 @@ export default {
             let data              = new FormData();
             data.append('front_image', $value, 'front_image');
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
 
                 // Adding method type
                 method: "PATCH",
@@ -164,7 +164,7 @@ export default {
             let data                   = new FormData()
             data.append('background_image', $value, 'background_image')
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -212,7 +212,7 @@ export default {
             let data              = new FormData()
             data.append('group_photo', $value, 'group_photo')
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -261,7 +261,7 @@ export default {
             let data                  = new FormData()
             data.append('christmas_image', $value, 'christmas_image');
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
 
                 // Adding method type
                 method: "PATCH",
@@ -387,7 +387,7 @@ export default {
           this.load.addYear = true
           this.errors.addYear = ''
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/active_year`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year`, {
 
               // Adding method type
               method: "POST",
@@ -449,7 +449,7 @@ export default {
             this.$set(this.errors.committee_member, id + fieldname, '')
 
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/active_year/committee_members${id ? '?memberId=' + id : ''}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/committee_members${id ? '?memberId=' + id : ''}`, {
 
                 // Adding method type
                 method: "PATCH",
@@ -503,7 +503,7 @@ export default {
             }
 
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/active_year/committee_members`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/committee_members`, {
 
                 // Adding method type
                 method: "DELETE",
@@ -540,7 +540,7 @@ export default {
         },
         getActiveYear() {
           this.state.then(obj => {
-            fetch('http://localhost:8000/loehk/active_year', {
+            fetch(process.env.VUE_APP_API_URL + '/loehk/active_year', {
               headers: {
                 sessionId: obj.SessionStore.getSessionId()
               }
@@ -571,7 +571,7 @@ export default {
           this.message.description = ''
           this.errors.description = ''
           this.state.then(obj => {
-            fetch(`http://localhost:8000/loehk/active_year?yearId=${this.active_year.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -592,6 +592,7 @@ export default {
                   this.message.description = 'Sparat!'
                 } else {
                   if(res.status === 403){
+                    this.errors.description = 'utloggad, refresh?'
                     this.errors.description = 'utloggad, refresh?'
                   }
                   else {

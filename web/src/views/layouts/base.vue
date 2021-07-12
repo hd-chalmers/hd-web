@@ -33,7 +33,7 @@ export default class Base extends Vue {
     }
     backgroundProperties = ''
     async getData(): Promise<void>{
-      fetch('http://localhost:8000/background').then(res =>res.json()).then(res => {
+      fetch(process.env.VUE_APP_API_URL + '/background').then(res =>res.json()).then(res => {
         this.backgroundProperties = `background-image: url(${res});` +
           'background-repeat: no-repeat;' +
           'background-position: center;' +

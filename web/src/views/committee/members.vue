@@ -78,7 +78,7 @@
     description = ''
     committeeMembers: Array<memberType> = []
     async getData(): Promise<void>{
-      fetch('http://localhost:8000/committee').then(res =>res.json()).then(res =>{
+      fetch(process.env.VUE_APP_API_URL + '/committee').then(res =>res.json()).then(res =>{
         this.displayedYear = res.displayedYear
         this.groupPhoto = res.groupPhoto
         this.description = res.description

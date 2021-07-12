@@ -195,7 +195,7 @@ export default {
             this.$set(this.errors, 'delete' + item.id, '')
 
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/investments`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
 
                 // Adding method type
                 method: "DELETE",
@@ -234,7 +234,7 @@ export default {
             this.$set(this.errors, 'new', '')
 
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/investments`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
 
                 // Adding method type
                 method: "POST",
@@ -293,7 +293,7 @@ export default {
             this.$set(this.errors, item.id, '')
 
             this.state.then(obj => {
-              fetch(`http://localhost:8000/loehk/investments?accountId=${item.id}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/investments?accountId=${item.id}`, {
 
                 // Adding method type
                 method: "PUT",
@@ -341,7 +341,7 @@ export default {
             this.$set(this, "loading", true);
 
             this.state.then(obj => {
-              fetch('http://localhost:8000/loehk/investments', {
+              fetch(process.env.VUE_APP_API_URL + '/loehk/investments', {
                 headers: {
                   sessionId: obj.SessionStore.getSessionId()
                 }

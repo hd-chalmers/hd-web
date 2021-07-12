@@ -6,7 +6,7 @@ export class loehkInvestAcc extends ApiCall{
   processName = 'Loehk Investment Accounts'
 
   async run (): Promise<void> {
-    this.app.get('/loehk/investments', async (req, res) =>{
+    this.app.get(process.env.API_PATH + '/loehk/investments', async (req, res) =>{
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')
@@ -27,7 +27,7 @@ export class loehkInvestAcc extends ApiCall{
       res.json({active, inactive})
     })
 
-    this.app.put('/loehk/investments', async (req, res) => {
+    this.app.put(process.env.API_PATH + '/loehk/investments', async (req, res) => {
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')
@@ -66,7 +66,7 @@ export class loehkInvestAcc extends ApiCall{
       }
     })
 
-    this.app.post('/loehk/investments', async (req, res) => {
+    this.app.post(process.env.API_PATH + '/loehk/investments', async (req, res) => {
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')
@@ -99,7 +99,7 @@ export class loehkInvestAcc extends ApiCall{
       }
     })
 
-    this.app.delete('/loehk/investments', async (req, res) => {
+    this.app.delete(process.env.API_PATH + '/loehk/investments', async (req, res) => {
       // Check if request is authorized
       if(!await this.verify(<string> req.header('sessionId'))){
         this.warn(req.header('sessionId') + ' tried to access without being loggedin')

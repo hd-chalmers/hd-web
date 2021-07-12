@@ -12,16 +12,19 @@ import fs from 'fs'
 import AsyncRedisClient from './src/asyncRedisClient'
 
 const asyncRedis = new AsyncRedisClient({
-  host: 'localhost',
-  port: 49153
+  host: process.env.REDIS_URL,
+  port: parseInt(<string>process.env.REDIS_PORT)
 })
 const app = express()
-const PORT = 8000
-app.use(morgan(
-  'combined',
-  {
-    stream: fs.createWriteStream('./storage/logs/httpRequests.log')
-}))
+if(!fs.existsSync('./storage/logs')) {
+  fs.mkdirSync('./storage/logs', {recursive: true})
+  fs.writeFileSync('./storage/logs/httpRequests.log', '')
+}
+    app.use(morgan(
+      'combined',
+      {
+        stream: fs.createWriteStream('./storage/logs/httpRequests.log')
+      }))
 app.use(morgan( LogStyle.bg.white + LogStyle.fg.black
   + `:date[iso] | :method | :url ${LogStyle.reset} Status :status, :response-time ms, http :http-version & :req[content-type]`))
 app.use(Cors())
@@ -33,7 +36,7 @@ app.use(expressFileUpload({
   safeFileNames: true,
   preserveExtension: true
 }))
-app.use('/static',express.static('./storage/public'))
+app.use(<string>process.env.STATIC_PATH,express.static('./storage/public'))
 /*
 app.use(expressSession({
   secret: 'hd',
@@ -54,9 +57,9 @@ app.use((req, res, next) => {
 })
 
 app.get('/', (req, res) => res.send('Api is running'))
-app.listen(PORT, () => {
+app.listen(parseInt(<string>process.env.API_PORT), () => {
   console.log(LogStyle.bg.green + LogStyle.fg.black + new Date().toISOString() +
-    ` | Server ${LogStyle.reset} Server is running at http://localhost:${PORT}`)
+    ` | Server ${LogStyle.reset} Server is running at ` + process.env.API_FULL_URL)
 })
 
 for (const route of routes){
