@@ -1,13 +1,11 @@
 <template>
     <div>
         <v-navigation-drawer v-model="nav" app :mini-variant="$vuetify.breakpoint.lgOnly" :expand-on-hover="$vuetify.breakpoint.lgOnly" :temporary="$vuetify.breakpoint.mobile" clipped>
-            <v-list shaped>
+            <v-list nav>
                 <v-list-item-group>
                     <v-list-item to="/loehk/home">
                         <v-list-item-icon>
-                            <v-icon>
-                                mdi-home
-                            </v-icon>
+                              <home-icon/>
                         </v-list-item-icon>
                         <v-list-item-content>
                             Loehk
@@ -15,9 +13,7 @@
                     </v-list-item>
                     <v-list-item to="/loehk/active-year">
                         <v-list-item-icon>
-                            <v-icon>
-                                mdi-account-group
-                            </v-icon>
+                            <users-icon/>
                         </v-list-item-icon>
                         <v-list-item-content>
                             Sittande
@@ -25,9 +21,7 @@
                     </v-list-item>
                     <v-list-item to="/loehk/events">
                         <v-list-item-icon>
-                            <v-icon>
-                                mdi-calendar
-                            </v-icon>
+                            <calendar-icon/>
                         </v-list-item-icon>
                         <v-list-item-content>
                             Events
@@ -35,9 +29,7 @@
                     </v-list-item>
                     <v-list-item to="/loehk/investments">
                         <v-list-item-icon>
-                            <v-icon>
-                                mdi-receipt
-                            </v-icon>
+                            <clipboard-icon/>
                         </v-list-item-icon>
                         <v-list-item-content>
                             Strecklista
@@ -45,9 +37,7 @@
                     </v-list-item>
                     <v-list-item to="/loehk/prices">
                         <v-list-item-icon>
-                            <v-icon>
-                                mdi-cart
-                            </v-icon>
+                            <shopping-cart-icon/>
                         </v-list-item-icon>
                         <v-list-item-content>
                             Prislista
@@ -55,9 +45,9 @@
                     </v-list-item>
                     <v-list-item to="/loehk/games">
                         <v-list-item-icon>
-                            <v-icon>
-                                mdi-gamepad-square
-                            </v-icon>
+                          <i class="material-icons-outlined" style="image-rendering: pixelated">
+                            videogame_asset
+                          </i>
                         </v-list-item-icon>
                         <v-list-item-content>
                             Spel
@@ -67,8 +57,8 @@
             </v-list>
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn block color="purple" dark>
-                      <v-icon style="margin-right: 7px">mdi-logout</v-icon>
+                    <v-btn block color="purple" outlined dark>
+                      <log-out-icon style="margin-right: 7px"/>
                         Logout
                     </v-btn>
                 </div>
@@ -79,9 +69,7 @@
                 <v-card>
                     <v-card-title>
                         <v-btn icon @click.stop="nav = !nav">
-                            <v-icon>
-                                mdi-menu
-                            </v-icon>
+                            <menu-icon/>
                         </v-btn>
                         Loehk
                     </v-card-title>
@@ -96,17 +84,27 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "LoehkMain",
-    data() {
-        return {
-            nav: null,
-        }
-    }
+<script lang="ts">
+import {Vue, Component} from 'vue-property-decorator'
+import {HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon,
+  ShoppingCartIcon, MonitorIcon, MenuIcon, LogOutIcon} from 'vue-feather-icons'
+
+@Component({
+  components: {
+    HomeIcon,
+    UsersIcon,
+    CalendarIcon,
+    ClipboardIcon,
+    ShoppingCartIcon,
+    MonitorIcon,
+    MenuIcon,
+    LogOutIcon
+  }
+})
+export default class LoehkMain extends Vue{
+  nav: boolean | null = null
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
 </style>
