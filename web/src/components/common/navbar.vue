@@ -91,6 +91,14 @@
     color: rgba(0, 0, 0, 0.87);;
   }
 
+  .v-app-bar .v-toolbar__content .v-btn:hover .v-btn__content {
+    color: #E0218A;
+  }
+
+  .v-app-bar .v-toolbar__content .v-btn .v-btn__content {
+    transition: color 0.28s;
+  }
+
   .v-app-bar .v-toolbar__content .v-btn--active {
     border-bottom: 3px solid #E0218A;
     padding-top: 3px !important;
