@@ -2,46 +2,60 @@ version: "3"
 
 services:
   hd-site:
-    build: .
+    build: web
     hostname: hd
     env_file:
-      - ./web/.env
+      - web/.env
     ports:
-      - 8080:8080
-      - 6001:6001
+      - 80:80
     volumes:
-      - ./web:/var/www/html
+      - ./web/dist:/var/www/html
     restart: on-failure:3
     depends_on:
-    - hd-db
-    - hd-memcached
-    - hd-redis
+      - hd-api
+
+  hd-api:
+    build: api
+    hostname: hd-api
+    env_file:
+      - ./api/.env
+    ports:
+    - 8000:8000
+    restart: on-failure:3
+    links:
+      - hd-redis
+      - hd-db
+    depends_on:
+      - hd-db
+      - hd-redis
 
   hd-db:
     #    image: registry.wayatech.se/frontend/hd/db
     build: db
     hostname: hd-db
     env_file:
-      - ./web/.env
+      - web/.env
     ports:
       - ${HOST_AUX_PORT_HEKTO:-10}81:5432
     restart: on-failure:3
 
-  hd-memcached:
-    image: memcached:latest
-    hostname: hd-memcached
-    env_file:
-    - ./web/.env
-    restart: on-failure:3
+ # hd-memcached:
+ #   image: memcached:latest
+ #   hostname: hd-memcached
+ #   env_file:
+ #   - web/.env
+ #   restart: on-failure:3
 
   hd-redis:
     image: redis:latest
     hostname: hd-redis
     env_file:
-      - ./web/.env
+      - web/.env
+    #ports:
+    #- "6379:6379"
     restart: on-failure:3
 
 networks:
   default:
     external:
-      name: ${NETWORK:-local2}
+      name: ${NETWORK:-local}

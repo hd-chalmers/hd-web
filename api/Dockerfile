@@ -1,4 +1,3 @@
-FROM git.hd.chalmers.se:5050/hd/images/web:latest
 FROM node:14
 
 ENV DB_HOST=hd-db DB_PORT=5432 DB_DATABASE=hd DB_USERNAME=hd DB_PASSWORD=hd DB_CONNECTIOn=pgsql \
@@ -8,17 +7,10 @@ ENV DB_HOST=hd-db DB_PORT=5432 DB_DATABASE=hd DB_USERNAME=hd DB_PASSWORD=hd DB_C
 	CACHE_DRIVER=redis SESSION_DRIVER=redis MEMCACHED_HOST=hd-memcached REDIS_HOST=hd-redis \
     BROADCAST_DRIVER=redis QUEUE_DRIVER=database ENVIRONMENT=production
 
-RUN npm install --global @vue/cli
-COPY docker-entrypoint /usr/local/bin/
-RUN sed -i -e 's/\r$//' /usr/local/bin/docker-entrypoint && chmod +x /usr/local/bin/docker-entrypoint
-ENTRYPOINT [ "docker-entrypoint" ]
-#RUN service supervisor start
-#CMD [ "apache2-foreground" ]
 
-WORKDIR /var/www/html
-#COPY php.ini /usr/local/etc/php/
-#COPY laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
-
-
-# DEPLOY COPY --chown=www-data:www-data /web/ /var/www/html/
-# DEPLOY COPY --chown=www-data:www-data /web/.* /var/www/html/
+WORKDIR /home/node
+COPY package*.json ./
+USER node
+RUN npm i
+COPY ./build .
+CMD [ "node", "app.js" ]
