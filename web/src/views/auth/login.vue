@@ -7,23 +7,23 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <!--v-form target="_self"-->
+                        <v-form @submit.prevent="submit()">
                             <v-row>
                                 <v-col>
-                                    <v-text-field type="email" name="email" id="email" label="E-Post"></v-text-field>
+                                    <v-text-field outlined autofocus type="email" name="email" id="email" label="E-Post"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field type="password" name="password" id="password" label="Lösenord"></v-text-field>
+                                    <v-text-field outlined type="password" name="password" id="password" label="Lösenord"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-btn v-on:click="submit()" type="button">Logga in</v-btn>
+                                    <v-btn color="primary" type="submit">Logga in</v-btn>
                                 </v-col>
                             </v-row>
-                        <!--/v-form-->
+                        </v-form>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -36,7 +36,9 @@ import {Component, Vue} from 'vue-property-decorator'
 
   @Component
   export default class loginPage extends Vue{
-    submit():void{
+    state = import('@/assets/ts/sessionStore')
+
+    submit (): void{
       const inputs = document.getElementsByTagName('input')
       fetch("http://localhost:8000/login", {
 
@@ -55,15 +57,14 @@ import {Component, Vue} from 'vue-property-decorator'
         }
       })
         // Converting to JSON
-        .then(response => response.json())
+        .then((res) => res.json())
         // Handling the results
         .then((res) => {
-          if(res.status === 'success'){
-            location.href = 'loehk'
+          if(res.status === 'success' && res.sessionId){
+            this.state.then(object => object.SessionStore.setSessionId(res.sessionId))
+            this.$router.push('/loehk/home')
           }
         })
-
-
     }
   }
 </script>
