@@ -9,6 +9,7 @@ import { loehkPrices } from './loehk/loehkPrices'
 import { loehkInvestAcc } from './loehk/loehkInvestAcc'
 import { loehkActiveYear } from './loehk/loehkActiveYear'
 import { loehkActiveYearMembers } from './loehk/loehkActiveYearMembers'
+import { door } from './door'
 
 export const routes = [
   events,
@@ -21,5 +22,6 @@ export const routes = [
   loehkPrices,
   loehkInvestAcc,
   loehkActiveYear,
-  loehkActiveYearMembers
+  loehkActiveYearMembers,
+  door
 ]
