@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-actions>
-            <v-btn icon href="/loehk/streck/print">
+            <v-btn icon to="/loehk/investments/print">
                 <v-icon>mdi-printer</v-icon>
             </v-btn>
         </v-card-actions>

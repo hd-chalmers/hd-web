@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import BaseLayout from '@/views/layouts/base.vue'
+import { users } from '../../../api/src/database'
 
 Vue.use(VueRouter)
 
@@ -76,6 +77,11 @@ const routes: Array<RouteConfig> = [
       }
     ]
   },
+  {
+    path: '/loehk/investments/print',
+    name: 'loehk-investments-print',
+    component: () => import(/* webpackChunkName: "loehkInvestPrint"*/'@/components/streck/PrintView.vue')
+  }
 ]
 
 const router = new VueRouter({
