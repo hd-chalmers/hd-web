@@ -1,7 +1,9 @@
 <template>
     <div>
-        <v-btn fab bottom right fixed :color="color" :large="$vuetify.breakpoint.mobile" :loading="loading" @click="showDate">
-            <v-icon>{{ icon }}</v-icon>
+        <v-btn fab bottom right fixed :color="color" :large="$vuetify.breakpoint.mobile" :loading="loading" @click="showDate" style="bottom: 28px;">
+            <lock-icon v-if="icon === 'lock'"/>
+            <unlock-icon v-if="icon === 'unlock'"/>
+            <alert-circle-icon v-if="icon === 'alert'"/>
         </v-btn>
 
         <v-snackbar
@@ -20,53 +22,59 @@
 </template>
 
 <script lang="js">
-import axios from 'axios'
+import {LockIcon, UnlockIcon, AlertCircleIcon} from 'vue-feather-icons'
 
 export default {
   name: 'ChassitOpenIcon',
   created () {
     this.getStatus()
-    setInterval(this.getStatus, 3000)
+    setInterval(this.getStatus, 10000)
+  },
+  components: {
+    LockIcon,
+    UnlockIcon,
+    AlertCircleIcon
   },
   methods: {
     showDate () {
+      this.getStatus()
       if (this.state !== -1) {
         this.snackbar = true
       }
     },
     getStatus () {
-      axios(
-        '/door',
-        {
-          method:
-                        'get',
-          withCredentials:
-                        true,
-          responseType:
-                        'json',
-          timeout: 3000,
-          headers:
-                        {
-                          'Content-Type':
-                                'application/json',
-                          Accept:
-                                'application/json'
-                        }
+      fetch(process.env.VUE_APP_API_URL + '/door')
+        .then(res => {
+          if(res.ok) {
+            return res.json()
+          }
+          else {
+            this.state = -1
+            this.icon = 'alert'
+            this.color = 'warning'
+            return null
+          }
         }).then(res => {
-        this.state = res.data.status
-        this.date = res.data.updated
-        this.duration = res.data.duration_str
-        if (res.data.status) {
-          this.icon = 'mdi-lock-open-variant'
-          this.color = 'green'
-        } else {
-          this.icon = 'mdi-lock'
-          this.color = 'red'
-        }
+          if(res) {
+            this.state = res.status
+            this.date = res.updated
+            this.duration = res.duration_str
+            if (res.status) {
+              this.icon = 'unlock'
+              this.color = 'success'
+            } else if (res.status === null) {
+              this.state = -1
+              this.icon = 'alert'
+              this.color = 'warning'
+            } else {
+              this.icon = 'lock'
+              this.color = 'error'
+            }
+          }
       }).catch(() => {
         this.state = -1
-        this.icon = 'mdi-alert-circle'
-        this.color = 'yellow'
+        this.icon = 'alert'
+        this.color = 'warning'
       }).finally(() => {
         this.loading = false
       })

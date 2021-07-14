@@ -8,7 +8,7 @@
             <router-view/>
           </v-scroll-y-reverse-transition>
         </v-main>
-    <!--ChassitOpenIcon></ChassitOpenIcon-->
+    <ChassitOpenIcon></ChassitOpenIcon>
 <FooterElement></FooterElement>
 </v-app>
 </template>
@@ -17,13 +17,13 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Navbar from '../../components/common/navbar.vue'
 import FooterElement from '../../components/common/footer.vue'
-//  import ChassitOpenIcon from '../../js/components/ChassitOpenIcon.vue'
+import ChassitOpenIcon from '@/components/ChassitOpenIcon.vue'
 
   @Component({
     components: {
       Navbar,
-      FooterElement
-      //  ChassitOpenIcon
+      FooterElement,
+      ChassitOpenIcon
     }
   })
 export default class Base extends Vue {
