@@ -118,6 +118,9 @@ export class loehkPrices extends ApiCall{
               .catch((err: Error) => this.error(err.message, err.stack))
           }
           res.send()
+
+          this.redisClient.aDel('loehkFront')
+            .catch((err: Error) => this.error(err.message, err.stack))
         }
       else {
         res.status(422).send()
@@ -175,6 +178,9 @@ export class loehkPrices extends ApiCall{
             })
         }
         res.send()
+
+        this.redisClient.aDel('loehkFront')
+          .catch((err: Error) => this.error(err.message, err.stack))
       }
       else {
         res.status(422).send()
@@ -202,6 +208,9 @@ export class loehkPrices extends ApiCall{
       this.log('Deleted product ' + id)
 
       res.send()
+
+      this.redisClient.aDel('loehkFront')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
     return Promise.resolve(undefined);
   }

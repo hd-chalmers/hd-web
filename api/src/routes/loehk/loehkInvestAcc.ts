@@ -93,6 +93,9 @@ export class loehkInvestAcc extends ApiCall{
         entryObj.active_text = '!Nytt!'
 
         res.json(entryObj)
+
+        this.redisClient.aDel('loehkFront')
+          .catch((err: Error) => this.error(err.message, err.stack))
       }
       else {
         res.status(422).send()
@@ -126,6 +129,8 @@ export class loehkInvestAcc extends ApiCall{
         .catch(err => console.log(err))
 
       res.send()
+      this.redisClient.aDel('loehkFront')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
     return Promise.resolve(undefined);
   }

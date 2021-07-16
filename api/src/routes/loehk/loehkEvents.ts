@@ -65,6 +65,13 @@ export class loehkEvents extends ApiCall{
         }
       }
       res.send()
+
+      this.redisClient.aDel('events')
+        .catch((err: Error) => this.error(err.message, err.stack))
+      this.redisClient.aDel('loehkFront')
+        .catch((err: Error) => this.error(err.message, err.stack))
+      this.redisClient.aDel('frontpage')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
 
     this.app.get(process.env.API_PATH + '/loehk/events', async (req, res) => {
@@ -107,6 +114,11 @@ export class loehkEvents extends ApiCall{
       const result: Events[] = await this.db.query(this.sql`SELECT id, title, description, location, poster, show_on_frontpage, google_event_id, facebook_event_link,
                                 to_char(events.date, 'HH24:MI') AS time, to_char(events.date, 'YYYY-MM-DD') AS date FROM events ORDER BY id DESC LIMIT 1`)
       res.json(result[0])
+
+      this.redisClient.aDel('events')
+        .catch((err: Error) => this.error(err.message, err.stack))
+      this.redisClient.aDel('loehkFront')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
 
     this.app.delete(process.env.API_PATH + '/loehk/events', async (req, res) => {
@@ -130,6 +142,12 @@ export class loehkEvents extends ApiCall{
         })
       console.log(`[API] Removed event with id ` + req.body.id)
       res.send()
+      this.redisClient.aDel('events')
+        .catch((err: Error) => this.error(err.message, err.stack))
+      this.redisClient.aDel('loehkFront')
+        .catch((err: Error) => this.error(err.message, err.stack))
+      this.redisClient.aDel('frontpage')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
 
     return Promise.resolve(undefined);

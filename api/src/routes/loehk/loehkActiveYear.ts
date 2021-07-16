@@ -108,6 +108,13 @@ export class loehkActiveYear extends ApiCall{
       }
 
       res.send()
+
+      this.redisClient.aDel('committee')
+        .catch(((err: Error) => this.error(err.message, err.stack)))
+      this.redisClient.aDel('background')
+        .catch((err: Error) => this.error(err.message, err.stack))
+      this.redisClient.aDel('frontpage')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
 
     this.app.post(process.env.API_PATH + '/loehk/active_year', async (req, res) => {

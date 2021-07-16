@@ -6,6 +6,11 @@ export class frontPage extends ApiCall{
   processName = 'Front-page'
   async run (): Promise<void> {
     this.app.get(process.env.API_PATH + '/frontpage', async (req, res) =>{
+      if(await this.redisClient.aExist('frontpage')){
+        res.setHeader('Content-Type', 'application/json')
+        res.send(await this.redisClient.aGet('frontpage'))
+        return
+      }
 
       const eventList: Events[] = await this.db.query(this.sql`SELECT title, date FROM events
             WHERE date > now() AND show_on_frontpage=true ORDER BY date LIMIT 1;`)
@@ -23,13 +28,23 @@ export class frontPage extends ApiCall{
         this.warn('Frontpage image was not specified, using default image instead')
       }
 
-      res.json({
+      const result = {
         frontpageImg: yearList[0].front_image,
         event: {
           title: eventList[0].title,
           date: eventList[0].date
         }
-      })
+      }
+      res.json(result)
+
+      this.redisClient.aSet('frontpage', JSON.stringify(result))
+        .then(() => {
+          this.log('Set new cache')
+          // Expire after a month
+          this.redisClient.aExpire('frontpage', 2628000)
+            .catch((err: Error) => this.error(err.message, err.message))
+        })
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
 
     return Promise.resolve(undefined);

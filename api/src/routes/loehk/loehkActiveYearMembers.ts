@@ -55,6 +55,9 @@ export class loehkActiveYearMembers extends ApiCall{
       }
 
       res.json((<any>updatedMember)[0])
+
+      this.redisClient.aDel('committee')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
 
     this.app.delete(process.env.API_PATH + '/loehk/active_year/committee_members', async (req, res) =>{
@@ -76,6 +79,9 @@ export class loehkActiveYearMembers extends ApiCall{
         .catch(err => console.log(err))
 
       res.send()
+
+      this.redisClient.aDel('committee')
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
     return Promise.resolve(undefined);
   }

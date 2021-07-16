@@ -20,6 +20,12 @@ export class loehkFrontpage extends ApiCall{
           return
         }
 
+      if(await this.redisClient.aExist('loehkFront')){
+        res.setHeader('Content-Type', 'application/json')
+        res.send(await this.redisClient.aGet('loehkFront'))
+        return
+      }
+
         const productCount = await  this.db.query(this.sql`SELECT count(id) AS count FROM products`)
         const updatedProducts: Products[] = await this.db.query(this.sql`SELECT name, updated_at FROM products ORDER BY updated_at DESC LIMIT 1;`)
         const latestProduct: Products[] = await this.db.query(this.sql`SELECT name, created_at FROM products ORDER BY created_at DESC LIMIT 1;`)
@@ -38,50 +44,60 @@ export class loehkFrontpage extends ApiCall{
         const updatedGame = await this.db.query(this.sql`SELECT games.name, games.updated_at, gp.name AS platform FROM games
                             JOIN game_platforms gp on games.game_platform_id = gp.id ORDER BY games.updated_at DESC LIMIT 1`)
 
-        res.json({
-            products: productCount[0].count,
-            product_updated: updatedProducts[0] ? {
-              name: updatedProducts[0].name,
-              updated_at: updatedProducts[0].updated_at
-            } : null,
-            product_latest: latestProduct[0] ? {
-              name: latestProduct[0].name,
-              created_at: latestProduct[0].created_at
-            } : null,
-            investment_accounts: accountCount[0].count,
-            investment_latest: latestAccount[0] ? {
-              uid: latestAccount[0].uid,
-              name: latestAccount[0].name,
-              created_at: latestAccount[0].created_at
-            } : null,
-            investment_updated: updatedAccount ? {
-              uid: updatedAccount[0].uid,
-              name: updatedAccount[0].name,
-              updated_at: updatedAccount[0].updated_at
-            } : null,
-            events: eventCount[0].count,
-            event_latest: latestEvent[0] ? {
-              title: latestEvent[0].title,
-              created_at: latestEvent[0].created_at,
-              date: latestEvent[0].date
-            } : null,
-            event_updated: updatedEvent[0] ? {
-              title: updatedEvent[0].title,
-              updated_at: updatedEvent[0].updated_at,
-              date: updatedEvent[0].date
-            } : null,
-            games: gameCount[0].count,
-            games_latest: latestGame[0] ? {
-              name: latestGame[0].name,
-              created_at: latestGame[0].created_at,
-              platform: latestGame[0].platform,
-            } : null,
-            games_updated: updatedGame[0] ? {
-              name: updatedGame[0].name,
-              updated_at: updatedGame[0].updated_at,
-              platform: updatedGame[0].platform,
-            } : null
-          })
+      const result = {
+        products: productCount[0].count,
+        product_updated: updatedProducts[0] ? {
+          name: updatedProducts[0].name,
+          updated_at: updatedProducts[0].updated_at
+        } : null,
+        product_latest: latestProduct[0] ? {
+          name: latestProduct[0].name,
+          created_at: latestProduct[0].created_at
+        } : null,
+        investment_accounts: accountCount[0].count,
+        investment_latest: latestAccount[0] ? {
+          uid: latestAccount[0].uid,
+          name: latestAccount[0].name,
+          created_at: latestAccount[0].created_at
+        } : null,
+        investment_updated: updatedAccount ? {
+          uid: updatedAccount[0].uid,
+          name: updatedAccount[0].name,
+          updated_at: updatedAccount[0].updated_at
+        } : null,
+        events: eventCount[0].count,
+        event_latest: latestEvent[0] ? {
+          title: latestEvent[0].title,
+          created_at: latestEvent[0].created_at,
+          date: latestEvent[0].date
+        } : null,
+        event_updated: updatedEvent[0] ? {
+          title: updatedEvent[0].title,
+          updated_at: updatedEvent[0].updated_at,
+          date: updatedEvent[0].date
+        } : null,
+        games: gameCount[0].count,
+        games_latest: latestGame[0] ? {
+          name: latestGame[0].name,
+          created_at: latestGame[0].created_at,
+          platform: latestGame[0].platform,
+        } : null,
+        games_updated: updatedGame[0] ? {
+          name: updatedGame[0].name,
+          updated_at: updatedGame[0].updated_at,
+          platform: updatedGame[0].platform,
+        } : null
+      }
+
+      res.json(result)
+      this.redisClient.aSet('loehkFront', JSON.stringify(result))
+        .then(() => {
+          this.log('Set new cache')
+          // Expire after a month
+          this.redisClient.aExpire('loehkFront', 2628000)
+            .catch((err: Error) => this.error(err.message, err.message))
+        })
+        .catch((err: Error) => this.error(err.message, err.stack))
     })
     return Promise.resolve(undefined);
   }
