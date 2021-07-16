@@ -40,5 +40,18 @@ export class login extends ApiCall {
         res.status(401).json({ error: 'invalid credentials' })
       }
     })
+
+    this.app.delete(process.env.API_PATH + '/logout', async (req, res) => {
+      if(!req.header('sessionId')){
+        res.sendStatus(400)
+        return
+      }
+      const id = req.header('sessionId');
+
+      (<any>this.redisClient.aDel)(id)
+        .then(() => this.log(id + ' was logged out'))
+        .catch((err: Error) => this.error(err.message, err.stack))
+        .finally(() => res.sendStatus(205))
+    })
   }
 }

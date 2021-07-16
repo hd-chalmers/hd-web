@@ -57,7 +57,7 @@
             </v-list>
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn block color="purple" outlined dark>
+                    <v-btn block color="purple" outlined dark @click="logout()">
                       <log-out-icon style="margin-right: 7px"/>
                         Logout
                     </v-btn>
@@ -103,6 +103,25 @@ import {HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon,
 })
 export default class LoehkMain extends Vue{
   nav: boolean | null = null
+  state = import('@/assets/ts/sessionStore')
+  logout():void {
+    this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + '/logout', {
+        method: 'DELETE',
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        headers: {
+          sessionId: obj.SessionStore.getSessionId()
+        }
+      })
+      .then(res => {
+        if(res.status === 205){
+          obj.SessionStore.clearSessionId()
+          this.$router.push('/')
+        }
+      })
+    })
+  }
 }
 </script>
 
