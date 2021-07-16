@@ -46,9 +46,9 @@ export class login extends ApiCall {
         res.sendStatus(400)
         return
       }
-      const id = req.header('sessionId');
+      const id = req.header('sessionId')
 
-      (<any>this.redisClient.aDel)(id)
+      this.redisClient.aDel(<string> id)
         .then(() => this.log(id + ' was logged out'))
         .catch((err: Error) => this.error(err.message, err.stack))
         .finally(() => res.sendStatus(205))

@@ -1,4 +1,4 @@
-import { RedisClient } from 'redis'
+import { Callback, RedisClient } from 'redis'
 import { promisify } from 'util'
 
 /*
@@ -7,6 +7,13 @@ export const redisClient = redis.createClient({
   port: 49154
 })
 */
+
+declare module 'redis'{
+  export interface RedisClient{
+    exists(key:string, cb: Callback<boolean>): void
+    del(key: string, cb?: Callback<boolean>): void
+  }
+}
 
 // This class is a wrapper for the RedisClient object and it has promisofied versions of some functions
 export default class AsyncRedisClient extends RedisClient{
