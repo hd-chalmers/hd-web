@@ -1,10 +1,12 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card :loading="loading">
+          <v-alert v-if="error" text color="error">{{error}}</v-alert>
             <v-card-title>
                 Kommande Arrangemang
             </v-card-title>
             <v-card-text>
+              <v-skeleton-loader v-if="loading" type="card@2"></v-skeleton-loader>
                     <v-card v-for="event in events" v-bind:key="event.id" class="mb-3" elevation="5">
                         <v-card-title>
                             {{event.date.toLocaleDateString('sv-SE', {
@@ -27,7 +29,7 @@
                             {{event.description}}
                         </v-card-text>
                     </v-card>
-                <span v-if="!events[0]">Inga arrangemang är just nu inlagda</span>
+                <span v-if="!events[0] && !loading">Inga arrangemang är just nu inlagda</span>
             </v-card-text>
         </v-card>
     </v-container>
@@ -45,15 +47,24 @@ import { eventType } from '@/assets/ts/interfaces'
         this.getEvents()
       }
       events: eventType[] = []
+      error = ''
+      loading = true
       getEvents (): void {
+        this.loading = true
         fetch(process.env.VUE_APP_API_URL + '/events').then(res =>res.text()).then(res => {
+          this.error = ''
           this.events = JSON.parse(res, (key: string, value: any) => {
             if (key == 'date') {
               return new Date(value)
             }
             return value
-          }) as eventType[]
+          })
         })
+        .catch(() => {
+          this.error = 'Sidan kunde inte nå servern'
+          setTimeout(() => this.getEvents(), 5000)
+        })
+        .finally(() => this.loading = false)
       }
     }
 </script>

@@ -1,6 +1,7 @@
 <template>
     <v-container>
         <v-card>
+          <v-alert v-if="error" text color="error"> {{error}} </v-alert>
             <v-card-text>
                 <v-row>
                     <v-col cols="12" class="text-center">
@@ -10,10 +11,13 @@
                 <v-row>
                     <v-col cols="12" class="text-center">
                         <v-img lazy-src="/img/unknown_group.png" v-bind:src="groupPhoto" class="mx-auto" max-height="400px" contain></v-img>
+                        <v-progress-circular v-if="loading" indeterminate color="primary" style="width: 100%; margin: 5px;"></v-progress-circular>
                         {{description}}
                     </v-col>
                 </v-row>
                 <v-row class="mb-3 text-center justify-center">
+                  <v-skeleton-loader v-if="loading" type="card@2" :style="`width: ${$vuetify.breakpoint.lgAndUp ? '45%' : '95%'}; margin: 5px`"></v-skeleton-loader>
+                  <v-skeleton-loader v-if="loading && $vuetify.breakpoint.lgAndUp" type="card@2" style="width: 45%; margin: 5px"></v-skeleton-loader>
                         <v-col v-for="member in committeeMembers" v-bind:key="member.id" cols="12" md="6" lg="4" xl="3">
                             <v-avatar size="200px" class="elevation-4 mb-2">
                                 <v-img lazy-src="/img/unknown_profile.png" v-bind:src="member.profilePic" class="mx-auto" max-height="200px" contain></v-img>
@@ -77,13 +81,22 @@
     groupPhoto = ''
     description = ''
     committeeMembers: Array<memberType> = []
+    loading = true
+    error = ''
     async getData(): Promise<void>{
+      this.loading = true
       fetch(process.env.VUE_APP_API_URL + '/committee').then(res =>res.json()).then(res =>{
+        this.error = ''
         this.displayedYear = res.displayedYear
         this.groupPhoto = res.groupPhoto
         this.description = res.description
         this.committeeMembers = res.committeeMembers
       })
+      .catch(() => {
+        this.error = 'Sidan kunde inte nå servern'
+        setTimeout(() => this.getData(), 5000)
+      })
+      .finally(() => this.loading = false)
     }
   }
 </script>

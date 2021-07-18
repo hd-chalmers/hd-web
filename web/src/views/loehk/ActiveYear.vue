@@ -94,12 +94,12 @@
                     </v-card>
                 </v-row>
             </v-form>
+          <v-skeleton-loader v-if="loading" type="card@2" style="margin: 5px;"></v-skeleton-loader>
         </v-card-text>
     </v-card>
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
     name: "ActiveYear",

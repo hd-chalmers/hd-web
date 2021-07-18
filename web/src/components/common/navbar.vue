@@ -1,9 +1,9 @@
 <template>
 <v-app-bar app elevate-on-scroll clipped-left>
   <v-container style="display: flex; align-items: center;">
-    <v-img src="/img/HD_logo.png" id="hd-logo" max-width="100"></v-img>
+    <v-img src="/img/HD_logo.png" id="hd-logo" max-width="100" style="z-index: 10;"></v-img>
   <router-link to="/">
-    <v-toolbar-title>
+    <v-toolbar-title @click="setLoad(true)">
         <v-btn
             :hidden="$vuetify.breakpoint.mobile"
             class="hidden-sm-and-down"
@@ -23,13 +23,15 @@
   </router-link>
     <v-spacer></v-spacer>
     <v-toolbar-items  :style="$vuetify.breakpoint.smAndDown ? 'height: 56px;' : 'height: 64px;'">
-        <v-btn to="/committee" text :icon="$vuetify.breakpoint.smAndDown"  :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly" :x-small="$vuetify.breakpoint.xsOnly">
+        <v-btn to="/committee" text :icon="$vuetify.breakpoint.smAndDown"  :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly"
+               :x-small="$vuetify.breakpoint.xsOnly" @click="setLoad(true)">
           <users-icon class="navbar-icon"></users-icon>
           <span class="hidden-sm-and-down">
             Sittande
           </span>
         </v-btn>
-        <v-btn to="/events" text :icon="$vuetify.breakpoint.smAndDown" :x-small="$vuetify.breakpoint.xs" :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly">
+        <v-btn to="/events" text :icon="$vuetify.breakpoint.smAndDown" :x-small="$vuetify.breakpoint.xs" :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly"
+        @click="setLoad(true)">
           <calendar-icon class="navbar-icon"></calendar-icon>
           <span class="hidden-sm-and-down">
             Evenemang
@@ -44,7 +46,8 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-        <v-btn to="/contact" text :icon="$vuetify.breakpoint.smAndDown" :x-small="$vuetify.breakpoint.xs" :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly">
+        <v-btn to="/contact" text :icon="$vuetify.breakpoint.smAndDown" :x-small="$vuetify.breakpoint.xs"
+               :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly" @click="setLoad(true)">
           <phone-call-icon class="navbar-icon"></phone-call-icon>
           <span class="hidden-sm-and-down">
             Kontakta Oss
@@ -63,6 +66,7 @@
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
   </v-container>
+  <v-progress-linear v-if="getLoad()" color="primary" fixed bottom indeterminate></v-progress-linear>
 </v-app-bar>
 </template>
 
@@ -149,5 +153,37 @@ import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, FacebookIcon, MoonIcon}
     MoonIcon
   }
 })
-export default class navbar extends Vue {}
+export default class navbar extends Vue {
+  constructor () {
+    super()
+    const setLoad = this.setLoad
+
+    this.$router.afterEach((to, from) => {
+      //console.log('router after')
+      setLoad(false)
+    })
+  }
+
+  loading = false
+  lock = false
+
+  getLoad(): boolean{
+    return this.loading
+  }
+  setLoad(value: boolean): void{
+    // sometimes the router event is faster than the click event so a lock check is used
+    if(value === this.loading){
+      this.lock = true
+      //console.log('locked')
+    }
+    else if(!this.lock) {
+      this.loading = value
+      //console.log('set ' + this.loading + ' ' + value)
+    }
+    else {
+      this.lock = false
+      //console.log('unlocked')
+    }
+  }
+}
 </script>

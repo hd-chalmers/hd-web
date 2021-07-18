@@ -8,9 +8,12 @@
                       + ' - ' + eventObj.title
                   }}
                 </v-alert>
+                <v-alert v-if="error" text color="error"> {{error}} </v-alert>
             <v-card-text>
                 <v-row>
-                    <v-col class="hidden-sm-and-down" cols="2" md="1" lg="2" xl="3"></v-col>
+                  <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
+                    <v-col class="hidden-sm-and-down" cols="2" md="1" lg="2" xl="3" style="display: flex; justify-content: center;">
+                    </v-col>
                     <v-col cols="12" md="10" lg="8" xl="6">
                         <v-img v-bind:src="frontpageImg" alt="unknown_group" contain></v-img>
                     </v-col>
@@ -46,7 +49,7 @@ import { eventType } from '@/assets/ts/interfaces'
 @Component
 export default class IndexPage extends Vue {
   constructor () {
-    super();
+    super()
     this.getData()
   }
   eventObj: eventType = {
@@ -58,8 +61,13 @@ export default class IndexPage extends Vue {
     title: ''
   }
   frontpageImg = ''
+  error = ''
+  loading = true
+  timeout: any | null = null
   async getData(): Promise<void>{
+    this.loading = true
     fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res =>res.json()).then(res => {
+        this.error = ''
         this.eventObj = {
           title: res.event.title,
           date: new Date(res.event.date),
@@ -70,6 +78,12 @@ export default class IndexPage extends Vue {
       }
       this.frontpageImg = res.frontpageImg ?? '/img/unknown_group.png'
     })
+    .catch(() => {
+      this.error = 'Sidan hade svårigheter att nå servern'
+      console.log(this.timeout)
+      this.timeout = setTimeout(() => this.getData(), 5000)
+    })
+    .finally(() => this.loading = false)
   }
 }
 </script>
