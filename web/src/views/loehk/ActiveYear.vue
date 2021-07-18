@@ -138,6 +138,9 @@ export default {
                     if(res.status === 415){
                       this.errors.front_image = 'denna filtyp är inte accepterat'
                     }
+                    else if(res.status === 422){
+                      this.errors.front_image = 'filen är för stor (>10MB)'
+                    }
                     else if(res.status === 403) {
                       this.errors.front_image = 'utloggad, refresh?'
                     }
@@ -187,6 +190,9 @@ export default {
                   if(res.status === 415){
                     this.errors.background_image = 'denna filtyp är inte accepterat'
                   }
+                  else if(res.status === 422){
+                    this.errors.background_image = 'filen är för stor (>10MB)'
+                  }
                   else if(res.status === 403) {
                     this.errors.background_image = 'utloggad, refresh?'
                   }
@@ -234,6 +240,9 @@ export default {
                   this.load.group_photo = 'fail'
                   if(res.status === 415){
                     this.errors.group_photo = 'denna filtyp är inte accepterat'
+                  }
+                  else if(res.status === 422){
+                    this.errors.group_photo = 'filen är för stor (>10MB)'
                   }
                   else if(res.status === 403) {
                     this.errors.group_photo = 'utloggad, refresh?'
@@ -283,6 +292,9 @@ export default {
                     this.load.christmas_image = 'fail'
                     if(res.status === 415){
                       this.errors.christmas_image = 'denna filtyp är inte accepterat'
+                    }
+                    else if(res.status === 422){
+                      this.errors.christmas_image = 'filen är för stor (>10MB)'
                     }
                     else if(res.status === 403) {
                       this.errors.christmas_image = 'utloggad, refresh?'
@@ -471,7 +483,13 @@ export default {
                     }
                     return res.json()
                   } else {
-                    if(res.status === 403) {
+                    if(res.status === 415){
+                      this.$set(this.errors, id + fieldname, 'denna filtyp är inte accepterat')
+                    }
+                    else if(res.status === 422){
+                      this.$set(this.errors, id + fieldname,'filen är för stor (>10MB)')
+                    }
+                    else if(res.status === 403) {
                       this.$set(this.errors.committee_member, id + fieldname, 'utloggad, refresh?')
                     }
                     else {

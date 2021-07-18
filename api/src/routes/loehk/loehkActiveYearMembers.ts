@@ -48,8 +48,22 @@ export class loehkActiveYearMembers extends ApiCall{
         const year = await active_years(this.db).findOne({id: member.active_year_id})
           .catch((err: Error) => this.error(err.message, err.stack))
         const file = req.files.image as UploadedFile
-        await file.mv(`./storage/public/${year?.year.getFullYear()}/members/${(<any>updatedMember)[0]?.name}`)
-        const image = `${<string>process.env.API_FULL_URL + process.env.STATIC_PATH}/${year?.year.getFullYear()}/members/${(<any>updatedMember)[0]?.name}`
+
+        if(file.size > 10 * 1000000){
+          res.sendStatus(422)
+          return
+        }
+
+        await this.processImage(file, `./storage/public/${year?.year.getFullYear()}/members/${(<any>updatedMember)[0]?.name}_`)
+          .catch((err) => {
+            this.error(err)
+            res.sendStatus(415)
+          })
+        if(res.statusCode >= 400){
+          return
+        }
+
+        const image = `${<string>process.env.API_FULL_URL + process.env.STATIC_PATH}/${year?.year.getFullYear()}/members/${(<any>updatedMember)[0]?.name}_${file.name}.webp`
         updatedMember = await committee_members(this.db).update({id: (<any>updatedMember)[0].id},{image})
           .catch((err: Error) => this.error(err.message, err.stack))
       }

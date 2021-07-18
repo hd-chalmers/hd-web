@@ -39,7 +39,12 @@ app.use(expressFileUpload({
   createParentPath: true,
   debug: false,
   safeFileNames: true,
-  preserveExtension: true
+  useTempFiles: true,
+  tempFileDir: 'storage/temp',
+  abortOnLimit: true,
+  limits: {
+    fileSize: 10 * 1024 * 1024 * 1024 //10MB max file(s) size
+  }
 }))
 app.use(<string>process.env.STATIC_PATH,express.static('./storage/public'))
 /*

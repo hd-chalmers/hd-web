@@ -3,8 +3,12 @@ import { ConnectionPool } from '@databases/pg'
 import { SQL } from '@databases/sql'
 import { LogStyle } from './logStyles'
 import fs from 'fs'
-import AsyncRedisClient from './asyncRedisClient'
+import AsyncRedisClient from './declarations/asyncRedisClient'
 import { users } from './database'
+import { UploadedFile } from 'express-fileupload'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import webp from 'webp-converter'
 
 
 export default abstract class ApiCall {
@@ -39,7 +43,7 @@ export default abstract class ApiCall {
   }
 
   // Write info styled in console and in log file
-  log(message: string): void{
+  async log(message: string): Promise<void>{
     const date = new Date().toISOString()
     // Write to console
     console.info(LogStyle.bg.blue + LogStyle.fg.black + `${date} | ${this.processName} ` + LogStyle.reset + ' ' + message)
@@ -55,7 +59,7 @@ export default abstract class ApiCall {
   }
 
   // Write a warning styled in console and in log file
-  warn(message: string): void{
+  async warn(message: string): Promise<void>{
     const date = new Date().toISOString()
     // Write styled message to console
     console.warn(
@@ -75,7 +79,7 @@ export default abstract class ApiCall {
   }
 
   // Write an error message styled in console and in log files
-  error(message: string, stacktrace?: string): void{
+  async error(message: string, stacktrace?: string): Promise<void>{
     const date = new Date().toISOString()
     // Write to console
     console.error(
@@ -103,5 +107,37 @@ export default abstract class ApiCall {
           console.log(LogStyle.fg.red + message + LogStyle.reset)
         }
       }))
+  }
+
+  async processImage(image: UploadedFile, destinationPath: string): Promise<void>{
+    console.log(image)
+    let temp
+    switch (image.mimetype){
+      case 'image/jpeg':
+      case 'image/png':
+      case 'image/webp':
+      case 'image/tiff':
+        await webp.cwebp(image.tempFilePath, destinationPath + image.name + '.webp', '-q 75')
+          .catch((err: any) => this.error(err))
+        break
+      case 'image/gif':
+        await webp.gwebp(image.tempFilePath, destinationPath + image.name + '.webp', '-loop_compatibility -q 75')
+        break
+      default:
+        this.error(image.mimetype + ' is not an allowed filetype')
+        fs.rm(image.tempFilePath, (err) => {
+          if(err){
+            this.error(err.message, err.stack)
+          }
+        })
+        return Promise.reject(image.mimetype + ' is not an allowed filetype')
+    }
+
+    fs.rm(image.tempFilePath, (err) => {
+      if(err){
+        this.error(err.message, err.stack)
+      }
+    })
+    return Promise.resolve()
   }
 }

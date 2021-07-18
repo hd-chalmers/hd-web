@@ -1,6 +1,7 @@
 import { active_years, committee_members } from '../../database'
 import { FileArray, UploadedFile } from 'express-fileupload'
 import ApiCall from '../../apiCallClass'
+import * as fs from 'fs'
 
 export class loehkActiveYear extends ApiCall{
   processName = 'Loehk Active Year'
@@ -62,7 +63,7 @@ export class loehkActiveYear extends ApiCall{
           return
         }
 
-        let file: UploadedFile, temp
+        let temp
         switch (key){
           case 'front_image':
           case 'christmas_image':
@@ -73,41 +74,38 @@ export class loehkActiveYear extends ApiCall{
               res.status(400).send()
               return
             }
-            console.log('uploading ' + key)
-            file = files[key] as UploadedFile
-            switch (file.mimetype){
-              case 'image/jpg':
-                file.name += '.jpg'
-                break
-              case 'image/png':
-                file.name += '.png'
-                break
-              case 'image/gif':
-                file.name += '.gif'
-                break
-              case 'image/webp':
-                file.name += '.webp'
-                break
-              default:
-                console.log(file.mimetype + ' is not an allowed filetype')
-                res.status(415).send()
-                return
+            if((<UploadedFile>req.files[key]).size > 10 * 1000000){
+              fs.rm((<UploadedFile>req.files[key]).tempFilePath, (err) => {
+                if(err){
+                this.error(err?.message, err?.stack)
+              }})
+              res.sendStatus(422)
+              return
             }
-            file.mv(`./storage/public/${(<any>year).year.getFullYear()}/` + file.name, (err) => console.log(err))
-            temp = {} as any
-            temp[key] = `${<string>process.env.API_FULL_URL +process.env.STATIC_PATH}/${(<any>year).year.getFullYear()}/` + file.name
-            temp.updated_at = new Date()
-            active_years(this.db).update({id}, temp)
-              .catch(err => console.log(err))
+            await this.processImage(<UploadedFile> files[key], `./storage/public/${(<any>year).year.getFullYear()}/`)
+              .catch(err => {
+                res.sendStatus(415)
+                this.error(err)
+              })
+                if(res.statusCode  >= 400 ){
+                  return
+                }
+                temp = {} as any
+                temp[key] = `${<string>process.env.API_FULL_URL + process.env.STATIC_PATH}/${(<any>year).year.getFullYear()}/` + (<UploadedFile>files[key]).name + '.webp'
+                temp.updated_at = new Date()
+                active_years(this.db).update({ id }, temp)
+                  .catch(err => this.error(err))
+
+            this.log('uploaded ' + key)
             break
           default:
-            console.log(key + 'is not an allowed field')
+            this.error(key + 'is not an allowed field')
             res.status(400).send()
             return
         }
       }
 
-      res.send()
+        res.send()
 
       this.redisClient.aDel('committee')
         .catch(((err: Error) => this.error(err.message, err.stack)))
