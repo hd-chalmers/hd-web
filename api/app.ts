@@ -9,7 +9,7 @@ import expressFileUpload from 'express-fileupload'
 import { LogStyle } from './src/logStyles'
 import morgan from 'morgan'
 import fs from 'fs'
-import AsyncRedisClient from './src/asyncRedisClient'
+import AsyncRedisClient from './src/declarations/asyncRedisClient'
 
 const asyncRedis = new AsyncRedisClient({
   host: process.env.REDIS_URL,
@@ -26,7 +26,12 @@ if(!fs.existsSync('./storage/logs')) {
         stream: fs.createWriteStream('./storage/logs/httpRequests.log')
       }))
 app.use(morgan( LogStyle.bg.white + LogStyle.fg.black
-  + `:date[iso] | :method | :url ${LogStyle.reset} Status :status, :response-time ms, http :http-version & :req[content-type]`))
+  + `:date[iso] | :method | :url ${LogStyle.reset} Status :status, :response-time ms, http :http-version & :req[content-type]`,
+  {
+    skip (req, res): boolean {
+      return req.url === process.env.API_PATH + '/door' && res.statusCode < 400
+    }
+  }))
 app.use(Cors())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
