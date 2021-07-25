@@ -126,4 +126,7 @@ export default class LoehkMain extends Vue{
 </script>
 
 <style scoped lang="scss">
+  .v-navigation-drawer .v-list .v-item--active.v-list-item--active{
+    color: #DE3163;
+  }
 </style>

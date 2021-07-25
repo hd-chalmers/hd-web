@@ -1,9 +1,9 @@
 <template>
 <v-app-bar app elevate-on-scroll clipped-left>
   <v-container style="display: flex; align-items: center;">
-    <v-img src="/img/HD_logo.png" id="hd-logo" max-width="100" style="z-index: 10;"></v-img>
+    <v-img src="/img/HD_logo.png" id="hd-logo" max-width="100" style="z-index: 10; cursor: pointer;" @click="$router.push('/')"></v-img>
   <router-link to="/">
-    <v-toolbar-title @click="setLoad(true)">
+    <v-toolbar-title @click.once="setLoad(true, $event)">
         <v-btn
             :hidden="$vuetify.breakpoint.mobile"
             class="hidden-sm-and-down"
@@ -15,28 +15,28 @@
         <v-btn
             :hidden="$vuetify.breakpoint.mobile"
             class="hidden-md-and-up"
-            text>
+            text
+            :small="$vuetify.breakpoint.xs">
             <span style="color: #E0218A">H</span>
           <span>D</span>
         </v-btn>
     </v-toolbar-title>
   </router-link>
     <v-spacer></v-spacer>
-    <v-toolbar-items  :style="$vuetify.breakpoint.smAndDown ? 'height: 56px;' : 'height: 64px;'">
-        <v-btn to="/committee" text :icon="$vuetify.breakpoint.smAndDown"  :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly"
-               :x-small="$vuetify.breakpoint.xsOnly" @click="setLoad(true)">
+    <v-toolbar-items :show-arrows="false" :style="$vuetify.breakpoint.smAndDown ? 'height: 56px;' : 'height: 64px;'">
+        <v-tabs optional id="navbarBtns" right>
+        <v-tab to="/committee" @click.once="setLoad(true, $event)">
           <users-icon class="navbar-icon"></users-icon>
           <span class="hidden-sm-and-down">
             Sittande
           </span>
-        </v-btn>
-        <v-btn to="/events" text :icon="$vuetify.breakpoint.smAndDown" :x-small="$vuetify.breakpoint.xs" :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly"
-        @click="setLoad(true)">
+        </v-tab>
+        <v-tab to="/events" @click.once="setLoad(true, $event)">
           <calendar-icon class="navbar-icon"></calendar-icon>
           <span class="hidden-sm-and-down">
             Evenemang
           </span>
-        </v-btn>
+        </v-tab>
         <!--
         @if(false)
             <v-btn text href="products">Prislista</v-btn>
@@ -46,23 +46,26 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-        <v-btn to="/contact" text :icon="$vuetify.breakpoint.smAndDown" :x-small="$vuetify.breakpoint.xs"
-               :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly" @click="setLoad(true)">
+        <v-tab to="/contact" @click.once="setLoad(true, $event)">
           <phone-call-icon class="navbar-icon"></phone-call-icon>
           <span class="hidden-sm-and-down">
             Kontakta Oss
           </span>
-        </v-btn>
-        <v-btn icon color="pink" href="https://www.facebook.com/HsektionenChalmers/" :x-large="!$vuetify.breakpoint.mobile" :x-small="$vuetify.breakpoint.xs" :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly">
+        </v-tab>
+        <v-tab style="color: #E91E63;" href="https://www.facebook.com/HsektionenChalmers/">
           <v-img contain id="h-tek-img" width="28px" height="28px" src="/img/H-sektionen.svg" />
-        </v-btn>
-        <v-btn color="blue" icon href="https://www.facebook.com/HDChalmers/" :x-large="!$vuetify.breakpoint.mobile" :x-small="$vuetify.breakpoint.xs" :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly">
+        </v-tab>
+        <v-tab style="color: #2196F3;" href="https://www.facebook.com/HDChalmers/">
             <facebook-icon/>
-        </v-btn>
+        </v-tab>
+        <v-tab style="color: #9C27B0;" icon href="https://www.instagram.com/hdchalmers/">
+            <instagram-icon/>
+        </v-tab>
 
-      <v-btn @click="$vuetify.theme.dark = !$vuetify.theme.dark" icon :x-large="!$vuetify.breakpoint.mobile" :x-small="$vuetify.breakpoint.xs" :small="$vuetify.breakpoint.mobile && !$vuetify.breakpoint.xsOnly">
+      <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" id="themeToggle" depressed x-small @click="$vuetify.theme.dark = !$vuetify.theme.dark">
         <sun-icon :hidden="$vuetify.theme.dark"/> <moon-icon :hidden="!$vuetify.theme.dark"/>
       </v-btn>
+        </v-tabs>
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
   </v-container>
@@ -70,19 +73,20 @@
 </v-app-bar>
 </template>
 
-<style>
+<style lang="scss">
+
   .v-toolbar a{
   text-decoration: none;
   }
 
-  .v-btn:hover span #h-tek-img .v-image__image{
+  .v-tab:hover #h-tek-img .v-image__image{
     background-image: url("/img/H-sektionen-colored.svg") !important;
   }
-  .v-btn span #h-tek-img .v-image__image{
+  .v-tab #h-tek-img .v-image__image{
     transition: background-image 0.28s;
   }
 
-  .v-toolbar .v-btn__content > svg {
+  .v-toolbar .v-tab > svg, #themeToggle svg {
     width: 21px;
     height: 21px;
   }
@@ -91,41 +95,50 @@
     margin-right: 5px;
   }
 
-  .v-app-bar .v-toolbar__content .v-btn.theme--light{
-    color: rgba(0, 0, 0, 0.87);;
+  .v-app-bar .v-toolbar__content .v-tabs.theme--light > .v-tabs-bar .v-tab:not(.v-tab--active){
+    color: rgba(0, 0, 0, 0.87);
   }
 
-  .v-app-bar .v-toolbar__content .v-btn:hover .v-btn__content {
-    color: #E0218A;
+  .v-app-bar .v-toolbar__content .v-tabs.theme--dark > .v-tabs-bar .v-tab:not(.v-tab--active){
+    color: #fff;
   }
 
-  .v-app-bar .v-toolbar__content .v-btn .v-btn__content {
-    transition: color 0.28s;
+  .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar .v-tab, #themeToggle{
+    padding: 0 5px;
+    min-width: 32px;
   }
 
-  .v-app-bar .v-toolbar__content .v-btn--active {
-    border-bottom: 3px solid #E0218A;
-    padding-top: 3px !important;
+  .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar > .v-slide-group__next.v-slide-group__next--disabled,
+  .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar > .v-slide-prev.v-slide-prev--disabled{
+    display: none !important;
+    width: 0;
   }
 
-  .v-app-bar .v-toolbar__content .v-btn--active::before {
-    opacity: 0;
+  #navbarBtns, #navbarBtns > .v-tabs-bar {
+    height: 100%;
+    background-color: transparent;
+  }
+
+  @media only screen and (max-width: 1264px){
+    .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar .v-tab > span{
+      font-size: 0.775rem;
+    }
   }
 
   @media only screen and (max-width: 960px) {
-    .v-app-bar .v-btn--icon{
-      margin: 0 5px;
-    }
-
     .navbar-icon{
       margin-right: 0;
     }
   }
 
   @media only screen and (max-width: 600px) {
-     .v-toolbar .v-btn__content > svg {
+     .v-toolbar .v-tab > svg, #themeToggle svg {
       width: 16px;
       height: 16px;
+    }
+
+    .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar .v-tab, #themeToggle{
+      min-width: 21px;
     }
 
     #hd-logo {
@@ -141,7 +154,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, FacebookIcon, MoonIcon} from 'vue-feather-icons'
+import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, FacebookIcon, MoonIcon, InstagramIcon} from 'vue-feather-icons'
 
 @Component({
   components: {
@@ -150,7 +163,8 @@ import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, FacebookIcon, MoonIcon}
     PhoneCallIcon,
     SunIcon,
     FacebookIcon,
-    MoonIcon
+    MoonIcon,
+    InstagramIcon
   }
 })
 export default class navbar extends Vue {
@@ -170,19 +184,19 @@ export default class navbar extends Vue {
   getLoad(): boolean{
     return this.loading
   }
-  setLoad(value: boolean): void{
+  setLoad(value: boolean, event?: Event): void{
     // sometimes the router event is faster than the click event so a lock check is used
     if(value === this.loading){
       this.lock = true
-      //console.log('locked')
+      console.log('locked')
     }
-    else if(!this.lock) {
-      this.loading = value
-      //console.log('set ' + this.loading + ' ' + value)
+    else if(!this.lock || !value) {
+      this.loading = value 
+      console.log('set ' + this.loading + ' ' + value)
     }
     else {
       this.lock = false
-      //console.log('unlocked')
+      console.log('unlocked')
     }
   }
 }
