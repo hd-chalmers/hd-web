@@ -146,7 +146,7 @@ export default {
                 show_on_frontpage: false,
                 google_event_id: '',
                 facebook_event_link: '',
-                date: new Date().toLocaleString('se-SV', {year: 'numeric', month: '2-digit', day: '2-digit'}),
+                date: new Date().toISOString().substr(0, 10),
                 time: '17:00',
             },
             event: {
