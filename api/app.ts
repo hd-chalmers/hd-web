@@ -26,7 +26,7 @@ if(!fs.existsSync('./storage/logs')) {
         stream: fs.createWriteStream('./storage/logs/httpRequests.log')
       }))
 app.use(morgan( LogStyle.bg.white + LogStyle.fg.black
-  + `:date[iso] | :method | :url ${LogStyle.reset} Status :status, :response-time ms, http :http-version & :req[content-type]`,
+  + ` :date[iso] | :method | :url ${LogStyle.reset} Status :status, :response-time ms, http :http-version & :req[content-type]`,
   {
     skip (req, res): boolean {
       return req.url === process.env.API_PATH + '/door' && res.statusCode < 400
@@ -68,7 +68,7 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => res.send('Api is running'))
 app.listen(parseInt(<string>process.env.API_PORT), () => {
-  console.log(LogStyle.bg.green + LogStyle.fg.black + new Date().toISOString() +
+  console.log(LogStyle.bg.green + LogStyle.fg.black + ' ' + new Date().toISOString() +
     ` | Server ${LogStyle.reset} Server is running at ` + process.env.API_FULL_URL)
 })
 

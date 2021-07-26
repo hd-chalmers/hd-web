@@ -46,7 +46,7 @@ export default abstract class ApiCall {
   async log(message: string): Promise<void>{
     const date = new Date().toISOString()
     // Write to console
-    console.info(LogStyle.bg.blue + LogStyle.fg.black + `${date} | ${this.processName} ` + LogStyle.reset + ' ' + message)
+    console.info(LogStyle.bg.blue + LogStyle.fg.white + ` ${date} | ${this.processName} ` + LogStyle.reset + ' ' + message)
 
     // Write to log file
     fs.appendFile('./storage/logs/general.log',
@@ -64,7 +64,7 @@ export default abstract class ApiCall {
     // Write styled message to console
     console.warn(
       LogStyle.bg.yellow + LogStyle.fg.black
-      + `${date} | ⚠ ️${this.processName} ` + LogStyle.reset + LogStyle.bright
+      + ` ${date} | ⚠ ️${this.processName} ` + LogStyle.reset + LogStyle.bright
       + ' ' + message + LogStyle.reset
     )
 
@@ -83,7 +83,7 @@ export default abstract class ApiCall {
     const date = new Date().toISOString()
     // Write to console
     console.error(
-      LogStyle.bg.red + `${date} | ☠ ${this.processName} ` + LogStyle.reset + ' '
+      LogStyle.bg.red + ` ${date} | ☠ ${this.processName} ` + LogStyle.reset + ' '
       + LogStyle.bright + LogStyle.fg.red + message + LogStyle.reset
     )
 
@@ -111,17 +111,53 @@ export default abstract class ApiCall {
 
   async processImage(image: UploadedFile, destinationPath: string): Promise<void>{
     console.log(image)
-    let temp
     switch (image.mimetype){
       case 'image/jpeg':
       case 'image/png':
       case 'image/webp':
       case 'image/tiff':
-        await webp.cwebp(image.tempFilePath, destinationPath + image.name + '.webp', '-q 75')
-          .catch((err: any) => this.error(err))
+        image.mv(destinationPath + image.name, async (err: Error) => {
+          if(err){
+            this.error(err.message, err.stack)
+            fs.rm(image.tempFilePath, (err) => {
+              if(err){
+                this.error(err.message, err.stack)
+              }
+            })
+          }
+          else{
+            await webp.cwebp(destinationPath + image.name, destinationPath + image.name + '.webp', '-q 75')
+              .catch((err: any) => this.error(err))
+
+              fs.rm(destinationPath + image.name, (err) => {
+                if(err){
+                  this.error(err.message, err.stack)
+                }
+              })
+          }
+        })
         break
       case 'image/gif':
-        await webp.gwebp(image.tempFilePath, destinationPath + image.name + '.webp', '-loop_compatibility -q 75')
+        image.mv(destinationPath + image.name, async (err: Error) => {
+          if(err){
+            this.error(err.message, err.stack)
+            fs.rm(image.tempFilePath, (err) => {
+              if(err){
+                this.error(err.message, err.stack)
+              }
+            })
+          }
+          else{
+            await webp.gwebp(destinationPath + image.name, destinationPath + image.name + '.webp', '-loop_compatibility -q 75')
+              .catch((err: any) => this.error(err))
+
+            fs.rm(destinationPath + image.name, (err) => {
+              if(err){
+                this.error(err.message, err.stack)
+              }
+            })
+          }
+        })
         break
       default:
         this.error(image.mimetype + ' is not an allowed filetype')
@@ -132,12 +168,6 @@ export default abstract class ApiCall {
         })
         return Promise.reject(image.mimetype + ' is not an allowed filetype')
     }
-
-    fs.rm(image.tempFilePath, (err) => {
-      if(err){
-        this.error(err.message, err.stack)
-      }
-    })
     return Promise.resolve()
   }
 }
