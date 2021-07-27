@@ -9,7 +9,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./web/dist:/var/www/html
+      - ./web/dist:/usr/share/nginx/html
     restart: on-failure:3
     depends_on:
       - hd-api
@@ -21,6 +21,8 @@ services:
       - ./api/.env.production
     ports:
     - 8000:8000
+    volumes: 
+      - ./api/storage:/home/node/storage
     restart: on-failure:3
     links:
       - hd-redis
