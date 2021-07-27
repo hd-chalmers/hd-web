@@ -36,7 +36,7 @@ services:
     build: db
     hostname: hd-db
     env_file:
-      - web/.env
+      - db/.env
     ports:
       - ${HOST_AUX_PORT_HEKTO:-10}81:5432
     restart: on-failure:3
