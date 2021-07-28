@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => res.send('Api is running'))
 app.listen(parseInt(<string>process.env.API_PORT), () => {
   console.log(LogStyle.bg.green + LogStyle.fg.black + ' ' + new Date().toISOString() +
-    ` | Server ${LogStyle.reset} Server is running at ` + process.env.API_FULL_URL)
+    ` | Server ${LogStyle.reset} API Server is running at ` + process.env.API_FULL_URL)
 })
 
 for (const route of routes){
