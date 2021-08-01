@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Client run dev" type="js.build_tools.npm" folderName="Dev test" singleton="false">
-    <package-json value="$PROJECT_DIR$/web/package.json" />
+  <configuration default="false" name="Clean" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/package.json" />
     <command value="run" />
     <scripts>
-      <script value="serve" />
+      <script value="clean" />
     </scripts>
     <node-interpreter value="project" />
     <envs />

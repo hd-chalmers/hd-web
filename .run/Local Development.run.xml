@@ -1,8 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start Dev Enviorement" type="CompoundRunConfigurationType">
+    <toRun name="API run dev" type="js.build_tools.npm" />
     <toRun name="Client run dev" type="js.build_tools.npm" />
     <toRun name="Client Debug" type="JavascriptDebugType" />
-    <toRun name="API run dev" type="js.build_tools.npm" />
+    <toRun name="Migrate and Seed db" type="js.build_tools.npm" />
     <method v="2" />
   </configuration>
 </component>
