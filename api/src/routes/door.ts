@@ -41,6 +41,9 @@ export class door extends ApiCall{
       }
 
       this.status = status > 0
+      if(status > 1 || status === null){
+        this.status = null
+      }
       this.updatedAt = new Date()
       this.log('door was set to ' + this.status)
 

@@ -16,7 +16,7 @@ export class committee extends ApiCall{
       }
 
       const yearList: ActiveYears[] = await this.db.query(this.sql`SELECT id, year, group_photo, description FROM active_years ORDER BY year DESC LIMIT 1`)
-      const memberList: CommitteeMembers[] = await this.db.query(this.sql`SELECT * FROM committee_members WHERE active_year_id = ${yearList[0].id}`)
+      const memberList: CommitteeMembers[] = await this.db.query(this.sql`SELECT * FROM committee_members WHERE active_year_id = ${yearList[0].id} ORDER BY id`)
 
       const formattedMembers: memberType[] = []
 
