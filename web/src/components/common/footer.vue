@@ -3,6 +3,7 @@
           padless
           elevation="5"
 >
+  <div @click="$vuetify.goTo('#footer')" style="width: 100%;" v-ripple>
     <v-row
         justify="center"
         no-gutters
@@ -13,6 +14,7 @@
             {{"2021"}} <strong class="mx-1">H-Sektionens Datorförening</strong>
         <v-spacer></v-spacer>
     </v-row>
+  </div>
 </v-footer>
 </template>
 

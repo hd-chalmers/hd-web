@@ -46,23 +46,23 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-        <v-tab to="/contact" @click.once="setLoad(true, $event)">
+        <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.goTo('#footer')">
           <phone-call-icon class="navbar-icon"></phone-call-icon>
-          <span class="hidden-sm-and-down">
+          <!--span class="hidden-sm-and-down">
             Kontakta Oss
-          </span>
-        </v-tab>
+          </span-->
+        </v-btn>
         <v-tab style="color: #E91E63;" href="https://www.facebook.com/HsektionenChalmers/">
           <v-img contain id="h-tek-img" width="28px" height="28px" src="/img/H-sektionen.svg" />
         </v-tab>
-        <v-tab style="color: #2196F3;" href="https://www.facebook.com/HDChalmers/">
+        <!--v-tab style="color: #2196F3;" href="https://www.facebook.com/HDChalmers/">
             <facebook-icon/>
         </v-tab>
         <v-tab style="color: #9C27B0;" icon href="https://www.instagram.com/hdchalmers/">
             <instagram-icon/>
-        </v-tab>
+        </v-tab-->
 
-      <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" id="themeToggle" depressed x-small @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+      <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.theme.dark = !$vuetify.theme.dark">
         <sun-icon :hidden="$vuetify.theme.dark"/> <moon-icon :hidden="!$vuetify.theme.dark"/>
       </v-btn>
         </v-tabs>
@@ -86,7 +86,7 @@
     transition: background-image 0.28s;
   }
 
-  .v-toolbar .v-tab > svg, #themeToggle svg {
+  .v-toolbar .v-tab > svg, .navBtn svg {
     width: 21px;
     height: 21px;
   }
@@ -103,9 +103,9 @@
     color: #fff;
   }
 
-  .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar .v-tab, #themeToggle{
-    padding: 0 5px;
-    min-width: 32px;
+  .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar .v-tab, .v-tabs-bar__content > .navBtn.v-btn{
+    padding: 0 5px !important;
+    min-width: 32px !important;
   }
 
   .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar > .v-slide-group__next.v-slide-group__next--disabled,
@@ -132,13 +132,13 @@
   }
 
   @media only screen and (max-width: 600px) {
-     .v-toolbar .v-tab > svg, #themeToggle svg {
+     .v-toolbar .v-tab > svg, .navBtn svg {
       width: 16px;
       height: 16px;
     }
 
-    .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar .v-tab, #themeToggle{
-      min-width: 21px;
+    .v-app-bar .v-toolbar__content .v-tabs > .v-tabs-bar .v-tab, .v-tabs-bar__content > .navBtn.v-btn{
+      min-width: 21px !important;
     }
 
     #hd-logo {
@@ -191,7 +191,7 @@ export default class navbar extends Vue {
       console.log('locked')
     }
     else if(!this.lock || !value) {
-      this.loading = value 
+      this.loading = value
       console.log('set ' + this.loading + ' ' + value)
     }
     else {
