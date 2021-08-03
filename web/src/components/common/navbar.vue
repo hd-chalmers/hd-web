@@ -37,6 +37,13 @@
             Evenemang
           </span>
         </v-tab>
+
+          <v-tab to="/pricelist" @click.once="setLoad(true, $event)">
+            <shopping-cart-icon class="navbar-icon"></shopping-cart-icon>
+            <span class="hidden-sm-and-down">
+              Prislista
+          </span>
+          </v-tab>
         <!--
         @if(false)
             <v-btn text href="products">Prislista</v-btn>
@@ -46,25 +53,25 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-        <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.goTo('#footer')">
-          <phone-call-icon class="navbar-icon"></phone-call-icon>
-          <!--span class="hidden-sm-and-down">
-            Kontakta Oss
-          </span-->
-        </v-btn>
-        <v-tab style="color: #E91E63;" href="https://www.facebook.com/HsektionenChalmers/">
-          <v-img contain id="h-tek-img" width="28px" height="28px" src="/img/H-sektionen.svg" />
-        </v-tab>
-        <!--v-tab style="color: #2196F3;" href="https://www.facebook.com/HDChalmers/">
-            <facebook-icon/>
-        </v-tab>
-        <v-tab style="color: #9C27B0;" icon href="https://www.instagram.com/hdchalmers/">
-            <instagram-icon/>
-        </v-tab-->
+          <v-tab style="color: #E91E63;" href="https://www.facebook.com/HsektionenChalmers/">
+            <v-img contain id="h-tek-img" width="28px" height="28px" src="/img/H-sektionen.svg" />
+          </v-tab>
+          <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.goTo('#footer')">
+            <phone-call-icon class="navbar-icon"></phone-call-icon>
+            <!--span class="hidden-sm-and-down">
+              Kontakta Oss
+            </span-->
+          </v-btn>
+          <!--v-tab style="color: #2196F3;" href="https://www.facebook.com/HDChalmers/">
+              <facebook-icon/>
+          </v-tab>
+          <v-tab style="color: #9C27B0;" icon href="https://www.instagram.com/hdchalmers/">
+              <instagram-icon/>
+          </v-tab-->
 
-      <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.theme.dark = !$vuetify.theme.dark">
-        <sun-icon :hidden="$vuetify.theme.dark"/> <moon-icon :hidden="!$vuetify.theme.dark"/>
-      </v-btn>
+        <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+          <sun-icon :hidden="$vuetify.theme.dark"/> <moon-icon :hidden="!$vuetify.theme.dark"/>
+        </v-btn>
         </v-tabs>
         <!--<v-btn icon href="https://www.facebook.com/HDChalmers/"><v-icon>mdi-instagram</v-icon></v-btn>-->
     </v-toolbar-items>
@@ -154,7 +161,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, FacebookIcon, MoonIcon, InstagramIcon} from 'vue-feather-icons'
+import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, FacebookIcon, MoonIcon, InstagramIcon, ShoppingCartIcon} from 'vue-feather-icons'
 
 @Component({
   components: {
@@ -164,7 +171,8 @@ import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, FacebookIcon, MoonIcon,
     SunIcon,
     FacebookIcon,
     MoonIcon,
-    InstagramIcon
+    InstagramIcon,
+    ShoppingCartIcon
   }
 })
 export default class navbar extends Vue {

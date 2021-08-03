@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import BaseLayout from '@/views/layouts/base.vue'
-import { users } from '../../../api/src/database'
 
 Vue.use(VueRouter)
 
@@ -29,6 +28,11 @@ const routes: Array<RouteConfig> = [
         path: '/contact',
         name: 'Contact',
         component: () => import(/* webpackChunkName: "contact" */ '@/views/contact.vue')
+      },
+      {
+        path: '/pricelist',
+        name: 'Pricelist',
+        component: () => import(/* webpackChunkName: "pricelist"*/ '@/views/pricelist/pricelist.vue')
       },
       {
         path: '/login',
