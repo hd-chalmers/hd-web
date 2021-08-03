@@ -1,14 +1,20 @@
 <template>
     <v-container>
-        <v-card :loading="loading">
+        <v-card :loading="loading" class="mb-3">
           <v-alert v-if="error" text color="error">{{error}}</v-alert>
             <v-card-title>
                 Kommande Arrangemang
             </v-card-title>
-            <v-card-text>
-              <v-skeleton-loader v-if="loading" type="card@2"></v-skeleton-loader>
+            <v-card-text v-if="!events[0] && !loading">
+              <span>Inga arrangemang är just nu inlagda</span>
+            </v-card-text>
+        </v-card>
+      <v-card v-if="loading" class="mb-3">
+        <v-skeleton-loader type="article"></v-skeleton-loader>
+      </v-card>
                     <v-card v-for="event in events" v-bind:key="event.id" class="mb-3" elevation="5">
                         <v-card-title>
+                          <h5>
                             {{event.date.toLocaleDateString('sv-SE', {
                               year: 'numeric',
                               month: 'numeric',
@@ -18,29 +24,40 @@
                             })}} - {{event.title}}
 
 
-                                <v-btn v-if="event.facebookLink" icon v-bind:href="event.facebookLink">
-                                    <v-icon>mdi-facebook</v-icon>
+                                <v-btn v-if="event.facebookLink" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebookLink">
+                                    <facebook-icon/>
                                 </v-btn>
+                          </h5>
                         </v-card-title>
-                        <v-card-text>
-                            <span v-if="event.location">
-                                Plats: {{event.location}}<br/><br/>
-                            </span>
-                            {{event.description}}
+                        <v-card-text v-if="event.location || event.description">
+                                <span v-if="event.location">
+                                  <map-pin-icon size="1x"/>
+                                    Plats: {{event.location}}<br/><br/>
+                                </span>
+                              <span v-if="event.description" style="display: flex; align-items: center;">
+                                <align-left-icon size="1x" style="margin-right: 5px;"/>
+                                {{event.description}}
+                              </span>
                         </v-card-text>
                     </v-card>
-                <span v-if="!events[0] && !loading">Inga arrangemang är just nu inlagda</span>
-            </v-card-text>
-        </v-card>
+      <footer-card/>
     </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { eventType } from '@/assets/ts/interfaces'
-//import axios from 'axios'
+import footerCard from '@/components/footerCard.vue'
+import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
 
-    @Component
+@Component({
+      components: {
+        footerCard,
+        FacebookIcon,
+        MapPinIcon,
+        AlignLeftIcon
+      }
+    })
     export default class EventPage extends Vue {
       constructor () {
         super();

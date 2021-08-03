@@ -2,13 +2,12 @@
 <template>
 <v-app id="app" v-bind:style="backgroundProperties">
 <Navbar></Navbar>
-    <!--@yield('loehk') -->
         <v-main>
           <v-scroll-y-reverse-transition leave-absolute>
             <router-view/>
           </v-scroll-y-reverse-transition>
         </v-main>
-    <ChassitOpenIcon></ChassitOpenIcon>
+    <!--ChassitOpenIcon></ChassitOpenIcon-->
 <FooterElement></FooterElement>
 </v-app>
 </template>
