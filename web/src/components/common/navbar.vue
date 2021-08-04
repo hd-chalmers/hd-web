@@ -37,6 +37,14 @@
             Evenemang
           </span>
         </v-tab>
+          <v-tab to="/games" @click.once="setLoad(true, $event)">
+            <i class="material-icons-outlined navbar-icon">
+              videogame_asset
+            </i>
+            <span class="hidden-sm-and-down">
+            Spel
+          </span>
+          </v-tab>
         <!--
         @if(false)
             <v-btn text href="products">Prislista</v-btn>
