@@ -37,13 +37,6 @@
             Evenemang
           </span>
         </v-tab>
-
-          <v-tab to="/pricelist" @click.once="setLoad(true, $event)">
-            <shopping-cart-icon class="navbar-icon"></shopping-cart-icon>
-            <span class="hidden-sm-and-down">
-              Prislista
-          </span>
-          </v-tab>
         <!--
         @if(false)
             <v-btn text href="products">Prislista</v-btn>

@@ -16,11 +16,20 @@
                           :expanded="expanded">
                 <template v-slot:top>
                     <v-toolbar flat>
-                        <v-text-field
-                            v-model.number="search"
-                            label="Sök..."
-                            clearable
-                        ></v-text-field>
+                      <v-row>
+                        <v-col cols="1">
+                          <v-btn rounded text to="/pricelist">
+                            <printer-icon/>
+                          </v-btn>
+                        </v-col>
+                        <v-col>
+                          <v-text-field
+                              v-model.number="search"
+                              label="Sök..."
+                              clearable
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
                     </v-toolbar>
                     <v-form class="px-4" @submit.stop.prevent="createProduct" v-model="item.valid" ref="newProduct">
                         <v-card>
@@ -189,6 +198,8 @@
 </template>
 
 <script>
+import { PrinterIcon } from 'vue-feather-icons'
+
 export default {
     name: "Prices",
     data() {
@@ -257,6 +268,9 @@ export default {
             ]
         }
     },
+  components:{
+    PrinterIcon
+  },
     computed: {
         new_price() {
             if (isNaN(this.item.purchase_price) || isNaN(this.item.package_size) || !this.item.package_size) {
