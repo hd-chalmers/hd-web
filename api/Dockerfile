@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:14
 
 
 #ENV DB_HOST=hd-db DB_PORT=5432 DB_DATABASE=hd DB_USERNAME=hd DB_PASSWORD=hd DB_CONNECTIOn=pgsql \
@@ -13,5 +13,6 @@ WORKDIR /home/node
 COPY package*.json ./
 USER node
 RUN npm i
+#RUN chmod 777 -R ./node_modules/webp-converter/bin
 COPY ./build .
 CMD [ "node", "app.js" ]
