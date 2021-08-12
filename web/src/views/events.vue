@@ -15,7 +15,7 @@
                     <v-card v-for="event in events" v-bind:key="event.id" class="mb-3" elevation="5">
                         <v-card-title>
                           <h5>
-                            {{event.date.toLocaleDateString('sv-SE', {
+                            {{event.date.toLocaleString('sv', {
                               year: 'numeric',
                               month: 'numeric',
                               day: 'numeric',

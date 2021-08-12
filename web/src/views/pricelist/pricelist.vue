@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card :loading="loading" id="pricelist">
+    <v-card light :loading="loading" id="pricelist">
       <v-alert v-if="error" color="error" text>{{error}}</v-alert>
       <v-card-title> <h2>Prislista</h2> </v-card-title>
       <v-card-subtitle style="padding-bottom: 0;">Här är saker man kan köpa i våra arr!</v-card-subtitle>
