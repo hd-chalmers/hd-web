@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text id="footer">
       <v-row no-gutters>
-        <v-col  class="flex flex-column align-right" style="display: flex;" cols="12" sm="6">
+        <v-col  class="flex flex-column align-right" style="display: flex; min-width: 167px;" cols="12" sm>
       <a href="mailto:hd@htek.chalmers.se">
         <mail-icon size="1.5x"/>
         HD@htek.chalmers.se
@@ -21,7 +21,7 @@
         <external-link-icon size="0.8x"/>
       </a>
         </v-col>
-        <v-col  class="flex flex-column align-right" style="display: flex;" cols="12" sm="6">
+        <v-col  class="flex flex-column align-right" style="display: flex; min-width: 167px;" cols="12" sm>
       <a href="https://www.instagram.com/hdchalmers/">
         <instagram-icon size="1.5x"/>
         @hdchalmers

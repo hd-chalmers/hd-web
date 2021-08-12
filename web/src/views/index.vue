@@ -15,7 +15,7 @@
         </v-col>
       </v-row>
       <v-row dense>
-        <v-col cols="12" sm="6" align-self="start">
+        <v-col cols="12" sm="6" lg="5" xl="6" align-self="start">
           <v-row id="indexCol" dense>
             <v-col align-self="start" cols="12">
           <v-card>
@@ -77,13 +77,14 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" sm="6" align-self="start">
-          <v-card id="feedCard">
+        <v-col cols="12" sm="6" lg="7" xl="6" align-self="stretch">
+          <v-card id="feedCard" style="height: 100%">
             <!--v-card-title style="transform: scaleY(2) translateY(5%);">
             <h3 style="display: flex; align-items: center;"><instagram-icon style="margin-right: 5px;"/> Instagram</h3>
             </v-card-title-->
-            <v-card-text>
-              <div class="embedsocial-hashtag" data-ref="7d09843251254063d8791fb6e0acc5f768a7d41a" >
+            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9"></div>
+            <v-card-text style="padding-top: 0;">
+              <div class="embedsocial-hashtag" data-ref="7d09843251254063d8791fb6e0acc5f768a7d41a">
                 <a class="feed-powered-by-es" href="https://embedsocial.com/social-media-aggregator/" target="_blank" title="Powered by EmbedSocial">
                   Powered by EmbedSocial<span>→</span>
                 </a>
@@ -96,6 +97,10 @@
 </template>
 
 <style>
+.embedsocial-stories iframe {
+  max-height: 80px;
+}
+/*
 @media screen and (max-width: 1904px) and (min-width: 600px){
   #feedCard{
     width: 100%;
@@ -104,7 +109,7 @@
     position: absolute;
     overflow: auto;
   }
-  #feedCard .embedsocial-hashtag{
+  #feedCard .embedsocial-hashtag, #feedCard .embedsocial-stories{
     width: 200%;
     transform: scale(0.5, 1) translate(-50%, 0);
   }
@@ -121,22 +126,23 @@
     margin-right: 12px;
     max-height: calc(1200px * 2);
   }
-}
+}*/
 </style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { eventType } from '@/assets/ts/interfaces'
-import { AlertCircleIcon, LockIcon, UnlockIcon/*, InstagramIcon*/ } from 'vue-feather-icons'
+import { AlertCircleIcon, LockIcon, UnlockIcon, InstagramIcon } from 'vue-feather-icons'
 import footerCard from '@/components/footerCard.vue'
+import {NavigationGuardNext, Route} from "vue-router";
 
 @Component({
   components: {
     LockIcon,
     UnlockIcon,
     AlertCircleIcon,
-    footerCard/*,
-    InstagramIcon*/
+    footerCard,
+    InstagramIcon
   }
 })
 export default class IndexPage extends Vue {
@@ -144,10 +150,12 @@ export default class IndexPage extends Vue {
     super()
     this.getData()
     this.getStatus()
-    setInterval(this.getStatus, 10000)
+    this.interval = setInterval(this.getStatus, 10000)
 
-    this.initFeed(document, "script", "EmbedSocialHashtagScript")
+    this.initSocialEmbed(document, "script", "EmbedSocialHashtagScript", "https://embedsocial.com/cdn/ht.js")
+    this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
   }
+
   eventObj: eventType = {
     date: new Date(),
     description: '',
@@ -159,7 +167,8 @@ export default class IndexPage extends Vue {
   frontpageImg = ''
   error = ''
   loading = true
-  timeout: any | null = null
+  interval: any
+  timeout: any | null
 
   doorShowDate = false
   doorLoading = true
@@ -168,6 +177,13 @@ export default class IndexPage extends Vue {
   doorOpenTimestamp = '0000-00-00 00:00:00'
   doorIcon = 'mdi-alert-circle'
   doorColor: string | undefined = 'black'
+
+  beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext<Vue>): void {
+    clearInterval(this.interval)
+    clearTimeout(this.timeout)
+    next()
+  }
+
   async getData(): Promise<void>{
     this.loading = true
     fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res =>res.json()).then(res => {
@@ -189,7 +205,7 @@ export default class IndexPage extends Vue {
     .finally(() => this.loading = false)
   }
 
-  initFeed(d: Document, s: string, id: string): void {
+  initSocialEmbed(d: Document, s: string, id: string, src: string): void {
     let js
     const existing = d.getElementById(id)
     if (existing) {
@@ -198,7 +214,7 @@ export default class IndexPage extends Vue {
     }
     js = d.createElement(s) as any
     js.id = id
-    js.src = "https://embedsocial.com/cdn/ht.js"
+    js.src = src
     d.getElementsByTagName("head")[0].appendChild(js)
   }
 
@@ -250,6 +266,18 @@ export default class IndexPage extends Vue {
   setColor(): void {
       const door = document.getElementById('doorCard') as HTMLElement
       door.style.color = this.doorColor as string
+  }
+
+  checkStoryExist(): boolean{
+    const result = (document.getElementsByClassName('embedsocial-iframe-story')[0]?.clientHeight ?? 0) > 0
+    if(!document.getElementsByClassName('embedsocial-iframe-story')[0]){
+      setTimeout(() => {
+        //console.log('timeout tick')
+        this.$forceUpdate()
+      }, 500)
+    }
+    console.log(result)
+    return result
   }
 }
 </script>

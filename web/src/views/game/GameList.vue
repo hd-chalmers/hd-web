@@ -45,7 +45,7 @@
                         <span v-if="groupBy === 'max_playtime' || groupBy === 'min_playtime'">min</span>
                       </h2>
                     <v-expansion-panels>
-                      <v-expansion-panel v-for="item in group.items" v-bind:key="item.id" @click="clearSelect(item.id)">
+                      <v-expansion-panel v-for="item in group.items" v-bind:key="item.id" @click="clearSelect(item.id)" class="elevation-4">
                         <v-expansion-panel-header :id="'s' + item.id" style="transition: background-color 0.5s;">
                           <v-row>
                             <v-col class="subtitle-2" sm cols="12">
