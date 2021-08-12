@@ -37,7 +37,8 @@ export class loehkEvents extends ApiCall{
 
           case 'time':
             temp = await this.db.query(this.sql`SELECT to_char(date, 'YYYY-MM-DD ') AS date FROM events WHERE id = ${id};`) as Events[]
-            await this.db.query(this.sql`UPDATE events SET date = ${temp[0].date + req.body[item]}, updated_at = current_timestamp WHERE id = ${id};`)
+            temp = new Date(`${temp[0].date} ${req.body[item]} UTC+2`)
+            await this.db.query(this.sql`UPDATE events SET date = ${temp.toUTCString()}, updated_at = current_timestamp WHERE id = ${id};`)
               .catch((err) => console.log(err))
             break;
 
