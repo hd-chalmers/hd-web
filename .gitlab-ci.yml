@@ -16,6 +16,16 @@ build:resources:
     - cd ..
   artifacts:
     untracked: true
+  only:
+    changes:
+      - web/**/*
+      - Dockerfile
+      - docker-entrypoint
+      - php.ini
+      - laravel-worker.conf
+      - Envoy.blade.php
+    refs:
+      - master
   stage: build
   cache:
     paths:
@@ -28,8 +38,16 @@ docker:web:
     - build:resources
   needs:
     - build:resources
-  only: 
-    - master
+  only:
+    changes:
+      - web/**/*
+      - Dockerfile
+      - docker-entrypoint
+      - php.ini
+      - laravel-worker.conf
+      - Envoy.blade.php
+    refs:
+      - master
   cache:
     paths:
       - .composer-cache
@@ -67,6 +85,14 @@ docker:branch-web:
     - build:resources
   needs:
     - build:resources
+  only:
+    changes:
+      - web/**/*
+      - Dockerfile
+      - docker-entrypoint
+      - php.ini
+      - laravel-worker.conf
+      - Envoy.blade.php
   cache:
     paths:
       - .composer-cache
@@ -97,24 +123,44 @@ docker:branch-db:
 deploy:prod:
   stage: deploy
   only:
-    - master
+    changes:
+      - web/**/*
+      - Dockerfile
+      - docker-entrypoint
+      - php.ini
+      - laravel-worker.conf
+      - Envoy.blade.php
+    refs:
+      - master
   when: manual
   environment:
     name: prod
     url: https://hd.chalmers.se
   needs:
     - docker:web
+  image: curlimages/curl
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - curl -X POST http://10.13.37.4:9000/api/webhooks/5b3a9b93-8836-49ee-b6a6-09d079a617a5
+
 
 deploy:staging:
   stage: deploy
   only:
-    - master
+    changes:
+      - web/**/*
+      - Dockerfile
+      - docker-entrypoint
+      - php.ini
+      - laravel-worker.conf
+      - Envoy.blade.php
+    refs:
+      - master
   environment:
     name: staging
     url: https://staging.hd.chalmers.se
   needs:
     - docker:web
+  image: curlimages/curl
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - curl -X POST http://10.13.37.4:9000/api/webhooks/a1ecd156-bf84-4949-b681-89cae144750f
+
