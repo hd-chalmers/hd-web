@@ -97,7 +97,7 @@
                                     <v-col cols="12" sm="6" md="4" lg="3">
                                         <v-radio-group row>
                                             <v-switch class="mr-1" label="Skriv ut" v-model="item.print"></v-switch>
-                                            <v-switch label="Aktiv" v-model="item.active"></v-switch>
+                                            <v-switch label="Aktiv" v-model="item.active" persistent-hint :hint="item.inactive_since ? 'Inaktiv sedan: ' + new Date(item.inactive_since).toLocaleString('sv') : ''"></v-switch>
                                         </v-radio-group>
                                     </v-col>
                                 </v-row>
