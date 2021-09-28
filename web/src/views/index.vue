@@ -3,7 +3,7 @@
       <v-row dense>
         <v-col cols="12">
           <v-card>
-          <v-alert v-ripple v-if="eventObj.title" text color="#e0218a" tile elevation="1" style="margin-bottom: 0; cursor: pointer;" @click="$router.push('/events')">
+          <v-alert v-ripple v-if="eventObj" text color="#e0218a" tile elevation="1" style="margin-bottom: 0; cursor: pointer;" @click="$router.push('/events')">
             <strong>Nästa Event: </strong>
             {{
             eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', day: '2-digit', month: 'long'})
@@ -13,31 +13,25 @@
           <v-alert v-if="error" text color="error" style="margin-bottom: 0"> {{error}} </v-alert>
           </v-card>
         </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col cols="12" sm="6" lg="5" xl="6" align-self="start">
-          <v-row id="indexCol" dense>
-            <v-col align-self="start" cols="12">
-          <v-card>
+        <v-col cols="12" sm="6" align-self="stretch" style="display: flex; flex-flow: column;">
+          <v-card style="margin-bottom: 4px;">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
             <v-img v-bind:src="frontpageImg" alt="unknown_group" contain></v-img>
           </v-card>
-            </v-col>
-            <v-col>
-              <v-card @click="showDate()" style="cursor: default;">
+              <v-card @click="showDate()" style="cursor: default; margin: 4px 0;">
                 <v-card-text class="flex justify-space-between align-content-center" style="display: flex; align-items: center; transition: color 1s ease" id="doorCard">
                   <template v-if="!doorLoading">
                     <v-scroll-x-transition leave-absolute>
-                    <lock-icon v-if="doorIcon === 'lock'"/>
+                      <lock-icon v-if="doorIcon === 'lock'"/>
                     </v-scroll-x-transition>
                     <v-scroll-x-transition leave-absolute>
-                    <unlock-icon v-if="doorIcon === 'unlock'"/>
+                      <unlock-icon v-if="doorIcon === 'unlock'"/>
                     </v-scroll-x-transition>
                     <v-scroll-x-transition leave-absolute>
-                    <alert-circle-icon v-if="doorIcon === 'alert'"/>
+                      <alert-circle-icon v-if="doorIcon === 'alert'"/>
                     </v-scroll-x-transition>
                     <v-scroll-x-transition leave-absolute>
-                    <span v-if="!doorShowDate">Hoppas du har en bra dag :)</span>
+                      <span v-if="!doorShowDate">Hoppas du har en bra dag :)</span>
                     </v-scroll-x-transition>
                     <v-scroll-x-transition leave-absolute>
                       <span v-if="doorShowDate" style="line-height: 12px; font-size: 11px; text-align: right;">{{doorOpenTimestamp}} <br> ca {{doorDuration}} sedan</span>
@@ -49,46 +43,42 @@
                   </template>
                 </v-card-text>
               </v-card>
-            </v-col>
-            <v-col cols="12">
-        <v-card>
-          <v-card-title>
-                        <strong>Vad är <span style="color: #E0218A">H</span><span style="
+              <footer-card class="hidden-xl-only hidden-xs-only" style="flex-grow: 1; margin-top: 4px;"/>
+        </v-col>
+        <v-col align-self="stretch">
+          <v-card style="height: 100%;">
+            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block;"></div>
+            <v-card-title style="padding-top: 0;">
+              <strong>Vad är <span style="color: #E0218A">H</span><span style="
                             color: black;
                             -webkit-text-stroke-width: 0.5px;
                             -webkit-text-stroke-color: white;
                           ">D</span>?</strong>
-          </v-card-title>
-          <v-card-text>
-                        <p>Vi arrar dator- och spelrelaterade (självklart även datorspelrelaterade) aktiviteter. Vårt paradnummer är 'Chilla med HD', ett event som hålls minst två gånger per läsperiod. Då spelar vi spel (brädspel, tv-spel,
-                            datorspel)
-                            och intar socker i olika former.</p>
-                        <p>Vi tillhandahåller även hjälp i diverse datorrelaterade kurser.</p>
-                        <p>Vi leverar socker samt högupplöst kärlek till alla och några till. Våra arr är alkoholfria, med undantag för våra spelpubar som vi har några gånger per år.</p>
-                        <p>Så om ni vill spela spel, ha hjälp med programmering eller bara få er en sockerchock är det oss ni ska vända er till.</p>
-                        <p>Vårt tillhåll är vid lilla FöreningsTorget i källaren av Svea-huset.</p>
-                        <!----<p>Vi håller till i katakomberna under Lindholmen.</p>----->
-                        <p><strong>TL;DR:</strong> Socker, spel, datorer, kakor, läsk, SOCKER!!1!</p>
+            </v-card-title>
+            <v-card-text>
+              <p>Vi arrar dator- och spelrelaterade (självklart även datorspelrelaterade) aktiviteter. Vårt paradnummer är 'Chilla med HD', ett event som hålls minst två gånger per läsperiod. Då spelar vi spel (brädspel, tv-spel,
+                datorspel)
+                och intar socker i olika former.</p>
+              <p>Vi tillhandahåller även hjälp i diverse datorrelaterade kurser.</p>
+              <p>Vi leverar socker samt högupplöst kärlek till alla och några till. Våra arr är alkoholfria, med undantag för våra spelpubar som vi har några gånger per år.</p>
+              <p>Så om ni vill spela spel, ha hjälp med programmering eller bara få er en sockerchock är det oss ni ska vända er till.</p>
+              <p>Vårt tillhåll är vid lilla FöreningsTorget i källaren av Svea-huset.</p>
+              <!----<p>Vi håller till i katakomberna under Lindholmen.</p>----->
+              <p><strong>TL;DR:</strong> Socker, spel, datorer, kakor, läsk, SOCKER!!1!</p>
             </v-card-text>
-        </v-card>
-            </v-col>
-            <v-col cols="12" align-self="start">
-              <footer-card/>
-            </v-col>
-          </v-row>
+          </v-card>
+          </v-col>
+
+        <v-col cols="12" class="hidden-sm-only hidden-md-only hidden-lg-only">
+          <footer-card/>
         </v-col>
-        <v-col cols="12" sm="6" lg="7" xl="6" align-self="stretch">
-          <v-card id="feedCard" style="height: 100%">
+        <v-col cols="12" align-self="start">
+          <v-card id="feedCard" style="height: 100%;">
             <!--v-card-title style="transform: scaleY(2) translateY(5%);">
             <h3 style="display: flex; align-items: center;"><instagram-icon style="margin-right: 5px;"/> Instagram</h3>
             </v-card-title-->
-            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9"></div>
-            <v-card-text style="padding-top: 0;">
-              <div class="embedsocial-hashtag" data-ref="7d09843251254063d8791fb6e0acc5f768a7d41a">
-                <a class="feed-powered-by-es" href="https://embedsocial.com/social-media-aggregator/" target="_blank" title="Powered by EmbedSocial">
-                  Powered by EmbedSocial<span>→</span>
-                </a>
-              </div>
+            <v-card-text>
+              <div class="embedsocial-hashtag" data-ref="7d09843251254063d8791fb6e0acc5f768a7d41a"></div>
             </v-card-text>
           </v-card>
         </v-col>
@@ -156,14 +146,7 @@ export default class IndexPage extends Vue {
     this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
   }
 
-  eventObj: eventType = {
-    date: new Date(),
-    description: '',
-    facebookLink: '',
-    id: 0,
-    location: '',
-    title: ''
-  }
+  eventObj: eventType | null = null
   frontpageImg = ''
   error = ''
   loading = true
@@ -188,14 +171,14 @@ export default class IndexPage extends Vue {
     this.loading = true
     fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res =>res.json()).then(res => {
         this.error = ''
-        this.eventObj = {
+        this.eventObj = res.event ? {
           title: res.event.title,
           date: new Date(res.event.date),
           description: '',
           facebookLink: '',
           id: 0,
           location: ''
-      }
+      } : null
       this.frontpageImg = res.frontpageImg ?? '/img/unknown_group.png'
     })
     .catch(() => {

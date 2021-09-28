@@ -158,8 +158,7 @@ export default class GameList extends Vue{
                 'Content-Type':
                   'application/json',
                 'Accept':
-                  'application/json',
-                sessionId: ''
+                  'application/json'
               }
           }).then(res => res.json()).then(res => {
             this.games = res;

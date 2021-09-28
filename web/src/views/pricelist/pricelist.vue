@@ -97,7 +97,7 @@ export default class pricelist extends Vue{
     this.loading = true
     fetch(process.env.VUE_APP_API_URL + '/pricelist').then(res => res.json()).then(res => {
       this.error = ''
-      this.categories = res.categories
+      this.categories = res
     })
       .catch(() => {
         this.error = 'Sidan kunde inte nå servern'
