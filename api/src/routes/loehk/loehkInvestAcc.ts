@@ -13,9 +13,10 @@ export class loehkInvestAcc extends ApiCall{
         res.status(403).send()
         return
       }
-
-      const active = await accounts(this.db).find({active: true}).all() as any[]
-      const inactive = await accounts(this.db).find({active: false}).all() as any[]
+      const active = await this.db.query(this.sql`SELECT ac.id, ac.name, password, uid, active, print, (CASE WHEN sum(sum) IS NULL THEN 0 ELSE sum(sum) END) AS balance
+                                FROM accounts ac LEFT JOIN purchase_histories ph on ac.id = ph.account_id WHERE ac.active = true GROUP BY ac.id`)
+      const inactive = await this.db.query(this.sql`SELECT ac.id, ac.name, password, uid, active, print, inactive_since, (CASE WHEN sum(sum) IS NULL THEN 0 ELSE sum(sum) END) AS balance
+                                FROM accounts ac LEFT JOIN purchase_histories ph on ac.id = ph.account_id WHERE ac.active = false GROUP BY ac.id`)
 
       for(const account of active){
         account.active_text = 'Aktiv'
