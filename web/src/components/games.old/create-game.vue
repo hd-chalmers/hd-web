@@ -45,7 +45,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="search_result in search_results" @click="select_result(search_result.id)"
-                    style="cursor:pointer;">
+                    v-bind:key="search_result.id" style="cursor:pointer;">
                     <td>
                         {{search_result.published_year}} - {{search_result.name}}
                     </td>
@@ -60,7 +60,7 @@
                     <label for="category">Kategori <span style="color: red">*</span></label>
                     <select class="custom-select" id="category" required v-model="game.game_platform_id">
                         <option selected disabled value="0">Välj Kategori</option>
-                        <option v-for="category in platforms" :value="category.id">{{category.name}}</option>
+                        <option v-for="category in platforms" :value="category.id" v-bind:key="category.id">{{category.name}}</option>
                     </select>
                 </div>
                 <div class="col-6">
@@ -116,11 +116,10 @@
 
 <script>
 
-    import { Editor, EditorContent } from 'tiptap'
+    //import { Editor, EditorContent } from 'tiptap'
 
     export default {
         components: {
-            EditorContent,
         },
         name   : "create-game",
         methods: {
@@ -139,6 +138,7 @@
                         'Hämtar data',
                         () => {
                             return new Promise((success, fail) => {
+                              /*
                                 axios(
                                     "/bgg/fetch/" + id,
                                     {
@@ -184,12 +184,13 @@
                                     });
                                 }).finally(() => {
                                     this.fetch_running = false;
-                                })
+                                })*/
                             });
                         }
                     );
                 }
             },
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
             submit() {
 
             },
@@ -201,6 +202,7 @@
                         'Söker',
                         () => {
                             return new Promise((success, fail) => {
+                              /*
                                 axios(
                                     "/bgg/search",
                                     {
@@ -238,7 +240,7 @@
                                 }).finally(() => {
                                     this.search_running = false;
                                     this.search_run     = true;
-                                })
+                                })*/
                             });
                         }
                     );

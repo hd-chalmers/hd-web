@@ -13,6 +13,7 @@ import { door } from './door'
 import { print } from './print'
 import { priceList } from "./pricelist";
 import {games} from "./games";
+import {loehkGames} from "./loehk/loehkGames";
 
 export const routes = [
   events,
@@ -29,5 +30,6 @@ export const routes = [
   door,
   print,
   priceList,
-  games
+  games,
+  loehkGames
 ]
