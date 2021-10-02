@@ -142,9 +142,7 @@ export default {
                 title: 'Nytt Event',
                 description: '',
                 location: '',
-                poster: '',
                 show_on_frontpage: false,
-                google_event_id: '',
                 facebook_event_link: '',
                 date: new Date().toISOString().substr(0, 10),
                 time: '17:00',
@@ -177,7 +175,7 @@ export default {
             this.$set(this.load, 'time', true);
             this.$set(this.errors, 'time', '')
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/events?eventId=${this.event.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/events/${this.event.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -216,7 +214,7 @@ export default {
             this.$set(this.load, 'date', true);
             this.$set(this.errors, 'date', '')
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/events?eventId=${this.event.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/events/${this.event.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -296,7 +294,7 @@ export default {
                 data.append(fieldname, this.event[fieldname]);
             }*/
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/events?eventId=${this.event.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/events/${this.event.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -354,13 +352,10 @@ export default {
             this.$set(this.message, "deleteEvent", '');
             this.$set(this.errors, 'deleteEvent', '')
           this.state.then(obj => {
-            fetch (process.env.VUE_APP_API_URL + `/loehk/events`, {
+            fetch (process.env.VUE_APP_API_URL + `/loehk/events/${this.event.id}`, {
 
             // Adding method type
             method: "DELETE",
-
-            // Convert to JSON and send
-            body: JSON.stringify({ id: this.event.id }),
 
             // Adding headers to the request
             headers: {
