@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card :loading="loading" class="mb-3">
+        <v-card :loading="loading" class="mb-3" elevation="6">
           <v-alert v-if="error" text color="error">{{error}}</v-alert>
             <v-card-title>
                 Kommande Arrangemang

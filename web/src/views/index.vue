@@ -3,7 +3,7 @@
       <v-row dense>
         <v-col cols="12">
           <v-card>
-          <v-alert v-ripple v-if="eventObj" text color="#e0218a" tile elevation="1" style="margin-bottom: 0; cursor: pointer;" @click="$router.push('/events')">
+          <v-alert v-ripple v-if="eventObj" text color="#e0218a" tile elevation="6" style="margin-bottom: 0; cursor: pointer;" @click="$router.push('/events')">
             <strong>Nästa Event: </strong>
             {{
             eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', day: '2-digit', month: 'long'})
@@ -14,11 +14,11 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="6" align-self="stretch" style="display: flex; flex-flow: column;">
-          <v-card style="margin-bottom: 4px;">
+          <v-card style="margin-bottom: 4px;" elevation="4">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
             <v-img v-bind:src="frontpageImg" alt="unknown_group" contain></v-img>
           </v-card>
-              <v-card @click="showDate()" style="cursor: default; margin: 4px 0;">
+              <v-card @click="showDate()" style="cursor: default; margin: 4px 0;" elevation="4">
                 <v-card-text class="flex justify-space-between align-content-center" style="display: flex; align-items: center; transition: color 1s ease" id="doorCard">
                   <template v-if="!doorLoading">
                     <v-scroll-x-transition leave-absolute>
@@ -46,7 +46,7 @@
               <footer-card class="hidden-xl-only hidden-xs-only" style="flex-grow: 1; margin-top: 4px;"/>
         </v-col>
         <v-col align-self="stretch">
-          <v-card style="height: 100%;">
+          <v-card style="height: 100%;" elevation="4">
             <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block;"></div>
             <v-card-title style="padding-top: 0;">
               <strong>Vad är <span style="color: #E0218A">H</span><span style="
@@ -73,7 +73,7 @@
           <footer-card/>
         </v-col>
         <v-col cols="12" align-self="start">
-          <v-card id="feedCard" style="height: 100%;">
+          <v-card id="feedCard" style="height: 100%;" elevation="3">
             <!--v-card-title style="transform: scaleY(2) translateY(5%);">
             <h3 style="display: flex; align-items: center;"><instagram-icon style="margin-right: 5px;"/> Instagram</h3>
             </v-card-title-->

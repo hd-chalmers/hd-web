@@ -5,13 +5,13 @@
       </v-card>
       <v-row dense>
         <v-col cols="12" sm="6">
-          <v-card>
+          <v-card elevation="6">
             <v-img lazy-src="/img/unknown_group.png" v-bind:src="groupPhoto" class="mx-auto" contain></v-img>
           </v-card>
         </v-col>
 
         <v-col align-self="stretch" cols="12" sm="6">
-          <v-card class="text-center" style="height: 100%">
+          <v-card class="text-center" style="height: 100%" elevation="6">
                 <v-card-title style="margin: auto; display: inline-block">
                   HD {{displayedYear}}
                 </v-card-title>
@@ -26,7 +26,7 @@
           </v-card>
         </v-col>
         <v-col v-for="member in committeeMembers" v-bind:key="member.id" cols="12" sm="6" lg="4" xl="3" align-self="stretch">
-          <v-card style="height: 100%;">
+          <v-card style="height: 100%;" elevation="4">
             <v-card-text style="height: 100%;">
               <v-row dense class="align-center" style="height: 100%;">
                 <v-col cols="12" sm="4" align-self="center">
