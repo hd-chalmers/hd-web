@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card style="margin-bottom: 12px;" :loading="loading">
+        <v-card style="margin-bottom: 12px;" :loading="loading" elevation="6">
           <v-card-title style="margin-bottom: 5px;">
             <h2>Spelista</h2>
           </v-card-title>
@@ -14,13 +14,14 @@
                   v-model.number="search"
                   label="Sök efter spel"
                   clearable
+                  append-icon="search"
                 ></v-text-field>
               </v-col>
               <v-col>
-                <v-select label="Gruppera efter" v-model="groupBy" :items="groups" item-text="title" item-value="value"/>
+                <v-select label="Gruppera efter" append-icon="filter_list" v-model="groupBy" :items="groups" item-text="title" item-value="value"/>
               </v-col>
               <v-col>
-                <v-select label="Sortera efter" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value"/>
+                <v-select label="Sortera efter" append-icon="sort" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value"/>
               </v-col>
             </v-row>
           </v-card-text>
@@ -37,7 +38,7 @@
                               :expanded="expanded"
                               hide-default-footer>
                   <template v-slot:default="props">
-                    <v-card v-for="group in props.groupedItems" v-bind:key="group.key" style="margin-bottom: 10px;">
+                    <v-card v-for="group in props.groupedItems" v-bind:key="group.key" style="margin-bottom: 10px;" elevation="4">
                       <v-card-text>
                       <h2 :style="`margin-bottom: 20px; color: ${$vuetify.theme.currentTheme.primary};`">
                         {{group.items[0][groupBy]}}
@@ -52,9 +53,11 @@
                               {{item.name}}
                             </v-col>
                             <v-col class="body-2">
+                              <users-icon size="1x"/>
                               {{item.min_players === item.max_players ? item.min_players :`${item.min_players}-${item.max_players}`}} spelare
                             </v-col>
                             <v-col class="body-2">
+                              <clock-icon size="1x"/>
                               {{item.min_playtime === item.max_playtime ? item.min_playtime :`${item.min_playtime}-${item.max_playtime}`}} min
                             </v-col>
                           </v-row>
@@ -66,23 +69,23 @@
                             </v-col>
                             <v-col>
                           {{item.description}}
-                          <v-row v-if="item.platform || item.expansions">
-                          <v-col v-if="item.expansions">
-                            <h4>Expansioner</h4>
+                          <v-row v-if="item.published_year || item.platform || item.genre || item.expansions.length">
+                          <v-col v-if="item.expansions.length">
+                            <h4><layers-icon size="1x"/> Expansioner</h4>
                             <v-chip-group>
                               <v-chip ripple v-for="expansion in item.expansions" v-bind:key="expansion.id" @click="goToEntry(expansion.id)">{{expansion.name}}</v-chip>
                             </v-chip-group>
                           </v-col>
                             <v-col v-if="item.platform">
-                              <h4>Platform</h4>
+                              <h4><monitor-icon size="1x"/> Platform</h4>
                               {{item.platform}}
                             </v-col>
                             <v-col v-if="item.genre">
-                              <h4>Genre</h4>
+                              <h4><tag-icon size="1x"/> Genre</h4>
                               {{item.genre}}
                             </v-col>
                             <v-col v-if="item.published_year">
-                              <h4>Utgivnings år</h4>
+                              <h4><calendar-icon size="1x"/> Utgivnings år</h4>
                               {{item.published_year}}
                             </v-col>
                             </v-row>
@@ -90,7 +93,7 @@
                           </v-row>
                             <v-btn text outlined ripple :style="$vuetify.breakpoint.xsOnly ? 'font-size: 0.7em;' : ''" style="width: 100%; margin-top: 5px;"
                                    v-if="item.expansion_to" @click="goToEntry(item.expansion_to.id)">
-                              Expansion till {{item.expansion_to.name}}
+                              <box-icon size="1.3x" style="margin-right: 3px;"/>  Expansion till {{item.expansion_to.name}}
                             </v-btn>
                         </v-expansion-panel-content>
                       </v-expansion-panel>
@@ -107,10 +110,18 @@
 //import VPrintBreakpoint from "../VPrintBreakpoint";
 import {Vue, Component} from "vue-property-decorator";
 import footerCard from "@/components/footerCard.vue";
+import { UsersIcon, ClockIcon, CalendarIcon, LayersIcon, TagIcon, MonitorIcon, BoxIcon } from "vue-feather-icons";
 
 @Component({
   components: {
-    footerCard
+    footerCard,
+    UsersIcon,
+    ClockIcon,
+    CalendarIcon,
+    LayersIcon,
+    TagIcon,
+    MonitorIcon,
+    BoxIcon
   }
 })
 export default class GameList extends Vue{
@@ -129,8 +140,8 @@ export default class GameList extends Vue{
               {title: 'Genre', value: 'genre'},
               {title: 'Minst antal spelare', value: 'min_players'},
               {title: 'Max antal spelare', value: 'max_players'},
-              {title: 'Minimum speltid', value: 'min_playtime'},
-              {title: 'Max speltid', value: 'max_playtime'},
+              {title: 'Kortast speltid', value: 'min_playtime'},
+              {title: 'Längst speltid', value: 'max_playtime'},
               {title: 'Utgivnings år', value: 'published_year'}
             ]
             sortBy = 'name'
@@ -140,8 +151,8 @@ export default class GameList extends Vue{
               {title: 'Genre', value: 'genre'},
               {title: 'Minst antal spelare', value: 'min_players'},
               {title: 'Max antal spelare', value: 'max_players'},
-              {title: 'Minimum speltid', value: 'min_playtime'},
-              {title: 'Max speltid', value: 'max_playtime'},
+              {title: 'Kortast speltid', value: 'min_playtime'},
+              {title: 'Längst speltid', value: 'max_playtime'},
               {title: 'Utgivnings år', value: 'published_year'}
             ]
             expanded: number[] = []
