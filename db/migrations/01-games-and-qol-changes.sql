@@ -14,6 +14,9 @@ alter table games add constraint games_game_owners_id_fk foreign key (game_owner
 -- Added a boolean for use of buying whole packages
 alter table barcodes add package boolean default false not null;
 
+-- Added an axfood value to avoid problems when saving prices
+alter table products add axfood bool default true not null;
+
 -- Genre table
 create table game_genre
 (
