@@ -8,7 +8,7 @@
       <v-card-text>
         <v-row>
         <v-col v-for="category in categories" v-bind:key="'c' + category.id">
-          <div style="min-width: 300px;">
+          <div style="min-width: 200px;">
           <h2 :style="`color: ${$vuetify.theme.currentTheme.primary}; font-size: 1.6em; margin-bottom: 5px;`">{{category.name}}</h2>
           <div v-for="product in category.products" v-bind:key="'p' + product.id" class="productEntry"
                style="display: flex; justify-content: space-between; font-size: 1.3em; padding: 2.5px 0;">

@@ -10,7 +10,7 @@ export default new Vuetify({
     dark: browserTheme.matches,
     themes: {
       light:{
-        primary: '#DE3163',
+        primary: '#d2017a',
         error: '#ff3d00',
         success: '#28aa85',
         warning: '#decf31',
@@ -18,7 +18,7 @@ export default new Vuetify({
 
       },
       dark: {
-        primary: '#DE3163',
+        primary: '#f2008d',
         error: '#ff3d00',
         success: '#31deac',
         warning: '#decf31',
