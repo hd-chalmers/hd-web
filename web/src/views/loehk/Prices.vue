@@ -13,7 +13,11 @@
                           show-expand
                           :search="search"
                           @click:row="expandRow"
-                          :expanded="expanded">
+                          :expanded="expanded"
+                          sort-by="name"
+                          must-sort
+            >
+              <template v-slot:item.updated_at="{item}">{{new Date(item.updated_at).toLocaleString('sv')}}</template>
                 <template v-slot:top>
                     <v-toolbar flat>
                       <v-row>
@@ -224,16 +228,11 @@ export default {
                 active: true,
                 pant: false,
                 package_size: null,
-                created_at: '',
                 updated_at: '',
                 axfood: true,
-                barcodes: [],
                 category_id: null,
-                category: {
-                    name: '',
-                    created_at: '',
-                    updated_at: '',
-                }
+                category_name: '',
+                combobox_barcodes: []
             },
             rules: {
                 required: value => {
@@ -265,6 +264,12 @@ export default {
                     value: 'price',
                     groupable: false,
                 },
+              {
+                text: 'Senast updaterad',
+                value: 'updated_at',
+                align: 'right',
+                groupable: false
+              }
             ]
         }
     },
@@ -292,6 +297,7 @@ export default {
             this.item.price = (Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0)))
 
             this.state.then(obj => {
+              delete this.item.valid
               fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
 
                 // Adding method type
@@ -319,16 +325,11 @@ export default {
                       active: true,
                       pant: false,
                       package_size: null,
-                      created_at: '',
                       updated_at: '',
                       axfood: true,
-                      barcodes: [],
                       category_id: null,
-                      category: {
-                        name: '',
-                        created_at: '',
-                        updated_at: '',
-                      }
+                      category_name: '',
+                      combobox_barcodes: []
                     })
                     this.getItems()
                   } else {
@@ -356,13 +357,10 @@ export default {
             this.$set(this.errors, 'delete' + item.id, '')
 
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/prices/` + item.id, {
 
               // Adding method type
               method: "DELETE",
-
-              // Convert to JSON and send
-              body: JSON.stringify({ itemId: item.id }),
 
               // Adding headers to the request
               headers: {
@@ -394,7 +392,7 @@ export default {
             item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)))
 
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/prices?itemId=${item.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
 
               // Adding method type
               method: "PUT",

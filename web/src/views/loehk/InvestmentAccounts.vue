@@ -21,7 +21,11 @@
                           show-expand
                           :search="search"
                           @click:row="expandRow"
-                          :expanded="expanded">
+                          :expanded="expanded"
+                          sort-by="uid"
+                          must-sort
+                          sort-desc>
+              <template v-slot:item.updated_at="{item}">{{new Date(item.updated_at).toLocaleString('sv')}}</template>
                 <template v-slot:top>
                     <v-card color="mb-1">
                         <v-card-title>Ny Användare</v-card-title>
@@ -138,10 +142,7 @@ export default {
             account: {
                 name: null,
                 uid: null,
-                password: null,
-                balance: null,
-                active: null,
-                print: null,
+                password: null
             },
             rules: {
                 required: value => {
@@ -168,11 +169,18 @@ export default {
                 },
                 {
                     text: 'Kontobalans',
-                    align: 'right',
+                    align: 'center',
                     filterable: false,
                     value: 'balance',
                     groupable: false,
                 },
+              {
+                text: 'Uppdaterad',
+                align: 'end',
+                filterable: false,
+                value: 'updated_at',
+                groupable: false
+              },
                 {
                     text: 'Aktiv',
                     align: 'center',
@@ -195,13 +203,10 @@ export default {
             this.$set(this.errors, 'delete' + item.id, '')
 
             this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/investments/` + item.id, {
 
                 // Adding method type
                 method: "DELETE",
-
-                // Convert to JSON and send
-                body: JSON.stringify({ accountId: item.id }),
 
                 // Adding headers to the request
                 headers: {
@@ -273,10 +278,7 @@ export default {
                     this.account = {
                       name: null,
                       uid: null,
-                      password: null,
-                      balance: null,
-                      active: null,
-                      print: null,
+                      password: null
                     }
                   }
                 }).catch((err) => {
@@ -293,7 +295,7 @@ export default {
             this.$set(this.errors, item.id, '')
 
             this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/investments?accountId=${item.id}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
 
                 // Adding method type
                 method: "PUT",
