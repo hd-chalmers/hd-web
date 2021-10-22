@@ -4,13 +4,13 @@
         <v-alert v-if="error" text color="error"> {{error}} </v-alert>
       </v-card>
       <v-row dense>
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="5">
           <v-card elevation="6">
             <v-img lazy-src="/img/unknown_group.png" v-bind:src="groupPhoto" class="mx-auto" contain></v-img>
           </v-card>
         </v-col>
 
-        <v-col align-self="stretch" cols="12" sm="6">
+        <v-col align-self="stretch" cols="12" sm="7">
           <v-card class="text-center" style="height: 100%" elevation="6">
                 <v-card-title style="margin: auto; display: inline-block">
                   HD {{displayedYear}}
