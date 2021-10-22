@@ -54,7 +54,7 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-          <v-tab style="color: #E91E63;" href="https://www.facebook.com/HsektionenChalmers/">
+          <v-tab style="color: #ea1d86;" href="https://www.facebook.com/HsektionenChalmers/">
             <v-img contain id="h-tek-img" width="28px" height="28px" src="/img/H-sektionen.svg" />
           </v-tab>
           <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.goTo('#footer')">
