@@ -3,12 +3,32 @@
       <v-row dense>
         <v-col cols="12">
           <v-card>
-          <v-alert v-ripple v-if="eventObj" text color="#e0218a" tile elevation="6" style="margin-bottom: 0; cursor: pointer;" @click="$router.push('/events')">
-            <strong>Nästa Event: </strong>
-            {{
-            eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', day: '2-digit', month: 'long'})
-            + ' - ' + eventObj.title
-            }}
+          <v-alert v-ripple v-if="eventObj" text color="#e0218a" tile elevation="6" style="margin-bottom: 0; cursor: pointer; padding: 10px;" @click="$router.push('/events')">
+            <v-row dense align="center">
+              <v-col>
+                <div style="margin: 0; display: inline-flex;" class="flex align-center">
+                  <strong style="margin: 0; display: inline-block">Nästa Event: </strong>
+                  <div style="display: inline-block; margin: 0 5px;" class="hidden-lg-and-up">
+                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventObj.title }}</p>
+                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
+                  </div>
+                  <p style="display: inline-block; margin: 0 5px" class="hidden-md-and-down">{{ eventObj.title + ' - ' + eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
+                </div>
+              </v-col>
+              <v-col v-if="eventAfter" class="hidden-xs-only">
+                <div style="margin: 0; display: inline-flex;" class="flex align-center">
+                  <strong style="margin: 0; display: inline-block">Därefter: </strong>
+                  <div style="display: inline-block; margin: 0 5px;" class="hidden-lg-and-up">
+                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventAfter.title }}</p>
+                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventAfter.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
+                  </div>
+                  <p style="display: inline-block; margin: 0 5px; padding: 6px 0;" class="hidden-md-and-down">{{ eventAfter.title + ' - ' + eventAfter.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
+                </div>
+              </v-col>
+              <v-col cols="2" sm="2"  v-if="eventCount || (eventAfter && $vuetify.breakpoint.xsOnly)" style="text-align: right">
+                {{"+" + ($vuetify.breakpoint.xsOnly ? eventCount + 1: eventCount)}}
+              </v-col>
+            </v-row>
           </v-alert>
           <v-alert v-if="error" text color="error" style="margin-bottom: 0"> {{error}} </v-alert>
           </v-card>
@@ -147,6 +167,8 @@ export default class IndexPage extends Vue {
   }
 
   eventObj: eventType | null = null
+  eventAfter: eventType | null = null
+  eventCount = 0
   frontpageImg = ''
   error = ''
   loading = true
@@ -179,7 +201,19 @@ export default class IndexPage extends Vue {
           id: 0,
           location: ''
       } : null
-      this.frontpageImg = res.frontpageImg ?? '/img/unknown_group.png'
+
+      this.eventAfter = res.event_after ? {
+        title: res.event_after.title,
+        date: new Date(res.event_after.date),
+        description: '',
+        facebookLink: '',
+        id: 0,
+        location: ''
+      } : null
+
+      this.eventCount = res.event_count
+
+      this.frontpageImg = res.front_image ?? '/img/unknown_group.png'
     })
     .catch(() => {
       this.error = 'Sidan hade svårigheter att nå servern'
