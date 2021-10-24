@@ -116,7 +116,7 @@ export default {
             let data              = new FormData();
             data.append('front_image', $value, 'front_image');
             this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/${this.active_year.id}`, {
 
                 // Adding method type
                 method: "PATCH",
@@ -167,7 +167,7 @@ export default {
             let data                   = new FormData()
             data.append('background_image', $value, 'background_image')
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/${this.active_year.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -218,7 +218,7 @@ export default {
             let data              = new FormData()
             data.append('group_photo', $value, 'group_photo')
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/${this.active_year.id}`, {
 
               // Adding method type
               method: "PATCH",
@@ -270,7 +270,7 @@ export default {
             let data                  = new FormData()
             data.append('christmas_image', $value, 'christmas_image');
             this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/${this.active_year.id}`, {
 
                 // Adding method type
                 method: "PATCH",
@@ -461,7 +461,7 @@ export default {
             this.$set(this.errors.committee_member, id + fieldname, '')
 
             this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/committee_members${id ? '?memberId=' + id : ''}`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/committee_members${id ? '/' + id : ''}`, {
 
                 // Adding method type
                 method: "PATCH",
@@ -521,7 +521,7 @@ export default {
             }
 
             this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/committee_members`, {
+              fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/committee_members/${member.id}`, {
 
                 // Adding method type
                 method: "DELETE",
@@ -530,10 +530,7 @@ export default {
                 headers: {
                   "content-type": "application/json",
                   sessionId: obj.SessionStore.getSessionId()
-                },
-
-                // Adding body or contents to send
-                body: JSON.stringify({ id: member.id })
+                }
               })
                 // Convey success
                 .then(res => {
@@ -589,7 +586,7 @@ export default {
           this.message.description = ''
           this.errors.description = ''
           this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year?yearId=${this.active_year.id}`, {
+            fetch(process.env.VUE_APP_API_URL + `/loehk/active_year/${this.active_year.id}`, {
 
               // Adding method type
               method: "PATCH",
