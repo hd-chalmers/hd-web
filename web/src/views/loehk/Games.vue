@@ -26,13 +26,13 @@
       </td>
     </template>
     <template v-slot:expanded-item="{ headers, item }">
-      <td :colspan="headers.length" class="v-data-table__expanded v-data-table__expanded__content px-0" style="margin: 10px;">
+      <td v-if="item.name !== 'DELETED'" :colspan="headers.length" class="v-data-table__expanded v-data-table__expanded__content px-0" style="margin: 10px;">
         <v-card tile flat>
           <v-alert v-if="error['s' + item.id]" color="error" text>{{error['s' + item.id]}}</v-alert>
           <v-card-text>
             <v-row>
-              <v-col cols="12" style="padding: 0;">
-                <v-btn outlined rounded color="blue" x-small @click="searchBoardgameAtlas(item)" :loading="loading['atlas-s' + item.id]">
+              <v-col cols="11" style="padding: 0;">
+                <v-btn outlined rounded color="blue" small @click="searchBoardgameAtlas(item)" :loading="loading['atlas-s' + item.id]">
                   <search-icon size="1x" style="margin-right: 5px;"/>
                   Sök i Boardgame Atlas
                 </v-btn>
@@ -40,6 +40,9 @@
                   <v-select v-if="searchResults[0]" v-model="searchSelect" :items="searchResults" item-text="name" return-object @input="fillEntry(item)"
                             label="Sökresultat" style="display: inline-block; margin: 10px;" dense/>
                 </v-fade-transition>
+              </v-col>
+              <v-col sm="1" cols style="padding: 0;">
+                <v-btn small outlined rounded @click="deleteGame(item)" :loading="loading['del' + item.id]" style="width: 100%;"><trash2-icon size="1.6x"/></v-btn>
               </v-col>
               <v-col>
                 <v-text-field label="namn" v-model="item.name" :messages="messages['name-s' + item.id]" style="min-width: 100px;"/>
@@ -64,30 +67,31 @@
               </v-col>
               <v-col>
                 <v-autocomplete label="expansion till" v-model="item.expansion_to" :items="games" item-text="name" item-value="id" style="min-width: 100px;"
-                                clearable :error-messages="error['expansion-s' + item.id]" @input="error['expansion-s' + item.id] = undefined"/>
+                                clearable :error-messages="error['expansion-s' + item.id]"
+                                @input="() => { error['expansion-s' + item.id] = undefined;  item.expansion_to = item.expansion_to ? {id: item.expansion_to.id ,name: item.expansion_to.name} : null}" return-object/>
               </v-col>
               <v-col>
                 <v-autocomplete label="genre" v-model="item.genre" item-text="name" item-value="id" :items="genres" style="min-width: 100px;"
-                                clearable :error-messages="error['genre-s' + item.id]" @input="error['genre-s' + item.id] = undefined"/>
+                                clearable :error-messages="error['genre-s' + item.id]" @input="error['genre-s' + item.id] = undefined" return-object/>
                 <v-expand-transition>
-                <v-card v-if="item.genre === -1" elevation="2">
-                  <v-form @submit.prevent="">
+                <v-card v-if="item.genre !== null && item.genre.id === -1" elevation="2">
+                  <v-form @submit.prevent="patchNewGenre(item, newCategories['genre-s' + item.id])">
                   <v-text-field style="display: inline-block; width: 80%; box-sizing: border-box; padding-left: 5px;"
                                 label="Ny genre namn" v-model="newCategories['genre-s' + item.id]"/>
-                  <v-btn color="success" style="width: 20%; font-size: 0.6em; min-width: 0;" text>Lägg till</v-btn>
+                  <v-btn color="success" type="submit" style="width: 20%; font-size: 0.6em; min-width: 0;" text>Lägg till</v-btn>
                   </v-form>
                 </v-card>
                 </v-expand-transition>
               </v-col>
               <v-col>
                 <v-autocomplete label="platform" v-model="item.platform" item-text="name" item-value="id" :items="platforms" style="min-width: 100px;"
-                                clearable :error-messages="error['platform-s'+ item.id]" @input="error['platform-s'+ item.id] = undefined"/>
+                                :error-messages="error['platform-s'+ item.id]" @input="error['platform-s'+ item.id] = undefined" return-object/>
                 <v-expand-transition>
-                <v-card v-if="item.platform === -1" elevation="2">
-                  <v-form @submit.prevent="">
+                <v-card v-if="item.platform.id === -1" elevation="2">
+                  <v-form @submit.prevent="patchNewPlat(item, newCategories['platform-s' + item.id])">
                     <v-text-field style="display: inline-block; width: 80%; box-sizing: border-box; padding-left: 5px;"
                                   label="Ny platform namn" v-model="newCategories['platform-s' + item.id]"/>
-                    <v-btn color="success" style="width: 20%; font-size: 0.6em; min-width: 0;" text>Lägg till</v-btn>
+                    <v-btn color="success" type="submit" style="width: 20%; font-size: 0.6em; min-width: 0;" text>Lägg till</v-btn>
                   </v-form>
                 </v-card>
                 </v-expand-transition>
@@ -105,10 +109,10 @@
                           <v-autocomplete label="Ägare" v-model="item.owner" item-text="name" item-value="id" :items="owners" clearable
                                           return-object style="min-width: 100px;"/>
                           <v-card v-if="item.owner.id === -1" elevation="2">
-                            <v-form @submit.prevent="">
+                            <v-form @submit.prevent="patchNewOwner(item, newCategories['owner-s' + item.id])">
                               <v-text-field style="display: inline-block; width: 80%; box-sizing: border-box; padding-left: 5px;"
                                             label="Ägarens namn" v-model="newCategories['owner-s' + item.id]"/>
-                              <v-btn color="success" style="width: 20%; font-size: 0.6em; min-width: 0;" text>Lägg till</v-btn>
+                              <v-btn color="success" type="submit" style="width: 20%; font-size: 0.6em; min-width: 0;" text>Lägg till</v-btn>
                             </v-form>
                           </v-card>
                         </v-col>
@@ -127,7 +131,7 @@
                 </v-expansion-panels>
               </v-col>
               <v-col cols="12">
-                <v-btn color="success">Spara</v-btn>
+                <v-btn color="success" @click="updateGame(item)" :loading="loading['s' + item.id]">Spara</v-btn>
                 <span></span>
               </v-col>
             </v-row>
@@ -140,10 +144,10 @@
 
 <script lang="ts">
 import { Component, Vue} from "vue-property-decorator"
-import {SearchIcon} from "vue-feather-icons";
+import {SearchIcon, Trash2Icon} from "vue-feather-icons";
 
 @Component({
-  components: { SearchIcon }
+  components: { SearchIcon, Trash2Icon }
 })
 export default class Games extends Vue{
   constructor() {
@@ -176,9 +180,112 @@ export default class Games extends Vue{
         this.platforms = res.platforms
         this.owners = res.owners
 
+        this.replaceNullObj()
+
         this.genres.unshift({id: -1, name: 'Lägg till en genre'})
         this.platforms.unshift({id: -1, name: 'Lägg till en platform'})
         this.owners.unshift({id: -1, name: 'Lägg till en ägare'})
+    })
+  }
+
+  updateGame(item: any): void{
+
+    this.$set(this.loading, 's' + item.id, true)
+    this.$set(this.error, 's' + item.id, "")
+
+    if(item.owner.name === undefined){
+      item.owner = null
+    }
+
+    fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
+      method: "PUT",
+      body: JSON.stringify(item),
+      headers: {
+        "content-type": "application/json; charset=UTF-8"
+      }
+    }).then(res => res.json()).then(res => {
+      item = res
+    }).catch(() => {
+      this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern")
+    }).finally( () => {
+      if(item.owner === null){
+        item.owner = {}
+      }
+      this.$set(this.loading, 's' + item.id, false)
+    })
+  }
+
+  replaceNullObj(): void{
+    for (let game of this.games) {
+      /*
+      if (game.expansion_to === null){
+        game.expansion_to = {}
+      }
+
+      if(game.genre === null){
+        game.genre = {}
+      }*/
+
+      if(game.owner === null){
+        game.owner = {}
+      }
+    }
+  }
+
+  patchNewPlat(item: any, value: string): void{
+    fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
+      method: "PATCH",
+      body: JSON.stringify({platform: value}),
+      headers: {
+        "content-type": "application/json; charset=UTF-8"
+      }
+    }).then(res => res.json()).then(res => {
+      this.platforms.push(res)
+      item.platform = res
+    })
+  }
+
+  patchNewGenre(item: any, value: string): void{
+    fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
+      method: "PATCH",
+      body: JSON.stringify({genre: value}),
+      headers: {
+        "content-type": "application/json; charset=UTF-8"
+      }
+    }).then(res => res.json()).then(res => {
+      this.genres.push(res)
+      item.genre = res
+    })
+  }
+
+  patchNewOwner(item: any, value: string): void{
+    fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
+      method: "PATCH",
+      body: JSON.stringify({owner: value}),
+      headers: {
+        "content-type": "application/json; charset=UTF-8"
+      }
+    }).then(res => res.json()).then(res => {
+      this.owners.push(res)
+      item.owner = res
+    })
+  }
+
+  deleteGame(item: any){
+    this.$set(this.loading, "del" + item.id, true)
+    this.$set(this.error, "del" + item.id, "")
+
+    fetch(process.env.VUE_APP_API_URL + "/loehk/games/" + item.id, {
+      method: "DELETE"
+    }).then(res => {
+      if(res.ok){
+        item.name = "DELETED"
+      } else {
+        this.$set(this.error, "del" + item.id, "Something went wrong in the server")
+      }
+    }).catch(() => this.$set(this.error, "del" + item.id, "Something went wrong in the server"))
+    .finally(()=> {
+      this.$set(this.loading, "del" + item.id, false)
     })
   }
 
@@ -217,7 +324,7 @@ export default class Games extends Vue{
   fillEntry(item: any): void{
     this.error = []
     item.description = this.searchSelect.description_preview
-    item.published_year = this.searchSelect.year_published
+    item.published_year = this.searchSelect.year_published.toString()
     item.min_players = this.searchSelect.min_players
     item.max_players = this.searchSelect.max_players
     item.min_playtime = this.searchSelect.min_playtime
