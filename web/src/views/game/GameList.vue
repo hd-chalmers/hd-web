@@ -52,11 +52,11 @@
                             <v-col class="subtitle-2" sm cols="12">
                               {{item.name}}
                             </v-col>
-                            <v-col class="body-2">
+                            <v-col class="body-2 hidden-xs-only">
                               <users-icon size="1x"/>
                               {{item.min_players === item.max_players ? item.min_players :`${item.min_players}-${item.max_players}`}} spelare
                             </v-col>
-                            <v-col class="body-2">
+                            <v-col class="body-2 hidden-xs-only">
                               <clock-icon size="1x"/>
                               {{item.min_playtime === item.max_playtime ? item.min_playtime :`${item.min_playtime}-${item.max_playtime}`}} min
                             </v-col>
@@ -67,8 +67,8 @@
                             <v-col cols="12" sm="2" v-if="item.image_link">
                               <v-img :src="item.image_link"/>
                             </v-col>
+                            <v-col sm="10" cols="12" order="1" order-sm="0">{{item.description}} </v-col>
                             <v-col>
-                          {{item.description}}
                           <v-row v-if="item.published_year || item.platform || item.genre || item.expansions.length">
                           <v-col v-if="item.expansions.length">
                             <h4><layers-icon size="1x"/> Expansioner</h4>
@@ -88,19 +88,29 @@
                               <h4><calendar-icon size="1x"/> Utgivnings år</h4>
                               {{item.published_year}}
                             </v-col>
+                            <v-col class="hidden-sm-and-up">
+                              <h4><users-icon size="1x"/> Antal Spelare </h4>
+                              {{item.min_players === item.max_players ? item.min_players :`${item.min_players}-${item.max_players}`}}
+                            </v-col>
+                            <v-col class="hidden-sm-and-up">
+                              <h4><clock-icon size="1x"/> Speltid</h4>
+                              {{item.min_playtime === item.max_playtime ? item.min_playtime :`${item.min_playtime}-${item.max_playtime}`}} min
+                            </v-col>
                             </v-row>
                             </v-col>
+                            <v-col style="padding: 0" cols="12">
+                              <v-btn text outlined ripple :style="$vuetify.breakpoint.xsOnly ? 'font-size: 0.7em;' : ''" style="width: 100%; margin-top: 5px;"
+                                     v-if="item.expansion_to" @click="goToEntry(item.expansion_to.id)">
+                                <box-icon size="1.3x" style="margin-right: 3px;"/>  Expansion till {{item.expansion_to.name}}
+                              </v-btn>
+                            </v-col>
                           </v-row>
-                            <v-btn text outlined ripple :style="$vuetify.breakpoint.xsOnly ? 'font-size: 0.7em;' : ''" style="width: 100%; margin-top: 5px;"
-                                   v-if="item.expansion_to" @click="goToEntry(item.expansion_to.id)">
-                              <box-icon size="1.3x" style="margin-right: 3px;"/>  Expansion till {{item.expansion_to.name}}
-                            </v-btn>
                         </v-expansion-panel-content>
                       </v-expansion-panel>
                     </v-expansion-panels>
                       </v-card-text>
                     </v-card>
-                  </template>>
+                  </template>
                 </v-data-iterator>
       <footer-card style="margin-top: 12px;"/>
     </v-container>
