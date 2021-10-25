@@ -12,7 +12,7 @@
                     <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventObj.title }}</p>
                     <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
                   </div>
-                  <p style="display: inline-block; margin: 0 5px" class="hidden-md-and-down">{{ eventObj.title + ' - ' + eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
+                  <p style="display: inline-block; margin: 0 5px; padding: 6px 0;" class="hidden-md-and-down">{{ eventObj.title + ' - ' + eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
                 </div>
               </v-col>
               <v-col v-if="eventAfter" class="hidden-xs-only">
@@ -34,11 +34,11 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="6" align-self="stretch" style="display: flex; flex-flow: column;">
-          <v-card style="margin-bottom: 4px;" elevation="4">
+          <v-card style="margin-bottom: 6px;" elevation="4">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
             <v-img v-bind:src="frontpageImg" alt="unknown_group" contain></v-img>
           </v-card>
-              <v-card @click="showDate()" style="cursor: default; margin: 4px 0;" elevation="4">
+              <v-card @click="showDate()" style="cursor: default;" elevation="4">
                 <v-card-text class="flex justify-space-between align-content-center" style="display: flex; align-items: center; transition: color 1s ease" id="doorCard">
                   <template v-if="!doorLoading">
                     <v-scroll-x-transition leave-absolute>
@@ -63,7 +63,7 @@
                   </template>
                 </v-card-text>
               </v-card>
-              <footer-card class="hidden-xl-only hidden-xs-only" style="flex-grow: 1; margin-top: 4px;"/>
+              <footer-card class="hidden-xl-only hidden-xs-only" style="flex-grow: 1; margin-top: 6px;"/>
         </v-col>
         <v-col align-self="stretch">
           <v-card style="height: 100%;" elevation="4">
