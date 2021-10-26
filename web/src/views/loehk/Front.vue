@@ -115,81 +115,81 @@
     </v-row>
 </template>
 
-<script>
-export default {
-    name: "Front",
-    created() {
-        this.getStatistics();
+<script lang="ts">
+
+
+import {Component, Vue} from "vue-property-decorator";
+import {LoehkSummaryData} from "@/assets/ts/interfaces";
+
+@Component
+export default class LoehkFront extends Vue{
+  constructor() {
+    super()
+    this.getStatistics()
+  }
+  loading = true
+  state = import('@/assets/ts/sessionStore')
+  stats: LoehkSummaryData = {
+    products: 0,
+    product_updated: {
+      name: "",
+      updated_at: ""
     },
-    data() {
-        return {
-            loading: true,
-            state: import('@/assets/ts/sessionStore'),
-            stats: {
-                products: 0,
-                product_updated: {
-                    name: "",
-                    updated_at: ""
-                },
-                product_latest: {
-                    name: "",
-                    created_at: ""
-                },
-                investment_accounts: 0,
-                investment_latest: {
-                    uid: "",
-                    name: "",
-                    created_at: ""
-                },
-                investment_updated: {
-                    uid: "",
-                    name: "",
-                    updated_at: ""
-                },
-                events: 0,
-                event_latest: {
-                    title: "",
-                    created_at: "",
-                    date: ""
-                },
-                event_updated: {
-                    title: "",
-                    updated_at: "",
-                    date: ""
-                },
-                games: 0,
-                games_latest: {
-                    name: "",
-                    created_at: "",
-                    platform: "",
-                },
-                games_updated: {
-                    name: "",
-                    updated_at: "",
-                    platform: "",
-                }
-            }
-        }
+    product_latest: {
+      name: "",
+      created_at: ""
     },
-    methods: {
-        getStatistics() {
-          this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + '/loehk/front', {
-              headers: {
-                sessionId: obj.SessionStore.getSessionId()
-              }
-            }).then(res =>res.json()).then(res => {
-              this.stats = res
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).catch((err) => {
-              console.log('login failed')
-              this.$router.push('/login')
-            }).finally(() => {
-              this.loading = false;
-            })
-          })
-        }
+    investment_accounts: 0,
+    investment_latest: {
+      uid: "",
+      name: "",
+      created_at: ""
+    },
+    investment_updated: {
+      uid: "",
+      name: "",
+      updated_at: ""
+    },
+    events: 0,
+    event_latest: {
+      title: "",
+      created_at: "",
+      date: ""
+    },
+    event_updated: {
+      title: "",
+      updated_at: "",
+      date: ""
+    },
+    games: 0,
+    games_latest: {
+      name: "",
+      created_at: "",
+      platform: "",
+    },
+    games_updated: {
+      name: "",
+      updated_at: "",
+      platform: "",
     }
+  }
+
+  getStatistics(): void {
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + '/loehk/front', {
+        headers: {
+          //sessionId: obj.SessionStore.getSessionId()
+        }
+      }).then(res =>res.json()).then((res: LoehkSummaryData )=> {
+        this.stats = res
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+      }).catch(() => {
+        this.$router.push('/login')
+      }).finally(() => {
+        this.loading = false;
+      })
+    //})
+  }
 }
 </script>
 

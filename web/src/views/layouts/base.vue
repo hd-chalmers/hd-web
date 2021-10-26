@@ -7,7 +7,6 @@
             <router-view/>
           </v-scroll-y-reverse-transition>
         </v-main>
-    <!--ChassitOpenIcon></ChassitOpenIcon-->
 <FooterElement></FooterElement>
 </v-app>
 </template>
@@ -16,13 +15,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Navbar from '../../components/common/navbar.vue'
 import FooterElement from '../../components/common/footer.vue'
-import ChassitOpenIcon from '@/components/ChassitOpenIcon.vue'
 
   @Component({
     components: {
       Navbar,
-      FooterElement,
-      ChassitOpenIcon
+      FooterElement
     }
   })
 export default class Base extends Vue {
@@ -31,9 +28,9 @@ export default class Base extends Vue {
       this.getData()
     }
     backgroundProperties = ''
-    async getData(): Promise<void>{
-      fetch(process.env.VUE_APP_API_URL + '/background').then(res =>res.json()).then(res => {
-        this.backgroundProperties = `background-image: url(${res.background});` +
+    getData(): void{
+      fetch(process.env.VUE_APP_API_URL + '/background').then(res =>res.json()).then((res: {background_image: string | null}) => {
+        this.backgroundProperties = `background-image: url(${res.background_image});` +
           'background-repeat: no-repeat;' +
           'background-position: center;' +
           'background-attachment: fixed;' +

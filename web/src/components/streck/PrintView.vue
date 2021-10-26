@@ -25,63 +25,67 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+
+
+import {Component, Vue} from "vue-property-decorator"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import VueBarcode from 'vue-barcode'
 import { HomeIcon } from 'vue-feather-icons'
+import {InevestAccPrintData} from "@/assets/ts/interfaces";
 
-export default {
-    name: "PrintView",
-    components: {
-        VueBarcode,
-        HomeIcon
-    },
-    data() {
-        return {
-            state: import('@/assets/ts/sessionStore'),
-            rows: [],
-            inactive_rows: [],
-            users: [],
-            last: 0,
-            inactive: [],
-        }
-    },
-    created() {
-        this.getData()
-    },
-  methods: {
-      getData(){
-        this.state.then(obj => {
-          fetch(process.env.VUE_APP_API_URL + '/loehk/investments/print', {
-            headers: {
-              sessionId: obj.SessionStore.getSessionId()
-            }
-          })
-            .then(res => res.json()).then(res => {
-            this.users = res.active
-            this.last = res.last
-            this.inactive = res.inactive
-            this.renderData()
-          }).catch(() => this.renderData())
-        })
-      },
-    renderData(){
-      if (!(this.users.length % 30)) {
-        this.users.push({'uid': 'USL' + (this.last < 100 ? '0' : '') + this.last, 'name': ''})
+@Component({
+  components:{
+    VueBarcode,
+    HomeIcon
+  }
+})
+export default class PrintView extends Vue{
+  constructor() {
+    super()
+    this.getData()
+  }
+
+  //state = import('@/assets/ts/sessionStore')
+  rows: InevestAccPrintData[][] = []
+  inactive_rows: InevestAccPrintData[][] = []
+  users: InevestAccPrintData[] = []
+  last = 0
+  inactive: InevestAccPrintData[] = []
+
+  getData(): void{
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + '/loehk/investments/print', {
+        /*headers: {
+          sessionId: obj.SessionStore.getSessionId()
+        }*/
+      })
+        .then(res => res.json()).then(res => {
+        this.users = res.active
+        this.last = res.last
+        this.inactive = res.inactive
+        this.renderData()
+      }).catch(() => this.renderData())
+    //})
+  }
+  renderData(): void{
+    if (!(this.users.length % 30)) {
+      this.users.push({'uid': 'USL' + (this.last < 100 ? '0' : '') + this.last, 'name': '', 'id': this.last})
+    }
+    while (this.users.length  > 0) {
+      const howMany = 30
+      while (this.users.length < 30) {
+        this.last++;
+        this.users.push({'uid': 'USL' + (this.last < 100 ? '0' : '') + this.last, 'name': '', 'id': this.last})
       }
-      while (this.users.length  > 0) {
-        const howMany = 30
-        while (this.users.length < 30) {
-          this.last++;
-          this.users.push({'uid': 'USL' + (this.last < 100 ? '0' : '') + this.last, 'name': ''})
-        }
-        const row = this.users.splice(0, howMany)
-        this.rows.push(row)
-      }
-      while (this.inactive.length > 0) {
-        const howMany = 30
-        const row     = this.inactive.splice(0, howMany)
-        this.inactive_rows.push(row)
-      }
+      const row = this.users.splice(0, howMany)
+      this.rows.push(row)
+    }
+    while (this.inactive.length > 0) {
+      const howMany = 30
+      const row     = this.inactive.splice(0, howMany)
+      this.inactive_rows.push(row)
     }
   }
 }

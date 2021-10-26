@@ -141,7 +141,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { eventType } from '@/assets/ts/interfaces'
+import {FrontpageData, SimpleEventData} from '@/assets/ts/interfaces'
 import { AlertCircleIcon, LockIcon, UnlockIcon, InstagramIcon } from 'vue-feather-icons'
 import footerCard from '@/components/footerCard.vue'
 import {NavigationGuardNext, Route} from "vue-router";
@@ -166,24 +166,24 @@ export default class IndexPage extends Vue {
     this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
   }
 
-  eventObj: eventType | null = null
-  eventAfter: eventType | null = null
+  eventObj: SimpleEventData | null = null
+  eventAfter: SimpleEventData | null = null
   eventCount = 0
   frontpageImg = ''
   error = ''
   loading = true
-  interval: any
-  timeout: any | null
+  interval: number
+  timeout: number | undefined
 
   doorShowDate = false
   doorLoading = true
-  doorState: number | null = 0
+  doorState: boolean | null = null
   doorDuration = ''
   doorOpenTimestamp = '0000-00-00 00:00:00'
   doorIcon = 'mdi-alert-circle'
   doorColor: string | undefined = 'black'
 
-  beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext<Vue>): void {
+  beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext): void {
     clearInterval(this.interval)
     clearTimeout(this.timeout)
     next()
@@ -191,24 +191,16 @@ export default class IndexPage extends Vue {
 
   async getData(): Promise<void>{
     this.loading = true
-    fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res =>res.json()).then(res => {
+    fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res =>res.json()).then((res: FrontpageData) => {
         this.error = ''
         this.eventObj = res.event ? {
           title: res.event.title,
-          date: new Date(res.event.date),
-          description: '',
-          facebookLink: '',
-          id: 0,
-          location: ''
+          date: new Date(res.event.date)
       } : null
 
       this.eventAfter = res.event_after ? {
         title: res.event_after.title,
-        date: new Date(res.event_after.date),
-        description: '',
-        facebookLink: '',
-        id: 0,
-        location: ''
+        date: new Date(res.event_after.date)
       } : null
 
       this.eventCount = res.event_count
@@ -242,12 +234,12 @@ export default class IndexPage extends Vue {
           return res.json()
         }
         else {
-          this.doorState = -1
+          this.doorState = null
           this.doorIcon = 'alert'
           this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
           return null
         }
-      }).then(res => {
+      }).then((res: {status: boolean | null, updated: string, duration_str: string, duration: number}) => {
       if(res) {
         this.doorState = res.status
         this.doorOpenTimestamp = res.updated
@@ -256,7 +248,7 @@ export default class IndexPage extends Vue {
           this.doorIcon = 'unlock'
           this.doorColor = this.$vuetify.theme.currentTheme.success?.toString()
         } else if (res.status === null) {
-          this.doorState = -1
+          this.doorState = null
           this.doorIcon = 'alert'
           this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
         } else {
@@ -265,7 +257,7 @@ export default class IndexPage extends Vue {
         }
       }
     }).catch(() => {
-      this.doorState = -1
+      this.doorState = null
       this.doorIcon = 'alert'
       this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
     }).finally(() => {

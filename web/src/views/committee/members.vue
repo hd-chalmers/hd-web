@@ -31,7 +31,7 @@
               <v-row dense class="align-center" style="height: 100%;">
                 <v-col cols="12" sm="4" align-self="center">
           <v-avatar :width="$vuetify.breakpoint.xsOnly ? '150px' :'100%'" :height="$vuetify.breakpoint.xsOnly ? '150px' : 'inherit'" style="margin: auto; display: block;" class="elevation-4 mb-2">
-            <v-img lazy-src="/img/unknown_profile.png" v-bind:src="member.profilePic" class="mx-auto" max-height="200px" contain></v-img>
+            <v-img lazy-src="/img/unknown_profile.png" v-bind:src="member.image" class="mx-auto" max-height="200px" contain></v-img>
           </v-avatar>
                 </v-col>
                 <v-col sm="8" cols="12" align-self="stretch">
@@ -50,20 +50,20 @@
                 <v-col cols="12" v-if="member.description" class="mx-0 py-0 text-center" style="min-height: 20px">
                     {{member.description}}
                 </v-col>
-                <template v-if="member.favouriteGame" class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
+                <template v-if="member.favourite_game" class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
                   <v-col>
                   <span class="subtitle-2" style="margin-right: 5px;">
                     Favoritspel:
                   </span>
-                    {{member.favouriteGame}}
+                    {{ member.favourite_game }}
                   </v-col>
                 </template>
-                <template v-if="member.favouriteSugar" class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
+                <template v-if="member.favourite_sugar" class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
                   <v-col class="flex-nowrap">
                   <span class="subtitle-2" style="margin-right: 5px;">
                     Favoritsocker:
                   </span>
-                    {{member.favouriteSugar}}
+                    {{ member.favourite_sugar }}
                   </v-col>
                 </template>
               </v-row>
@@ -114,7 +114,7 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator'
-  import { memberType } from '@/assets/ts/interfaces'
+  import {MemberType, YearData} from '@/assets/ts/interfaces'
   import footerCard from '@/components/footerCard.vue'
 
   @Component({
@@ -128,19 +128,19 @@
       this.getData()
     }
     displayedYear = ''
-    groupPhoto = ''
-    description = ''
-    committeeMembers: Array<memberType> = []
+    groupPhoto: string | null = ''
+    description: string | null = ''
+    committeeMembers: MemberType[] = []
     loading = true
     error = ''
     async getData(): Promise<void>{
       this.loading = true
-      fetch(process.env.VUE_APP_API_URL + '/committee').then(res =>res.json()).then(res =>{
+      fetch(process.env.VUE_APP_API_URL + '/committee').then(res =>res.json()).then((res: YearData) =>{
         this.error = ''
-        this.displayedYear = res.displayedYear
-        this.groupPhoto = res.groupPhoto
+        this.displayedYear = res.displayed_year
+        this.groupPhoto = res.group_photo
         this.description = res.description
-        this.committeeMembers = res.committeeMembers
+        this.committeeMembers = res.committee_members
       })
       .catch(() => {
         this.error = 'Sidan kunde inte nå servern'

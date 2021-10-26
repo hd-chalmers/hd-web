@@ -72,13 +72,13 @@
                                                       validate-on-blur></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="4" lg="2">
-                                        <v-select :items="categories" label="Kategori" hint="Krävs" persistent-hint item-text="name" item-value="id" v-model="item.category_id" :rules="[rules.required]" validate-on-blur></v-select>
+                                        <v-select :items="categories" label="Kategori" hint="Krävs" persistent-hint item-text="name" item-value="id" v-model="item.category_id" :rules="[rules.required, rules.positive]" validate-on-blur></v-select>
                                     </v-col>
                                     <v-col cols="12" md="2">
                                         <v-text-field v-model.number="item.adjustment" label="Prisjustering" :min="((-1)*Math.ceil(item.purchase_price*1.12))" type="number"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="10">
-                                        <v-combobox hint="Skriv antingen in bara artikelnumret eller som 'extra_name=article_no'" persistent-hint label="Streckkoder/Artikelnummer" v-model="item.barcodes" multiple deletable-chips
+                                        <v-combobox hint="Skriv antingen in bara artikelnumret eller som 'extra_name=article_no'" persistent-hint label="Streckkoder/Artikelnummer" v-model="item.combobox_barcodes" multiple deletable-chips
                                                     :delimiters="[',']" chips>
                                         </v-combobox>
                                     </v-col>
@@ -97,7 +97,7 @@
                                 <v-row>
                                     <v-col>
                                         <v-spacer></v-spacer>
-                                        <v-btn type="submit" :disabled="!item.valid" :color="errors['new'] ? 'error' : 'success'" :loading="save_loading[item.id] === true">Spara</v-btn>
+                                        <v-btn type="submit" :color="errors['new'] ? 'error' : 'success'" :loading="save_loading[item.id] === true">Spara</v-btn>
                                         <span :style="`color: ${$vuetify.theme.currentTheme.error}; margin: 5px;`" v-if="errors['new']">{{errors['new']}}</span>
                                     </v-col>
                                 </v-row>
@@ -201,263 +201,269 @@
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
+
+
+import {Component, Vue} from "vue-property-decorator"
 import { PrinterIcon } from 'vue-feather-icons'
+import {LoehkProductData, ProductCategory} from "@/assets/ts/interfaces";
 
-export default {
-    name: "Prices",
-    data() {
-        return {
-            state: import('@/assets/ts/sessionStore'),
-            trash_loading: [],
-            save_loading: [],
-            errors: [],
-            search: '',
-            categories: [],
-            expanded: [],
-            loading: true,
-            edit: false,
-            items: [],
-            item: {
-                valid: false,
-                name: '',
-                purchase_price: null,
-                discount: 0,
-                adjustment: 0,
-                price: null,
-                active: true,
-                pant: false,
-                package_size: null,
-                updated_at: '',
-                axfood: true,
-                category_id: null,
-                category_name: '',
-                combobox_barcodes: []
-            },
-            rules: {
-                required: value => {
-                    return value ? true : "Fältet är obligatoriskt"
-                },
-                positive: value => {
-                    return value > 0 ? true : "Måste vara större än 0"
-                },
-            },
-            headers: [
-                {
-                    text: 'Produkt',
-                    align: 'start',
-                    filterable: true,
-                    value: 'name',
-                    groupable: false,
-                },
-                {
-                    text: 'Kategori',
-                    align: 'center',
-                    filterable: true,
-                    value: 'category_name',
-                    groupable: true,
-                },
-                {
-                    text: 'Pris',
-                    align: 'center',
-                    filterable: true,
-                    value: 'price',
-                    groupable: false,
-                },
-              {
-                text: 'Senast updaterad',
-                value: 'updated_at',
-                align: 'right',
-                groupable: false
-              }
-            ]
-        }
-    },
-  components:{
-    PrinterIcon
-  },
-    computed: {
-        new_price() {
-            if (isNaN(this.item.purchase_price) || isNaN(this.item.package_size) || !this.item.package_size) {
-                return false;
-            }
-            return Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0))
-        }
-    },
-    created() {
-        this.getItems();
-    },
-    methods: {
-        createProduct() {
-            if (!this.$refs.newProduct.validate()) {
-                return
-            }
-
-            this.$set(this.errors, 'new', '')
-            this.item.price = (Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0)))
-
-            this.state.then(obj => {
-              delete this.item.valid
-              fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
-
-                // Adding method type
-                method: "POST",
-
-                // Convert to JSON and send
-                body: JSON.stringify(this.item),
-
-                // Adding headers to the request
-                headers: {
-                  "Content-type": "application/json; charset=UTF-8",
-                  sessionId: obj.SessionStore.getSessionId()
-                }
-              })
-                // Convert to JSON and convey success
-                .then(res => {
-                  if (res.ok) {
-                    this.$set(this, 'item', {
-                      valid: false,
-                      name: '',
-                      purchase_price: null,
-                      discount: 0,
-                      adjustment: 0,
-                      price: null,
-                      active: true,
-                      pant: false,
-                      package_size: null,
-                      updated_at: '',
-                      axfood: true,
-                      category_id: null,
-                      category_name: '',
-                      combobox_barcodes: []
-                    })
-                    this.getItems()
-                  } else {
-                    if (res.status === 422) {
-                      this.$set(this.errors, 'new',
-                        'det var ett problem med att hantera datan, produkten kanske redan existerar eller så är viktiga fält tomma')
-                    } else if (res.status === 403) {
-                      this.$set(this.errors, 'new', 'utloggad, refresh?')
-                    } else {
-                      this.$set(this.errors, 'new', 'servern stötte på ett problem när den hanterade datan')
-                    }
-                  }
-                })
-                .catch((err) => {
-                  console.error(err)
-                  this.$set(this.errors, 'new', 'kunde inte nå servern')
-                })
-                .finally(() => {
-                  this.$set(this, "loading", false);
-                })
-            })
-        },
-        deleteProduct(item) {
-            this.$set(this.trash_loading, item.id, true)
-            this.$set(this.errors, 'delete' + item.id, '')
-
-          this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/prices/` + item.id, {
-
-              // Adding method type
-              method: "DELETE",
-
-              // Adding headers to the request
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                sessionId: obj.SessionStore.getSessionId()
-              }
-            })
-              // Convey success
-              .then(res => {
-                if (res.ok) {
-                  this.$set(item, 'name', 'DELETED')
-                } else {
-                  if (res.status === 403) {
-                    this.$set(this.errors, 'delete' + item.id, 'utloggad, refresh?')
-                  } else {
-                    this.$set(this.errors, 'delete' + item.id, 'servern gick på något fel när den försökte ta bort produkten')
-                  }
-                }
-              }).catch(() => {
-              this.$set(this.errors, 'delete' + item.id, 'kunde inte nå servern')
-            }).finally(() => {
-              this.$set(this.trash_loading, item.id, "success")
-            })
-          })
-        },
-        updateProduct(item) {
-            this.$set(this.save_loading, item.id, true)
-            this.$set(this.errors, item.id, '')
-            item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)))
-
-          this.state.then(obj => {
-            fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
-
-              // Adding method type
-              method: "PUT",
-
-              // Convert to JSON and send
-              body: JSON.stringify(item),
-
-              // Adding headers to the request
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                sessionId: obj.SessionStore.getSessionId()
-              }
-            })
-              // Convey success
-              .then(res => {
-                if (res.ok) {
-                  this.$set(this.save_loading, item.id, 'success')
-                } else {
-                  this.$set(this.save_loading, item.id, false)
-                  if (res.status === 422) {
-                    this.$set(this.errors, item.id, 'det är något fel med detan, antigen så har produkten samma namn som en annnan produkt eller så är ett viktigt fält tomt')
-                  } else if (res.status === 403) {
-                    this.$set(this.errors, item.id, 'utloggad, refresh?')
-                  } else {
-                    this.$set(this.errors, item.id, 'servern stötte på något fel när den hanterade datan')
-                  }
-                }
-              }).catch(() => {
-              this.$set(this.save_loading, item.id, false)
-              this.$set(this.errors, item.id, 'kunde inte nå servern')
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-            }).finally(() => {
-            })
-          })
-        },
-        expandRow(row) {
-            this.expanded = row === this.expanded[0] ? [] : [row]
-            console.log(this.items[row])
-            console.log(this.categories)
-        },
-        getItems() {
-            this.$set(this, "loading", true);
-
-            this.state.then(obj => {
-              fetch (
-                process.env.VUE_APP_API_URL + '/loehk/prices', {
-                headers: {
-                  sessionId: obj.SessionStore.getSessionId()
-                }
-              })
-                .then(res => res.json())
-                .then(res => {
-                  this.$set(this, "items", res.products);
-                  this.$set(this, "categories", res.categories);
-                })
-                .catch((err) => {
-                  console.error(err)
-                  this.$router.push('/login')
-                })
-                .finally(() => {
-              this.$set(this, "loading", false);
-            })
-        })
-        }
+@Component<LoehkPrices>({
+  components: { PrinterIcon },
+  computed: {
+    new_price() {
+      if (isNaN(this.item.purchase_price) || isNaN(this.item.package_size) || !this.item.package_size) {
+        return false;
+      }
+      return Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0))
     }
+  }
+})
+export default class LoehkPrices extends Vue{
+  constructor() {
+    super()
+    this.getItems()
+  }
+
+  //state = import('@/assets/ts/sessionStore')
+  trash_loading: boolean[] = []
+  save_loading: boolean[] = []
+  errors: string[] = []
+  search = ''
+  categories: ProductCategory[] = []
+  expanded: number[] = []
+  loading = true
+  edit = false
+  items: LoehkProductData[] = []
+  item: LoehkProductData = {
+    id: -1,
+    valid: false,
+    name: '',
+    purchase_price: 0,
+    discount: 0,
+    adjustment: 0,
+    price: 0,
+    active: true,
+    pant: false,
+    package_size: 0,
+    updated_at: '',
+    axfood: true,
+    category_id: -1,
+    category_name: '',
+    combobox_barcodes: []
+  }
+  rules = {
+      required: (value: string): true | string => {
+      return value ? true : "Fältet är obligatoriskt"
+    },
+      positive: (value: number): true | string => {
+      return value > 0 ? true : "Måste vara större än 0"
+    }
+  }
+  headers = [
+    {
+      text: 'Produkt',
+      align: 'start',
+      filterable: true,
+      value: 'name',
+      groupable: false,
+    },
+    {
+      text: 'Kategori',
+      align: 'center',
+      filterable: true,
+      value: 'category_name',
+      groupable: true,
+    },
+    {
+      text: 'Pris',
+      align: 'center',
+      filterable: true,
+      value: 'price',
+      groupable: false,
+    },
+    {
+      text: 'Senast updaterad',
+      value: 'updated_at',
+      align: 'right',
+      groupable: false
+    }
+  ]
+
+  createProduct():void {
+    (this.$refs as unknown as { newProduct:{validate: () => boolean} }).newProduct.validate()
+    if (!this.item.valid) {
+      return
+    }
+
+    this.$set(this.errors, 'new', '')
+    this.item.price = (Math.ceil((this.item.purchase_price * (this.item.axfood ? 1.12 : 1)) / this.item.package_size + (this.item.pant ? 1 : 0) + (this.item.adjustment ? this.item.adjustment : 0)))
+
+    //this.state.then(obj => {
+      delete this.item.valid
+      fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
+
+        // Adding method type
+        method: "POST",
+
+        // Convert to JSON and send
+        body: JSON.stringify(this.item),
+
+        // Adding headers to the request
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          //sessionId: obj.SessionStore.getSessionId()
+        }
+      })
+        // Convert to JSON and convey success
+        .then(res => {
+          if (res.ok) {
+            this.item = {
+              id: -1,
+              valid: false,
+              name: '',
+              purchase_price: 0,
+              discount: 0,
+              adjustment: 0,
+              price: 0,
+              active: true,
+              pant: false,
+              package_size: 0,
+              updated_at: '',
+              axfood: true,
+              category_id: -1,
+              category_name: '',
+              combobox_barcodes: []
+            };
+
+            (this.$refs as unknown as {newProduct: {resetValidation: () => void}}).newProduct.resetValidation()
+            console.log("Created")
+            console.log(this.item)
+            this.getItems()
+          } else {
+            if (res.status === 422) {
+              this.$set(this.errors, 'new',
+                'det var ett problem med att hantera datan, produkten kanske redan existerar eller så är viktiga fält tomma')
+            } else if (res.status === 403) {
+              this.$set(this.errors, 'new', 'utloggad, refresh?')
+            } else {
+              this.$set(this.errors, 'new', 'servern stötte på ett problem när den hanterade datan')
+            }
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$set(this.errors, 'new', 'kunde inte nå servern')
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    //})
+  }
+  deleteProduct(item: LoehkProductData): void {
+    this.$set(this.trash_loading, item.id, true)
+    this.$set(this.errors, 'delete' + item.id, '')
+
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + `/loehk/prices/` + item.id, {
+
+        // Adding method type
+        method: "DELETE",
+
+        // Adding headers to the request
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          //sessionId: obj.SessionStore.getSessionId()
+        }
+      })
+        // Convey success
+        .then(res => {
+          if (res.ok) {
+            this.$set(item, 'name', 'DELETED')
+          } else {
+            if (res.status === 403) {
+              this.$set(this.errors, 'delete' + item.id, 'utloggad, refresh?')
+            } else {
+              this.$set(this.errors, 'delete' + item.id, 'servern gick på något fel när den försökte ta bort produkten')
+            }
+          }
+        }).catch(() => {
+        this.$set(this.errors, 'delete' + item.id, 'kunde inte nå servern')
+      }).finally(() => {
+        this.$set(this.trash_loading, item.id, "success")
+      })
+    //})
+  }
+  updateProduct(item: LoehkProductData): void {
+    this.$set(this.save_loading, item.id, true)
+    this.$set(this.errors, item.id, '')
+    item.price = (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)))
+
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + `/loehk/prices`, {
+
+        // Adding method type
+        method: "PUT",
+
+        // Convert to JSON and send
+        body: JSON.stringify(item),
+
+        // Adding headers to the request
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          //sessionId: obj.SessionStore.getSessionId()
+        }
+      })
+        // Convey success
+        .then(res => {
+          if (res.ok) {
+            this.$set(this.save_loading, item.id, 'success')
+          } else {
+            this.$set(this.save_loading, item.id, false)
+            if (res.status === 422) {
+              this.$set(this.errors, item.id, 'det är något fel med detan, antigen så har produkten samma namn som en annnan produkt eller så är ett viktigt fält tomt')
+            } else if (res.status === 403) {
+              this.$set(this.errors, item.id, 'utloggad, refresh?')
+            } else {
+              this.$set(this.errors, item.id, 'servern stötte på något fel när den hanterade datan')
+            }
+          }
+        }).catch(() => {
+        this.$set(this.save_loading, item.id, false)
+        this.$set(this.errors, item.id, 'kunde inte nå servern')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+      }).finally(() => {
+      })
+    //})
+  }
+  expandRow(row: number): void {
+    this.expanded = row === this.expanded[0] ? [] : [row]
+  }
+
+  getItems(): void {
+    this.loading = true
+
+    //this.state.then(obj => {
+      fetch (
+        process.env.VUE_APP_API_URL + '/loehk/prices', {
+          /*headers: {
+            sessionId: obj.SessionStore.getSessionId()
+          }*/
+        })
+        .then(res => res.json())
+        .then((res: {products: LoehkProductData[], categories: ProductCategory[]}) => {
+          this.items = res.products
+          this.categories = res.categories
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$router.push('/login')
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    //})
+  }
 }
 </script>
 

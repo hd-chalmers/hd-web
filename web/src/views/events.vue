@@ -24,7 +24,7 @@
                             })}} - {{event.title}}
 
 
-                                <v-btn v-if="event.facebookLink" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebookLink">
+                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebookLink">
                                     <facebook-icon/>
                                 </v-btn>
                           </h5>
@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { eventType } from '@/assets/ts/interfaces'
+import { EventType } from '@/assets/ts/interfaces'
 import footerCard from '@/components/footerCard.vue'
 import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
 
@@ -63,7 +63,7 @@ import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
         super();
         this.getEvents()
       }
-      events: eventType[] = []
+      events: EventType[] = []
       error = ''
       loading = true
       getEvents (): void {
@@ -71,7 +71,7 @@ import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
         fetch(process.env.VUE_APP_API_URL + '/events').then(res =>res.text()).then(res => {
           this.error = ''
           this.events = JSON.parse(res, (key: string, value: any) => {
-            if (key == 'date') {
+            if (key === 'date') {
               return new Date(value)
             }
             return value

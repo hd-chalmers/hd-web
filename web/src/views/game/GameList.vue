@@ -121,6 +121,7 @@
 import {Vue, Component} from "vue-property-decorator";
 import footerCard from "@/components/footerCard.vue";
 import { UsersIcon, ClockIcon, CalendarIcon, LayersIcon, TagIcon, MonitorIcon, BoxIcon } from "vue-feather-icons";
+import {GameData} from "@/assets/ts/interfaces";
 
 @Component({
   components: {
@@ -141,7 +142,7 @@ export default class GameList extends Vue{
     }
 
             loading = true
-            games: any[] = []
+            games: GameData[] = []
             search = ''
             groupBy = 'platform'
             groups = [
@@ -181,20 +182,20 @@ export default class GameList extends Vue{
                 'Accept':
                   'application/json'
               }
-          }).then(res => res.json()).then(res => {
+          }).then(res => res.json()).then((res: GameData[]) => {
             this.games = res;
           }).finally(() => {
             this.loading = false;
           })
         }
 
-      goToEntry(targetId: number): void {
+      goToEntry(targetId: number | bigint): void {
           const target = document.getElementById('s' + targetId) as HTMLElement
           target.style.backgroundColor = this.$vuetify.theme.currentTheme.primary + '22'
           this.$vuetify.goTo('#s' + targetId, {offset: 200});
         }
 
-        clearSelect(targetId: number): void{
+        clearSelect(targetId: number | bigint): void{
           const target = document.getElementById('s' + targetId)
           if(target?.style.backgroundColor)
           target.style.backgroundColor = ''

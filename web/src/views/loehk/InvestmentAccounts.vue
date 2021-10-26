@@ -122,249 +122,246 @@
     </v-card>
 </template>
 
-<script>
-import axios from 'axios'
+<script lang="ts">
+import {Component, Vue} from "vue-property-decorator";
+import {InvestAccData} from "@/assets/ts/interfaces";
 
-export default {
-    name: "InvestmentAccounts",
-    data() {
-        return {
-            state: import('@/assets/ts/sessionStore'),
-            trash_loading: [],
-            save_loading: [],
-            errors: [],
-            search: '',
-            categories: [],
-            expanded: [],
-            loading: true,
-            edit: false,
-            accounts: [],
-            account: {
-                name: null,
-                uid: null,
-                password: null
-            },
-            rules: {
-                required: value => {
-                    return value ? true : "Fältet är obligatoriskt"
-                },
-                positive: value => {
-                    return value > 0 ? true : "Måste vara större än 0"
-                },
-            },
-            headers: [
-                {
-                    text: 'Streckkod',
-                    align: 'start',
-                    filterable: true,
-                    value: 'uid',
-                    groupable: false,
-                },
-                {
-                    text: 'Namn',
-                    align: 'left',
-                    filterable: true,
-                    value: 'name',
-                    groupable: false,
-                },
-                {
-                    text: 'Kontobalans',
-                    align: 'center',
-                    filterable: false,
-                    value: 'balance',
-                    groupable: false,
-                },
-              {
-                text: 'Uppdaterad',
-                align: 'end',
-                filterable: false,
-                value: 'updated_at',
-                groupable: false
-              },
-                {
-                    text: 'Aktiv',
-                    align: 'center',
-                    filterable: false,
-                    value: 'active_text',
-                    groupable: true,
-                },
-            ]
-        }
+@Component
+export default class LoehkInvestmentAccounts extends Vue{
+  constructor() {
+    super()
+    this.getItems()
+  }
+
+  //state = import('@/assets/ts/sessionStore')
+  trash_loading: boolean[] = []
+  save_loading: boolean[] = []
+  errors: string[] = []
+  search = ''
+  expanded: number[] = []
+  loading = true
+  edit = false
+  accounts: InvestAccData[] = []
+  account = {
+    name: null,
+    uid: null,
+    password: null
+  }
+
+  rules = {
+    required: (value: string): true | string => {
+    return value ? true : "Fältet är obligatoriskt"
+  },
+    positive: (value: number): true | string => {
+    return value > 0 ? true : "Måste vara större än 0"
+  }
+}
+headers = [
+    {
+      text: 'Streckkod',
+      align: 'start',
+      filterable: true,
+      value: 'uid',
+      groupable: false,
     },
-    created() {
-        this.getItems();
+    {
+      text: 'Namn',
+      align: 'left',
+      filterable: true,
+      value: 'name',
+      groupable: false,
     },
-    methods: {
-        expandRow(row) {
-            this.expanded = row === this.expanded[0] ? [] : [row]
-        },
-        deleteAccount(item) {
-            this.$set(this.trash_loading, item.id, true)
-            this.$set(this.errors, 'delete' + item.id, '')
-
-            this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/investments/` + item.id, {
-
-                // Adding method type
-                method: "DELETE",
-
-                // Adding headers to the request
-                headers: {
-                  "Content-type": "application/json; charset=UTF-8",
-                  sessionId: obj.SessionStore.getSessionId()
-                }
-              })
-                // Convey success
-                .then(res => {
-                  if (res.ok) {
-                    this.$set(item, 'name', "DELETED")
-                  } else {
-                    if (res.status === 403) {
-                      this.$set(this.errors, 'delete' + item.id, 'utloggad, refresh?')
-                    } else {
-                      this.$set(this.errors, 'delete' + item.id, 'något gick fel vid hanterigen av begäran')
-                    }
-                  }
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                }).catch((err) => {
-                this.$set(this.errors, 'delete' + item.id, 'kan inte nå servern')
-                console.error(err)
-              }).finally(() => {
-                this.$set(this.trash_loading, item.id, "success")
-              })
-            })
-        },
-        createAccount(item) {
-            this.$set(this.save_loading, 'new', true)
-            this.$set(this.errors, 'new', '')
-
-            this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
-
-                // Adding method type
-                method: "POST",
-
-                // Convert to JSON and send
-                body: JSON.stringify(item),
-
-                // Adding headers to the request
-                headers: {
-                  "Content-type": "application/json; charset=UTF-8",
-                  sessionId: obj.SessionStore.getSessionId()
-                }
-              })
-                // Convert to json and convey success
-                .then(res => {
-                  if (res.ok) {
-                    this.$set(this.save_loading, 'new', "success")
-                    return res.json()
-                  } else {
-                    this.$set(this.save_loading, 'new', "failed")
-                    if(res.status === 422){
-                      this.$set(this.errors, 'new', 'antigen är ett fält tomt eller så existerar användaren redan')
-                    }
-                    else if(res.status === 403) {
-                      this.$set(this.errors, 'new', 'utloggad, refresh?')
-                    }
-                    else {
-                      this.$set(this.errors, 'new', 'något gick fel när uppgifterna procceserades')
-                    }
-                    return null
-                  }
-                })
-                .then(res => {
-                  if (res) {
-                    this.$set(this.accounts, this.accounts.length, res)
-                    this.account = {
-                      name: null,
-                      uid: null,
-                      password: null
-                    }
-                  }
-                }).catch((err) => {
-                this.$set(this.save_loading, 'new', 'failed')
-                this.$set(this.errors, 'new', 'kan inte nå servern, ta gärna en titt i inspektorn')
-                console.error(err)
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-              }).finally(() => {
-              })
-            })
-        },
-        updateAccount(item) {
-            this.$set(this.save_loading, item.id, true)
-            this.$set(this.errors, item.id, '')
-
-            this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
-
-                // Adding method type
-                method: "PUT",
-
-                // Convert to JSON and send
-                body: JSON.stringify(item),
-
-                // Adding headers to the request
-                headers: {
-                  "Content-type": "application/json; charset=UTF-8",
-                  sessionId: obj.SessionStore.getSessionId()
-                }
-              })
-                // Convey success
-                .then(res => {
-                  if (res.ok) {
-                    this.$set(this.save_loading, item.id, "success")
-                    return res.json()
-                  } else {
-                    if (res.status === 422) {
-                      this.$set(this.errors, item.id, 'Datan kunde ej proccesseras kan vara p.g.a. tomma fält eller så matchar den nya datan med en annan användare')
-                    } else if (res.status === 403) {
-                      this.$set(this.errors, item.id, 'Utloggad, refresh?')
-                    } else {
-                      this.$set(this.errors, item.id, 'Något gick fel när datan hanterades')
-                    }
-                    this.$set(this.save_loading, item.id, "fail")
-                    return null
-                  }
-                })
-                .then(res => {
-                  if (res) {
-                    item = res
-                  }
-                })
-                .catch(() => {
-                  this.$set(this.save_loading, item.id, "failed")
-                  this.$set(this.errors, item.id, 'kunde inte nå servern')
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                }).finally(() => {
-              })
-            })
-        },
-        getItems() {
-            this.$set(this, "loading", true);
-
-            this.state.then(obj => {
-              fetch(process.env.VUE_APP_API_URL + '/loehk/investments', {
-                headers: {
-                  sessionId: obj.SessionStore.getSessionId()
-                }
-              })
-                .then(res => {
-                  return res.json()
-                })
-                .then(res => {
-                  this.$set(this, "accounts", res.active);
-                  this.$set(this, "accounts", this.accounts.concat(res.inactive));
-                })
-                .catch((err) => {
-                  console.error(err)
-                  this.$router.push('/login')
-              })
-                .finally(() => {
-                this.$set(this, "loading", false);
-              })
-            })
-        }
+    {
+      text: 'Kontobalans',
+      align: 'center',
+      filterable: false,
+      value: 'balance',
+      groupable: false,
+    },
+    {
+      text: 'Uppdaterad',
+      align: 'end',
+      filterable: false,
+      value: 'updated_at',
+      groupable: false
+    },
+    {
+      text: 'Aktiv',
+      align: 'center',
+      filterable: false,
+      value: 'active_text',
+      groupable: true,
     }
+  ]
+
+  expandRow(row: number): void {
+    this.expanded = row === this.expanded[0] ? [] : [row]
+  }
+  deleteAccount(item: InvestAccData): void {
+    this.$set(this.trash_loading, item.id, true)
+    this.$set(this.errors, 'delete' + item.id, '')
+
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + `/loehk/investments/` + item.id, {
+
+        // Adding method type
+        method: "DELETE",
+
+        // Adding headers to the request
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          //sessionId: obj.SessionStore.getSessionId()
+        }
+      })
+        // Convey success
+        .then(res => {
+          if (res.ok) {
+            this.$set(item, 'name', "DELETED")
+          } else {
+            if (res.status === 403) {
+              this.$set(this.errors, 'delete' + item.id, 'utloggad, refresh?')
+            } else {
+              this.$set(this.errors, 'delete' + item.id, 'något gick fel vid hanterigen av begäran')
+            }
+          }
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).catch((err) => {
+        this.$set(this.errors, 'delete' + item.id, 'kan inte nå servern')
+        console.error(err)
+      }).finally(() => {
+        this.$set(this.trash_loading, item.id, "success")
+      })
+    //})
+  }
+  createAccount(item: { uid: string, name: string, password: string | null }): void {
+    this.$set(this.save_loading, 'new', true)
+    this.$set(this.errors, 'new', '')
+
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
+
+        // Adding method type
+        method: "POST",
+
+        // Convert to JSON and send
+        body: JSON.stringify(item),
+
+        // Adding headers to the request
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          //sessionId: obj.SessionStore.getSessionId()
+        }
+      })
+        // Convert to json and convey success
+        .then(res => {
+          if (res.ok) {
+            this.$set(this.save_loading, 'new', "success")
+            return res.json()
+          } else {
+            this.$set(this.save_loading, 'new', "failed")
+            if(res.status === 422){
+              this.$set(this.errors, 'new', 'antigen är ett fält tomt eller så existerar användaren redan')
+            }
+            else if(res.status === 403) {
+              this.$set(this.errors, 'new', 'utloggad, refresh?')
+            }
+            else {
+              this.$set(this.errors, 'new', 'något gick fel när uppgifterna procceserades')
+            }
+            return null
+          }
+        })
+        .then((res: InvestAccData) => {
+          if (res) {
+            this.$set(this.accounts, this.accounts.length, res)
+            this.account = {
+              name: null,
+              uid: null,
+              password: null
+            }
+          }
+        }).catch((err) => {
+        this.$set(this.save_loading, 'new', 'failed')
+        this.$set(this.errors, 'new', 'kan inte nå servern, ta gärna en titt i inspektorn')
+        console.error(err)
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+      }).finally(() => {
+      })
+    //})
+  }
+  updateAccount(item: InvestAccData): void {
+    this.$set(this.save_loading, item.id, true)
+    this.$set(this.errors, item.id, '')
+
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + `/loehk/investments`, {
+
+        // Adding method type
+        method: "PUT",
+
+        // Convert to JSON and send
+        body: JSON.stringify(item),
+
+        // Adding headers to the request
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          //sessionId: obj.SessionStore.getSessionId()
+        }
+      })
+        // Convey success
+        .then(res => {
+          if (res.ok) {
+            this.$set(this.save_loading, item.id, "success")
+            return res.json()
+          } else {
+            if (res.status === 422) {
+              this.$set(this.errors, item.id, 'Datan kunde ej proccesseras kan vara p.g.a. tomma fält eller så matchar den nya datan med en annan användare')
+            } else if (res.status === 403) {
+              this.$set(this.errors, item.id, 'Utloggad, refresh?')
+            } else {
+              this.$set(this.errors, item.id, 'Något gick fel när datan hanterades')
+            }
+            this.$set(this.save_loading, item.id, "fail")
+            return null
+          }
+        })
+        .then((res: InvestAccData) => {
+          if (res) {
+            item = res
+          }
+        })
+        .catch(() => {
+          this.$set(this.save_loading, item.id, "failed")
+          this.$set(this.errors, item.id, 'kunde inte nå servern')
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).finally(() => {
+      })
+    //})
+  }
+  getItems(): void {
+    this.loading = true
+
+    //this.state.then(obj => {
+      fetch(process.env.VUE_APP_API_URL + '/loehk/investments', {
+        /*headers: {
+          sessionId: obj.SessionStore.getSessionId()
+        }*/
+      })
+        .then(res => {
+          return res.json()
+        })
+        .then((res: {active: InvestAccData[], inactive: InvestAccData[]}) => {
+          this.accounts = res.active.concat(res.inactive)
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$router.push('/login')
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    //})
+  }
 }
 </script>
 

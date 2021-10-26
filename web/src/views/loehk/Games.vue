@@ -145,6 +145,14 @@
 <script lang="ts">
 import { Component, Vue} from "vue-property-decorator"
 import {SearchIcon, Trash2Icon} from "vue-feather-icons";
+import {
+  BoardgameAtlasGame,
+  BoardgameAtlasMechanic,
+  GameGenreData,
+  LoehkGameData,
+  OwnerData,
+  PlatformData
+} from "@/assets/ts/interfaces";
 
 @Component({
   components: { SearchIcon, Trash2Icon }
@@ -154,23 +162,23 @@ export default class Games extends Vue{
     super()
     this.getData()
   }
-  games: any[] = []
-  genres: any[] = []
-  platforms: any[] = []
-  owners: any[] = []
-  headers: any[] = [
+  games: LoehkGameData[] = []
+  genres: GameGenreData[] = []
+  platforms: PlatformData[] = []
+  owners: OwnerData[] = []
+  headers = [
     {text: 'Namn', value: 'name', align: 'start', groupable: false },
     {text: 'Utgivnings år', value: 'published_year', align: 'center', groupable: true},
     {text: 'Senast updaterad', value: 'updated_at', align: 'center', groupable: false},
     {text: 'Skapad', value: 'created_at', align: 'right', groupable: false}
   ]
-  loading: any = []
-  error: any = []
-  messages: any = []
-  newCategories: any = []
-  searchResults: any[] = []
-  searchSelect: any = {}
-  mechanicsList: any[] = []
+  loading: boolean[] = []
+  error: string[] = []
+  messages: string[] = []
+  newCategories: string[] = []
+  searchResults: BoardgameAtlasGame[] = []
+  searchSelect: BoardgameAtlasGame | any = {}
+  mechanicsList: BoardgameAtlasMechanic[] = []
 
   getData(): void{
     fetch(process.env.VUE_APP_API_URL + '/loehk/games')
@@ -183,17 +191,17 @@ export default class Games extends Vue{
         this.replaceNullObj()
 
         this.genres.unshift({id: -1, name: 'Lägg till en genre'})
-        this.platforms.unshift({id: -1, name: 'Lägg till en platform'})
-        this.owners.unshift({id: -1, name: 'Lägg till en ägare'})
+        this.platforms.unshift({id: -1, name: 'Lägg till en platform', type: ""})
+        this.owners.unshift({id: -1, name: 'Lägg till en ägare', phone_number: null, email: null, nickname: null})
     })
   }
 
-  updateGame(item: any): void{
+  updateGame(item: LoehkGameData): void{
 
     this.$set(this.loading, 's' + item.id, true)
     this.$set(this.error, 's' + item.id, "")
 
-    if(item.owner.name === undefined){
+    if(item.owner?.name === undefined){
       item.owner = null
     }
 
@@ -203,13 +211,13 @@ export default class Games extends Vue{
       headers: {
         "content-type": "application/json; charset=UTF-8"
       }
-    }).then(res => res.json()).then(res => {
+    }).then(res => res.json()).then((res: LoehkGameData) => {
       item = res
     }).catch(() => {
       this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern")
     }).finally( () => {
       if(item.owner === null){
-        item.owner = {}
+        item.owner = {} as any
       }
       this.$set(this.loading, 's' + item.id, false)
     })
@@ -227,51 +235,51 @@ export default class Games extends Vue{
       }*/
 
       if(game.owner === null){
-        game.owner = {}
+        game.owner = {} as any
       }
     }
   }
 
-  patchNewPlat(item: any, value: string): void{
+  patchNewPlat(item: LoehkGameData, value: string): void{
     fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
       method: "PATCH",
       body: JSON.stringify({platform: value}),
       headers: {
         "content-type": "application/json; charset=UTF-8"
       }
-    }).then(res => res.json()).then(res => {
+    }).then(res => res.json()).then((res: PlatformData) => {
       this.platforms.push(res)
       item.platform = res
     })
   }
 
-  patchNewGenre(item: any, value: string): void{
+  patchNewGenre(item: LoehkGameData, value: string): void{
     fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
       method: "PATCH",
       body: JSON.stringify({genre: value}),
       headers: {
         "content-type": "application/json; charset=UTF-8"
       }
-    }).then(res => res.json()).then(res => {
+    }).then(res => res.json()).then((res: GameGenreData) => {
       this.genres.push(res)
       item.genre = res
     })
   }
 
-  patchNewOwner(item: any, value: string): void{
+  patchNewOwner(item: LoehkGameData, value: string): void{
     fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
       method: "PATCH",
       body: JSON.stringify({owner: value}),
       headers: {
         "content-type": "application/json; charset=UTF-8"
       }
-    }).then(res => res.json()).then(res => {
+    }).then(res => res.json()).then((res: OwnerData) => {
       this.owners.push(res)
       item.owner = res
     })
   }
 
-  deleteGame(item: any){
+  deleteGame(item: LoehkGameData): void{
     this.$set(this.loading, "del" + item.id, true)
     this.$set(this.error, "del" + item.id, "")
 
@@ -289,16 +297,15 @@ export default class Games extends Vue{
     })
   }
 
-  searchBoardgameAtlas(item: any): void{
+  searchBoardgameAtlas(item: LoehkGameData): void{
     console.log('click')
     this.error = []
     this.$set(this.loading,'atlas-s' + item.id, true)
     fetch('https://api.boardgameatlas.com/api/search?client_id=E23Rb2sc1L&limit=6&name=' + item.name)
-      .then(res => res.json()).then(res => {
+      .then(res => res.json()).then((res: {games: BoardgameAtlasGame[], count: number}) => {
         console.log(res.games[0])
         if(res.games[0] === undefined){
-          this.error['s' + item.id] = 'Kunde inte hitta spelet i Boardgame Atlas'
-          console.log('fail')
+          this.error['s' + item.id as any] = 'Kunde inte hitta spelet i Boardgame Atlas'
           return
         }
         this.searchResults = res.games
@@ -309,7 +316,7 @@ export default class Games extends Vue{
         }
         else {
           fetch('https://api.boardgameatlas.com/api/game/mechanics?client_id=E23Rb2sc1L')
-            .then(res => res.json()).then(res => {
+            .then(res => res.json()).then((res: {mechanics: BoardgameAtlasMechanic[]}) => {
               this.mechanicsList = res.mechanics
               this.fillEntry(item)
           })
@@ -321,7 +328,7 @@ export default class Games extends Vue{
     })
   }
 
-  fillEntry(item: any): void{
+  fillEntry(item: LoehkGameData): void{
     this.error = []
     item.description = this.searchSelect.description_preview
     item.published_year = this.searchSelect.year_published.toString()
@@ -331,23 +338,23 @@ export default class Games extends Vue{
     item.max_playtime = this.searchSelect.max_playtime
     item.image_link = this.searchSelect.image_url
 
-    this.error['platform-s' + item.id] = "Troligtvis brädspel"
+    this.error['platform-s' + item.id as any] = "Troligtvis brädspel"
 
     if(this.searchSelect.mechanics[0]) {
-      this.error['genre-s' + item.id] = ''
+      this.error['genre-s' + item.id as any] = ''
       for (const source of this.searchSelect.mechanics) {
         for (const mechanic of this.mechanicsList) {
           if (mechanic.id === source.id) {
-            this.error['genre-s' + item.id] += mechanic.name + ', '
+            this.error['genre-s' + item.id as any] += mechanic.name + ', '
             break
           }
         }
       }
     }
     if(this.searchSelect.type === "expansion"){
-      this.error['expansion-s' + item.id] = 'Är en expansion!'
+      this.error['expansion-s' + item.id as any] = 'Är en expansion!'
     }
-    this.messages['name-s' + item.id] = this.searchSelect.name
+    this.messages['name-s' + item.id as any] = this.searchSelect.name
   }
 
 }
