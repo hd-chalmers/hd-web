@@ -9,6 +9,7 @@
                     <v-list>
                         <v-list-item-group>
                             <v-list-item>
+                              <v-list-item-icon> <disc-icon/> </v-list-item-icon>
                                 <v-list-item-title>
                                     Antal Spel:
                                 </v-list-item-title>
@@ -34,6 +35,7 @@
                             </v-list-item>
                             <hr>
                             <v-list-item>
+                              <v-list-item-icon> <shopping-cart-icon/> </v-list-item-icon>
                                 <v-list-item-title>
                                     Antal Produkter:
                                 </v-list-item-title>
@@ -59,6 +61,7 @@
                             </v-list-item>
                             <hr>
                             <v-list-item>
+                              <v-list-item-icon> <align-center-icon style="transform: rotate(90deg);"/></v-list-item-icon>
                                 <v-list-item-title>
                                     Antal Strecklistor:
                                 </v-list-item-title>
@@ -84,6 +87,7 @@
                             </v-list-item>
                             <hr>
                             <v-list-item>
+                              <v-list-item-icon> <calendar-icon/> </v-list-item-icon>
                                 <v-list-item-title>
                                     Antal Events:
                                 </v-list-item-title>
@@ -120,8 +124,16 @@
 
 import {Component, Vue} from "vue-property-decorator";
 import {LoehkSummaryData} from "@/assets/ts/interfaces";
+import { DiscIcon, ShoppingCartIcon, AlignCenterIcon, CalendarIcon } from "vue-feather-icons";
 
-@Component
+@Component({
+  components:{
+    DiscIcon,
+    ShoppingCartIcon,
+    AlignCenterIcon,
+    CalendarIcon
+  }
+})
 export default class LoehkFront extends Vue{
   constructor() {
     super()

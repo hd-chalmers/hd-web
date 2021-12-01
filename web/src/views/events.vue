@@ -15,13 +15,7 @@
                     <v-card v-for="event in events" v-bind:key="event.id" class="mb-3" elevation="5">
                         <v-card-title>
                           <h5>
-                            {{event.date.toLocaleString('sv', {
-                              year: 'numeric',
-                              month: 'numeric',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}} - {{event.title}}
+                             {{event.title}}
 
 
                                 <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebookLink">
@@ -29,6 +23,17 @@
                                 </v-btn>
                           </h5>
                         </v-card-title>
+                        <v-card-subtitle>
+                          <h3>
+                            {{event.date.toLocaleString('sv', {
+                            year: 'numeric',
+                            month: 'numeric',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}}
+                          </h3>
+                        </v-card-subtitle>
                         <v-card-text v-if="event.location || event.description">
                                 <span v-if="event.location">
                                   <map-pin-icon size="1x"/>

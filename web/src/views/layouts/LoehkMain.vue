@@ -64,7 +64,7 @@
                 </div>
             </template>
         </v-navigation-drawer>
-        <v-main style="padding-left: 0">
+        <v-main style="padding-left: 0; padding-top: 0;">
             <v-container fluid>
                 <v-card>
                     <v-card-title>

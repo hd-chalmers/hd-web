@@ -2,9 +2,10 @@
   <v-card :loading="loading">
     <v-card-title>
       <v-row>
-        <v-col cols="12" lg="8" md="8">
+        <v-col cols="12" md="7">
           <v-select v-model="event" :items="allEvents" :loading="this.isLoading('newEvent')" item-text="title"
                     item-value="id" label="Event" return-object @input="reset">
+            <template v-slot:prepend> <ListIcon/> </template>
             <template v-slot:item="
                           // eslint-disable-next-line vue/no-unused-vars
                           {parent, item, on, attrs}">
@@ -15,39 +16,42 @@
                           {parent, item, index, select, selected, disabled}">
               {{ item.date }} {{ item.time }} - {{ item.title }}
             </template>
-            <template v-slot:append-outer>
-              <v-switch v-if="event && event.id !== -1" v-model="event.show_on_frontpage" :error-messages="hasError('show_on_frontpage')"
-                        :loading="isLoading('show_on_frontpage')"
-                        :success-messages="hasSuccessMessage('show_on_frontpage')"
-                        class="my-auto mr-1" label="Visa på sidan"
-                        @change="updateField('show_on_frontpage')"></v-switch>
-
-              <v-btn v-if="event && event.id !== -1" :color="hasError('deleteEvent')? 'error' : 'inherit'" :loading="isLoading('deleteEvent')"
-                     class="mr-2" icon @click="deleteEvent">
-                <v-icon>mdi-delete</v-icon>
-                <span v-if="hasError('deleteEvent')"
-                      :style="`color: ${$vuetify.theme.currentTheme.error}; position: absolute; bottom: -30px;`">{{ hasError('deleteEvent') }}</span>
-              </v-btn>
-              <v-btn :color="hasError('newEvent')? 'error' : 'inherit'" :loading="isLoading('newEvent')"
-                     @click="addNewEvent()">
-                Nytt Event
-                <span v-if="hasError('newEvent')"
-                      :style="`color: ${$vuetify.theme.currentTheme.error}; position: absolute; bottom: -30px;`">{{ hasError('newEvent') }}</span>
-              </v-btn>
-            </template>
           </v-select>
+        </v-col>
+        <v-col style="min-width: 215px;">
+          <v-switch v-if="event && event.id !== -1" v-model="event.show_on_frontpage" :error-messages="hasError('show_on_frontpage')"
+                    :loading="isLoading('show_on_frontpage')"
+                    :success-messages="hasSuccessMessage('show_on_frontpage')"
+                    class="my-auto mr-1" label="Visa på sidan"
+                    style="display: inline-block;"
+                    @change="updateField('show_on_frontpage')"></v-switch>
+          <v-btn v-if="event && event.id !== -1" :color="hasError('deleteEvent')? 'error' : 'inherit'" :loading="isLoading('deleteEvent')"
+                 class="mr-2" icon @click="deleteEvent">
+            <trash-icon/>
+            <span v-if="hasError('deleteEvent')"
+                  :style="`color: ${$vuetify.theme.currentTheme.error}; position: absolute; bottom: -30px;`">{{ hasError('deleteEvent') }}</span>
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn :color="hasError('newEvent')? 'error' : 'inherit'" :loading="isLoading('newEvent')"
+                 @click="addNewEvent()" style="width: 100%; margin: 0;">
+            Nytt Event
+            <span v-if="hasError('newEvent')"
+                  :style="`color: ${$vuetify.theme.currentTheme.error}; position: absolute; bottom: -30px;`">{{ hasError('newEvent') }}</span>
+          </v-btn>
         </v-col>
       </v-row>
     </v-card-title>
     <v-card-text v-if="event && event.id !== -1">
       <v-row>
-        <v-col cols="12" lg="3" md="4">
+        <v-col cols="12" md="4" lg>
           <v-text-field v-model="event.title" :error-messages="hasError('title')" :loading="isLoading('title')"
                         :success-messages="hasSuccessMessage('title')"
-                        label="Titel" prepend-icon="mdi-format-title"
-                        @input="updateField('title')"></v-text-field>
+                        label="Titel" @input="updateField('title')">
+            <template v-slot:prepend> <type-icon/> </template>
+          </v-text-field>
         </v-col>
-        <v-col cols="12" lg="3" md="4">
+        <v-col cols="12" md="4" lg>
           <v-menu
             ref="dateMenu"
             v-model="dateMenu"
@@ -65,11 +69,12 @@
                 :loading="isLoading('date')"
                 :success-messages="hasSuccessMessage('date')"
                 label="Datum"
-                prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
                 v-on="on"
-              ></v-text-field>
+              >
+                <template v-slot:prepend> <CalendarIcon/> </template>
+              </v-text-field>
             </template>
             <v-date-picker
               v-model="event.date"
@@ -83,7 +88,7 @@
             </v-date-picker>
           </v-menu>
         </v-col>
-        <v-col cols="12" lg="3" md="4">
+        <v-col cols="12" md="4" lg>
           <v-menu
             ref="timeMenu"
             v-model="timeMenu"
@@ -101,11 +106,12 @@
                 :loading="isLoading('time')"
                 :success-messages="hasSuccessMessage('time')"
                 label="Tid"
-                prepend-icon="mdi-clock"
                 readonly
                 v-bind="attrs"
                 v-on="on"
-              ></v-text-field>
+              >
+                <template v-slot:prepend> <clock-icon/> </template>
+              </v-text-field>
             </template>
             <v-time-picker
               v-model="event.time"
@@ -119,23 +125,27 @@
             </v-time-picker>
           </v-menu>
         </v-col>
-        <v-col cols="12" lg="3" md="4">
-          <v-text-field v-model="event.description" :error-messages="hasError('description')" :loading="isLoading('description')"
-                        :success-messages="hasSuccessMessage('description')"
-                        label="Beskrivning" prepend-icon="mdi-calendar-text"
-                        @input="updateField('description')"></v-text-field>
-        </v-col>
-        <v-col cols="12" lg="3" md="4">
+        <v-col cols="12" md="6" lg>
           <v-text-field v-model="event.location" :error-messages="hasError('location')" :loading="isLoading('location')"
                         :success-messages="hasSuccessMessage('location')" label="Plats"
-                        prepend-icon="mdi-google-maps" @input="updateField('location')"></v-text-field>
+                        @input="updateField('location')">
+            <template v-slot:prepend> <map-pin-icon/> </template>
+          </v-text-field>
         </v-col>
-        <v-col cols="12" lg="3" md="4">
+        <v-col cols="12" md="6" lg>
           <v-text-field v-model="event.facebook_event_link" :error-messages="hasError('facebook_event_link')" :loading="isLoading('facebook_event_link')"
                         :success-messages="hasSuccessMessage('facebook_event_link')"
                         label="Facebook Länk"
-                        prepend-icon="mdi-facebook"
-                        @input="updateField('facebook_event_link')"></v-text-field>
+                        @input="updateField('facebook_event_link')">
+            <template v-slot:prepend> <facebook-icon/> </template>
+          </v-text-field>
+        </v-col>
+        <v-col cols="12">
+          <v-textarea v-model="event.description" :error-messages="hasError('description')" :loading="isLoading('description')"
+                      :success-messages="hasSuccessMessage('description')" label="Beskrivning"
+                      @input="updateField('description')" outlined>
+            <template v-slot:prepend> <align-left-icon/> </template>
+          </v-textarea>
         </v-col>
       </v-row>
     </v-card-text>
@@ -147,8 +157,20 @@
 import Vue from 'vue'
 import Component from "vue-class-component";
 import {EventPropsData} from "@/assets/ts/interfaces";
+import { TypeIcon, CalendarIcon, ClockIcon, MapPinIcon, FacebookIcon, AlignLeftIcon, ListIcon, TrashIcon } from "vue-feather-icons";
 
-@Component
+@Component({
+  components:{
+    TypeIcon,
+    CalendarIcon,
+    ClockIcon,
+    MapPinIcon,
+    FacebookIcon,
+    AlignLeftIcon,
+    ListIcon,
+    TrashIcon
+  }
+})
 export default class LoehkEvents extends Vue {
   constructor() {
     super()

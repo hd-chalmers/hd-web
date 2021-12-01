@@ -67,7 +67,7 @@
         </v-col>
         <v-col align-self="stretch">
           <v-card style="height: 100%;" elevation="4">
-            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block;"></div>
+            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block; filter: drop-shadow(0 0 2px white);"></div>
             <v-card-title style="padding-top: 0;">
               <strong>Vad är <span style="color: #E0218A">H</span><span style="
                             color: black;
@@ -98,7 +98,7 @@
             <h3 style="display: flex; align-items: center;"><instagram-icon style="margin-right: 5px;"/> Instagram</h3>
             </v-card-title-->
             <v-card-text>
-              <div class="embedsocial-hashtag" data-ref="7d09843251254063d8791fb6e0acc5f768a7d41a"></div>
+              <div class="embedsocial-hashtag" data-ref="7d09843251254063d8791fb6e0acc5f768a7d41a" style="filter: drop-shadow(0 0 2px white);"></div>
             </v-card-text>
           </v-card>
         </v-col>

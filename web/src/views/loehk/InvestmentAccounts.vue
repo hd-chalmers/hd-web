@@ -2,7 +2,7 @@
     <v-card>
         <v-card-actions>
             <v-btn icon to="/loehk/investments/print">
-                <v-icon>mdi-printer</v-icon>
+                <printer-icon/>
             </v-btn>
         </v-card-actions>
         <v-card-title>
@@ -78,7 +78,7 @@
                                 <v-spacer></v-spacer>
                                 <v-btn icon @click="deleteAccount(item)" :loading="trash_loading[item.id] === true"
                                        :color="errors['delete' + item.id] ? $vuetify.theme.currentTheme.error : 'inherit'">
-                                    <v-icon>mdi-delete</v-icon>
+                                    <trash-icon/>
                                     <span :style="`color: ${$vuetify.theme.currentTheme.error}; position: absolute; bottom: -30px; right: 0;`" v-if="errors['delete' + item.id]">
                                       {{errors['delete' + item.id]}}
                                     </span>
@@ -125,8 +125,11 @@
 <script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
 import {InvestAccData} from "@/assets/ts/interfaces";
+import  {PrinterIcon, TrashIcon} from "vue-feather-icons";
 
-@Component
+@Component({
+  components:{PrinterIcon, TrashIcon}
+})
 export default class LoehkInvestmentAccounts extends Vue{
   constructor() {
     super()

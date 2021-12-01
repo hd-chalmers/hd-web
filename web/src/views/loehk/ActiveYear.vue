@@ -17,23 +17,31 @@
                 <v-row>
                     <v-col cols="6">
                         <v-file-input show-size label="Gruppbild" :success-messages="message.group_photo" :messages="active_year.group_photo" :loading="load.group_photo === true" :success="load.group_photo === 'success'"
-                                      :error-messages="errors.group_photo" v-model="form.group_photo"></v-file-input>
+                                      :error-messages="errors.group_photo" v-model="form.group_photo" prepend-icon solo>
+                          <template v-slot:prepend-inner> <paperclip-icon/> </template>
+                        </v-file-input>
                     </v-col>
                     <v-col cols="6">
                         <v-file-input show-size label="Bakgrundsbild" :success-messages="message.background_image" :messages="active_year.background_image" :loading="load.background_image === true"
-                                      :success="load.background_image === 'success'" :error-messages="errors.background_image" v-model="form.background_image"></v-file-input>
+                                      :success="load.background_image === 'success'" :error-messages="errors.background_image" v-model="form.background_image" prepend-icon="" solo>
+                          <template v-slot:prepend-inner> <paperclip-icon/> </template>
+                        </v-file-input>
                     </v-col>
                     <v-col cols="6">
                         <v-file-input show-size label="Förstasidan, Bild" :success-messages="message.front_image" :messages="active_year.front_image" :loading="load.front_image === true" :success="load.front_image === 'success'"
-                                      :error-messages="errors.front_image" v-model="form.front_image"></v-file-input>
+                                      :error-messages="errors.front_image" v-model="form.front_image" prepend-icon="" solo>
+                          <template v-slot:prepend-inner> <paperclip-icon/> </template>
+                        </v-file-input>
                     </v-col>
                     <v-col cols="6">
                         <v-file-input show-size label="Förstasidan, Julbild" :success-messages="message.christmas_image" :messages="active_year.christmas_image" :loading="load.christmas_image === true"
-                                      :error-messages="errors.christmas_image" :success="load.christmas_image === 'success'" v-model="form.christmas_image"></v-file-input>
+                                      :error-messages="errors.christmas_image" :success="load.christmas_image === 'success'" v-model="form.christmas_image" solo prepend-icon="">
+                          <template v-slot:prepend-inner> <paperclip-icon/> </template>
+                        </v-file-input>
                     </v-col>
                     <v-col cols="12">
                         <v-textarea @input="saveDescriptionDebounced" :success-messages="message.description" counter label="Beskrivande text" :loading="load.description === true"
-                                    :success="load.description === 'success'" v-model="active_year.description" :error-messages="errors.description"></v-textarea>
+                                    :success="load.description === 'success'" v-model="active_year.description" :error-messages="errors.description" outlined></v-textarea>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -46,7 +54,7 @@
                         <v-card-actions>
                             <v-btn icon @click="deleteCommitteeMember(committee_member, index)" :loading="getLoad('committee_member',committee_member.id+'delete')"
                                     :color="getErrors('committee_member', committee_member.id + 'delete') ? 'red' : 'inherit'">
-                                <v-icon>mdi-delete</v-icon>
+                                <trash-icon/>
                               <span style="color: red; position: absolute; bottom: -30px; left: 0;" v-if="getErrors('committee_member', committee_member.id + 'delete')">
                                 {{getErrors('committee_member', committee_member.id + 'delete')}}
                               </span>
@@ -87,7 +95,10 @@
                                 <v-col cols="12">
                                     <v-file-input label="Profilbild" @change="updateCommitteeMemberDebounced(committee_member.id, 'image', committee_member.image_upload, index)" :messages="committee_member.image"
                                                   :success-messages="getMessage('committee_member', committee_member.id+'image')" v-model="committee_member.image_upload"
-                                                  :error-messages="getErrors('committee_member', committee_member.id + 'image')"></v-file-input>
+                                                  :error-messages="getErrors('committee_member', committee_member.id + 'image')"
+                                                  prepend-icon="" solo>
+                                      <template v-slot:prepend-inner> <paperclip-icon/> </template>
+                                    </v-file-input>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -104,8 +115,13 @@
 
 import {Component, Vue} from "vue-property-decorator";
 import {ActiveYearData, LoehkMemberType} from "@/assets/ts/interfaces";
+import {PaperclipIcon, TrashIcon} from "vue-feather-icons";
 
 @Component<LoehkActiveYear>({
+  components: {
+    PaperclipIcon,
+    TrashIcon
+  },
   watch: {
     'form.front_image': function ($value) {
       if (this.loading) {

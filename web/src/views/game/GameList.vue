@@ -2,7 +2,7 @@
     <v-container>
         <v-card style="margin-bottom: 12px;" :loading="loading" elevation="6">
           <v-card-title style="margin-bottom: 5px;">
-            <h2>Spel lista</h2>
+            <h2>Spellista</h2>
           </v-card-title>
           <v-card-subtitle>
             Här är några spel som är tillgängliga i våra arr

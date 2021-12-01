@@ -153,7 +153,7 @@ export interface LoehkMemberType {
 }
 
 export interface LoehkGameData{
-  id: bigint,
+  id: number,
   name: string,
   description: string | null,
   genre: GameGenreData | null,
