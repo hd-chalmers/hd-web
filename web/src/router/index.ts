@@ -6,6 +6,11 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
+    path: '/loehk/investments/print',
+    name: 'loehk-investments-print',
+    component: () => import(/* webpackChunkName: "loehkInvestPrint"*/'@/components/streck/PrintView.vue')
+  },
+  {
     path: '/',
     component: BaseLayout,
     children: [
@@ -83,13 +88,13 @@ const routes: Array<RouteConfig> = [
             component: () => import(/* webpackChunkName: "loehkGames" */ '@/views/loehk/Games.vue')
           }
         ]
+      },
+      {
+        path: "*", // Matches an non existent page, must be last in array
+        name: "Error404",
+        component: () => import(/* webpackChunckName: "Error404"*/ '@/views/errors/error404.vue')
       }
     ]
-  },
-  {
-    path: '/loehk/investments/print',
-    name: 'loehk-investments-print',
-    component: () => import(/* webpackChunkName: "loehkInvestPrint"*/'@/components/streck/PrintView.vue')
   }
 ]
 
