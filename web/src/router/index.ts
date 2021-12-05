@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import BaseLayout from '@/views/layouts/base.vue'
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,13 @@ const routes: Array<RouteConfig> = [
       {
         path: '',
         component: () => import(/* webpackChunkName: "loehkMain" */ '@/views/layouts/LoehkMain.vue'),
+        beforeEnter: (to, from, next) => {
+          if(SessionStore.getSessionId() === null){
+            next("/login")
+          }else {
+            next()
+          }
+        },
         children: [
           {
             path: '/loehk',
