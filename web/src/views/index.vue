@@ -67,7 +67,7 @@
         </v-col>
         <v-col align-self="stretch">
           <v-card style="height: 100%;" elevation="4">
-            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block; filter: drop-shadow(0 0 2px white);"></div>
+            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block; filter: drop-shadow(0 0 2px white); margin-top: 7px;"></div>
             <v-card-title style="padding-top: 0;">
               <strong>Vad är <span style="color: #E0218A">H</span><span style="
                             color: black;
