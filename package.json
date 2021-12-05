@@ -1,10 +1,5 @@
 {
     "scripts": {
-        "test": "(docker run --name test-redis -p 8002:6379 -d redis || (docker logs test-redis && echo Container already exists.)) && docker-compose up -d hd-db && cd db && echo Giving the database some time to setup... 5s && (sleep 5 || timeout /t 6) && npm run migrate-seed && cd .. && ((start cmd /c \"cd web && npm run serve\" && start cmd /c \"cd api && npx nodemon\") || (echo Running linux commands instead... && ((cd web && npm run serve) & (cd api && npx nodemon) & echo Don't forget to run 'npm run clean' and close all console windows when you're done))) && echo Don't forget to run 'npm run clean' and close all console windows when you're done.",
-        "clean": "docker-compose down && (((echo Asking sudo to override folder permissions for cleaning && sudo rm db/storage/ -R && mkdir db/storage && rm api/storage/ -R && mkdir api/storage && mkdir api/storage/logs && mkdir api/storage/public) || (echo Using windows command instead... && powershell rm db/storage/* -R && powershell rm api/storage/logs/* -R && powershell rm api/storage/public/* -R && powershell rm api/storage/temp/* -R)) &&  echo Cleared all storage directories successfully!) && ((docker stop test-redis && docker rm test-redis) || echo Nothing left to do...) && echo All done!",
-        "production": "cd api && npm run build && cd ../web && npm run build && cd .. && (echo Updating premissions for db/storage, may request root... && sudo chmod 777 db/storage -R || echo Skipping permission setup...) && docker-compose build && docker-compose up -d hd-db && echo Giving the database some time to setup... 5s && (sleep 5 || timeout /t 6) && cd db && npm run migrate && cd .. && docker-compose up",
-        "install": "echo Installing packages for database migrations... && cd db && npm i && echo Installing packages for Api server... && cd ../api && npm i --also=dev && echo Installing packages for web client development... && cd ../web && npm i --also=dev && cd ..",
-
-        "migrate-seed": "cd db && npm run migrate-seed && cd .."
+        "install": "echo Installing packages for web client development... && cd ../web && npm i --also=dev && cd .."
     }
 }

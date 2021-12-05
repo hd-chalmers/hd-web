@@ -11,53 +11,6 @@ services:
     volumes:
       - ./web/dist:/usr/share/nginx/html
     restart: on-failure:3
-    depends_on:
-      - hd-api
-
-  hd-api:
-    build: api
-    hostname: hd-api
-    env_file:
-      - ./api/.env.production
-    ports:
-    - 8000:8000
-    volumes: 
-      - ./api/storage:/home/node/storage
-    restart: on-failure:3
-    links:
-      - hd-redis
-      - hd-db
-    depends_on:
-      - hd-db
-      - hd-redis
-
-  hd-db:
-    #    image: registry.wayatech.se/frontend/hd/db
-    build: db
-    hostname: hd-db
-    env_file:
-      - db/.env
-    ports:
-      - ${HOST_AUX_PORT_HEKTO:-10}81:5432
-    volumes: 
-      - ./db/storage:/var/lib/postgresql/data
-    restart: on-failure:3
-
- # hd-memcached:
- #   image: memcached:latest
- #   hostname: hd-memcached
- #   env_file:
- #   - web/.env
- #   restart: on-failure:3
-
-  hd-redis:
-    image: redis:alpine
-    hostname: hd-redis
-    env_file:
-      - web/.env
-    #ports:
-    #- "6379:6379"
-    restart: on-failure:3
 
 networks:
   default:
