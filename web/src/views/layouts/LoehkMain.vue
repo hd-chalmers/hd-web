@@ -88,6 +88,7 @@
 import {Vue, Component} from 'vue-property-decorator'
 import {HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon,
   ShoppingCartIcon, MonitorIcon, MenuIcon, LogOutIcon} from 'vue-feather-icons'
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
   components: {
@@ -107,11 +108,11 @@ export default class LoehkMain extends Vue{
   logout():void {
     this.state.then(obj => {
       fetch(process.env.VUE_APP_API_URL + '/logout', {
-        method: 'DELETE',
+        method: 'POST',
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         headers: {
-          sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
       .then(res => {

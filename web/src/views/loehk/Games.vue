@@ -255,6 +255,7 @@ import {
   OwnerData,
   PlatformData
 } from "@/assets/ts/interfaces";
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
   components: { SearchIcon, Trash2Icon }
@@ -309,7 +310,11 @@ export default class Games extends Vue{
   mechanicsList: BoardgameAtlasMechanic[] = []
 
   getData(): void{
-    fetch(process.env.VUE_APP_API_URL + '/loehk/games')
+    fetch(process.env.VUE_APP_API_URL + '/loehk/games', {
+      headers:{
+        Authorization: SessionStore.getSessionId() ?? ""
+      }
+    })
       .then(res => res.json()).then(res => {
         this.games = res.games
         this.genres = res.genres
@@ -339,7 +344,8 @@ export default class Games extends Vue{
       method: "PUT",
       body: JSON.stringify(item),
       headers: {
-        "content-type": "application/json; charset=UTF-8"
+        "content-type": "application/json; charset=UTF-8",
+        Authorization: SessionStore.getSessionId() ?? ""
       }
     }).then(res => res.json()).then((res: LoehkGameData) => {
       item = res
@@ -351,8 +357,6 @@ export default class Games extends Vue{
   }
 
   insertGame(item: LoehkGameData): void{
-    console.log(this.valid[item.id])
-
     if(!this.valid[item.id]){
       return
     }
@@ -369,7 +373,8 @@ export default class Games extends Vue{
       method: "POST",
       body: JSON.stringify(item),
       headers: {
-        "content-type": "application/json; charset=UTF-8"
+        "content-type": "application/json; charset=UTF-8",
+        Authorization: SessionStore.getSessionId() ?? ""
       }
     }).then(res => res.json()).then((res: LoehkGameData) => {
       this.$set(this.games, this.games.length, res)
@@ -423,7 +428,8 @@ export default class Games extends Vue{
       method: "PATCH",
       body: JSON.stringify({platform: value}),
       headers: {
-        "content-type": "application/json; charset=UTF-8"
+        "content-type": "application/json; charset=UTF-8",
+        Authorization: SessionStore.getSessionId() ?? ""
       }
     }).then(res => res.json()).then((res: PlatformData) => {
       this.platforms.push(res)
@@ -436,7 +442,8 @@ export default class Games extends Vue{
       method: "PATCH",
       body: JSON.stringify({genre: value}),
       headers: {
-        "content-type": "application/json; charset=UTF-8"
+        "content-type": "application/json; charset=UTF-8",
+        Authorization: SessionStore.getSessionId() ?? ""
       }
     }).then(res => res.json()).then((res: GameGenreData) => {
       this.genres.push(res)
@@ -449,7 +456,8 @@ export default class Games extends Vue{
       method: "PATCH",
       body: JSON.stringify({owner: value}),
       headers: {
-        "content-type": "application/json; charset=UTF-8"
+        "content-type": "application/json; charset=UTF-8",
+        Authorization: SessionStore.getSessionId() ?? ""
       }
     }).then(res => res.json()).then((res: OwnerData) => {
       this.owners.push(res)
@@ -462,7 +470,10 @@ export default class Games extends Vue{
     this.$set(this.error, "del" + item.id, "")
 
     fetch(process.env.VUE_APP_API_URL + "/loehk/games/" + item.id, {
-      method: "DELETE"
+      method: "DELETE",
+      headers:{
+        Authorization: SessionStore.getSessionId() ?? ""
+      }
     }).then(res => {
       if(res.ok){
         item.name = "DELETED"

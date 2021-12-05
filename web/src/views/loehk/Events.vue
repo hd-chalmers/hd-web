@@ -158,6 +158,7 @@ import Vue from 'vue'
 import Component from "vue-class-component";
 import {EventPropsData} from "@/assets/ts/interfaces";
 import { TypeIcon, CalendarIcon, ClockIcon, MapPinIcon, FacebookIcon, AlignLeftIcon, ListIcon, TrashIcon } from "vue-feather-icons";
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
   components:{
@@ -223,7 +224,7 @@ export default class LoehkEvents extends Vue {
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -262,7 +263,7 @@ export default class LoehkEvents extends Vue {
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -346,7 +347,7 @@ export default class LoehkEvents extends Vue {
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-//sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -374,7 +375,7 @@ export default class LoehkEvents extends Vue {
     //this.state.then((obj) => {
       fetch(process.env.VUE_APP_API_URL + '/loehk/events', {
         headers: {
-//sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         .then(res => res.json()).then((res: EventPropsData[]) => {
@@ -402,7 +403,7 @@ export default class LoehkEvents extends Vue {
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-//sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -440,7 +441,7 @@ export default class LoehkEvents extends Vue {
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-//sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convert to JSON and convey success

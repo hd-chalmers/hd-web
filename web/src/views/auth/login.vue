@@ -45,25 +45,18 @@ import {Component, Vue} from 'vue-property-decorator'
         // Adding method type
         method: "POST",
 
-        // Adding body or contents to send
-        body: JSON.stringify({
-          email: inputs[0].value,
-          password: inputs[1].value
-        }),
-
         // Adding headers to the request
         headers: {
-          "Content-type": "application/json; charset=UTF-8"
+          "Content-type": "application/json; charset=UTF-8",
+          "Authorization": btoa(inputs[0].value + '|' + inputs[1].value)
         }
       })
         // Converting to JSON
         .then((res) => res.json())
         // Handling the results
-        .then((res) => {
-          if(res.status === 'success' && res.sessionId){
-            this.state.then(object => object.SessionStore.setSessionId(res.sessionId))
+        .then( (res: {token: string}) => {
+            this.state.then(object => object.SessionStore.setSessionId(res.token))
             this.$router.push('/loehk/home')
-          }
         })
     }
   }

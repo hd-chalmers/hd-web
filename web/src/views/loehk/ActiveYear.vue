@@ -116,6 +116,7 @@
 import {Component, Vue} from "vue-property-decorator";
 import {ActiveYearData, LoehkMemberType} from "@/assets/ts/interfaces";
 import {PaperclipIcon, TrashIcon} from "vue-feather-icons";
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component<LoehkActiveYear>({
   components: {
@@ -136,9 +137,10 @@ import {PaperclipIcon, TrashIcon} from "vue-feather-icons";
 
           // Adding method type
           method: "PATCH",
-          //headers:{
+          headers:{
             //sessionId: obj.SessionStore.getSessionId()
-          //},
+            Authorization: SessionStore.getSessionId() ?? ""
+          },
 
           // Adding body or contents to send
           body: data
@@ -187,11 +189,11 @@ import {PaperclipIcon, TrashIcon} from "vue-feather-icons";
 
           // Adding method type
           method: "PATCH",
-/*
+
           headers: {
-            sessionId: obj.SessionStore.getSessionId()
+            Authorization: SessionStore.getSessionId() ?? ""
           },
-*/
+
           // Adding body or contents to send
           body: data
         })
@@ -238,11 +240,11 @@ import {PaperclipIcon, TrashIcon} from "vue-feather-icons";
 
           // Adding method type
           method: "PATCH",
-/*
+
           headers: {
-            sessionId: obj.SessionStore.getSessionId()
+            Authorization: SessionStore.getSessionId() ?? ""
           },
-*/
+
           // Adding body or contents to send
           body: data
         })
@@ -290,11 +292,11 @@ import {PaperclipIcon, TrashIcon} from "vue-feather-icons";
 
           // Adding method type
           method: "PATCH",
-/*
+
           headers: {
-            sessionId: obj.SessionStore.getSessionId()
+            Authorization: SessionStore.getSessionId() ?? ""
           },
-*/
+
           // Adding body or contents to send
           body: data
         })
@@ -334,7 +336,6 @@ export default class LoehkActiveYear extends Vue{
   }
 
   loading = true
-  state = import('@/assets/ts/sessionStore')
   active_year: ActiveYearData = {
     id: -1,
     year: '',
@@ -434,7 +435,7 @@ export default class LoehkActiveYear extends Vue{
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -496,9 +497,9 @@ export default class LoehkActiveYear extends Vue{
         // Adding method type
         method: "PATCH",
 
-        /*headers: {
-          sessionId: obj.SessionStore.getSessionId()
-        },*/
+        headers: {
+          Authorization: SessionStore.getSessionId() ?? ""
+        },
 
         // Adding body or contents to send
         body: data
@@ -559,7 +560,7 @@ export default class LoehkActiveYear extends Vue{
         // Adding headers to request
         headers: {
           "content-type": "application/json",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -587,9 +588,9 @@ export default class LoehkActiveYear extends Vue{
   getActiveYear(): void {
     //this.state.then(obj => {
       fetch(process.env.VUE_APP_API_URL + '/loehk/active_year', {
-       /* headers: {
-          sessionId: obj.SessionStore.getSessionId()
-        }*/
+        headers: {
+          Authorization: SessionStore.getSessionId() ?? ""
+        }
       })
         .then(res => res.json()).then((res: {current: ActiveYearData, all_years: ActiveYearData[]}) => {
         this.active_year = res.current;
@@ -629,7 +630,7 @@ export default class LoehkActiveYear extends Vue{
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success

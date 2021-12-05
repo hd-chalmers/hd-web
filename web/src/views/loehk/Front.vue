@@ -124,6 +124,7 @@
 
 import {Component, Vue} from "vue-property-decorator";
 import {LoehkSummaryData} from "@/assets/ts/interfaces";
+import {SessionStore} from "@/assets/ts/sessionStore";
 import { DiscIcon, ShoppingCartIcon, AlignCenterIcon, CalendarIcon } from "vue-feather-icons";
 
 @Component({
@@ -140,7 +141,6 @@ export default class LoehkFront extends Vue{
     this.getStatistics()
   }
   loading = true
-  state = import('@/assets/ts/sessionStore')
   stats: LoehkSummaryData = {
     products: 0,
     product_updated: {
@@ -187,20 +187,17 @@ export default class LoehkFront extends Vue{
   }
 
   getStatistics(): void {
-    //this.state.then(obj => {
       fetch(process.env.VUE_APP_API_URL + '/loehk/front', {
         headers: {
-          //sessionId: obj.SessionStore.getSessionId()
+          "Authorization": SessionStore.getSessionId() ?? ""
         }
       }).then(res =>res.json()).then((res: LoehkSummaryData )=> {
         this.stats = res
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
       }).catch(() => {
         this.$router.push('/login')
       }).finally(() => {
         this.loading = false;
       })
-    //})
   }
 }
 </script>

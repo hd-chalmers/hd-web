@@ -207,6 +207,7 @@
 import {Component, Vue} from "vue-property-decorator"
 import { PrinterIcon } from 'vue-feather-icons'
 import {LoehkProductData, ProductCategory} from "@/assets/ts/interfaces";
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component<LoehkPrices>({
   components: { PrinterIcon },
@@ -312,7 +313,7 @@ export default class LoehkPrices extends Vue{
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convert to JSON and convey success
@@ -373,7 +374,7 @@ export default class LoehkPrices extends Vue{
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -411,7 +412,7 @@ export default class LoehkPrices extends Vue{
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -446,9 +447,9 @@ export default class LoehkPrices extends Vue{
     //this.state.then(obj => {
       fetch (
         process.env.VUE_APP_API_URL + '/loehk/prices', {
-          /*headers: {
-            sessionId: obj.SessionStore.getSessionId()
-          }*/
+          headers: {
+            Authorization: SessionStore.getSessionId() ?? ""
+          }
         })
         .then(res => res.json())
         .then((res: {products: LoehkProductData[], categories: ProductCategory[]}) => {

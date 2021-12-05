@@ -126,6 +126,7 @@
 import {Component, Vue} from "vue-property-decorator";
 import {InvestAccData} from "@/assets/ts/interfaces";
 import  {PrinterIcon, TrashIcon} from "vue-feather-icons";
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
   components:{PrinterIcon, TrashIcon}
@@ -213,7 +214,7 @@ headers = [
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -252,7 +253,7 @@ headers = [
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convert to json and convey success
@@ -308,7 +309,7 @@ headers = [
         // Adding headers to the request
         headers: {
           "Content-type": "application/json; charset=UTF-8",
-          //sessionId: obj.SessionStore.getSessionId()
+          Authorization: SessionStore.getSessionId() ?? ""
         }
       })
         // Convey success
@@ -346,9 +347,9 @@ headers = [
 
     //this.state.then(obj => {
       fetch(process.env.VUE_APP_API_URL + '/loehk/investments', {
-        /*headers: {
-          sessionId: obj.SessionStore.getSessionId()
-        }*/
+        headers: {
+          Authorization: SessionStore.getSessionId() ?? ""
+        }
       })
         .then(res => {
           return res.json()

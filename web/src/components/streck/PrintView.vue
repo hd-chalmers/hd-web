@@ -34,6 +34,7 @@ import {Component, Vue} from "vue-property-decorator"
 import VueBarcode from 'vue-barcode'
 import { HomeIcon } from 'vue-feather-icons'
 import {InevestAccPrintData} from "@/assets/ts/interfaces";
+import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
   components:{
@@ -47,7 +48,6 @@ export default class PrintView extends Vue{
     this.getData()
   }
 
-  //state = import('@/assets/ts/sessionStore')
   rows: InevestAccPrintData[][] = []
   inactive_rows: InevestAccPrintData[][] = []
   users: InevestAccPrintData[] = []
@@ -57,9 +57,9 @@ export default class PrintView extends Vue{
   getData(): void{
     //this.state.then(obj => {
       fetch(process.env.VUE_APP_API_URL + '/loehk/investments/print', {
-        /*headers: {
-          sessionId: obj.SessionStore.getSessionId()
-        }*/
+        headers: {
+          Authorization: SessionStore.getSessionId() ?? ""
+        }
       })
         .then(res => res.json()).then(res => {
         this.users = res.active
