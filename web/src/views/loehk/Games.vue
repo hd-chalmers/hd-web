@@ -10,6 +10,7 @@
     single-expand
     sort-by="name"
     must-sort
+    :loading="loading['page']"
   >
     <template v-slot:item.updated_at="{item}">{{new Date(item.updated_at).toLocaleString('sv')}}</template>
     <template v-slot:item.created_at="{item}">{{new Date(item.created_at).toLocaleString('sv')}}</template>
@@ -109,8 +110,9 @@
                         </v-expansion-panels>
                       </v-col>
                       <v-col cols="12">
-                        <v-btn color="success" type="submit" :loading="loading['s' + newGame.id]">Spara</v-btn>
-                        <span></span>
+                        <v-btn color="success" type="submit" :loading="loading['snew']">Spara</v-btn>
+                        <span v-if="error['snew']" :style="'color: ' + $vuetify.currentTheme.error"> {{error['snew']}}</span>
+                        <span v-if="messages['snew']"> {{messages['snew']}} </span>
                       </v-col>
                     </v-row>
                   </v-form>
@@ -137,7 +139,7 @@
     </template>
     <template v-slot:expanded-item="{ headers, item }">
       <td v-if="item.name !== 'DELETED'" :colspan="headers.length" class="v-data-table__expanded v-data-table__expanded__content px-0" style="margin: 10px;">
-        <v-card tile flat>
+        <v-card tile flat :loading="loading[item.id]">
           <v-alert v-if="error['s' + item.id]" color="error" text>{{error['s' + item.id]}}</v-alert>
           <v-card-text>
             <v-row>
@@ -232,6 +234,8 @@
               </v-col>
               <v-col cols="12">
                 <v-btn color="success" type="submit" :loading="loading['s' + item.id]">Spara</v-btn>
+                <span v-if="error['s' + item.id]" :style="'color: ' + $vuetify.currentTheme.error"> {{error['s' + item.id]}}</span>
+                <span v-if="messages['s' + item.id]"> {{messages['s' + item.id]}} </span>
                 <span></span>
               </v-col>
                 </v-row>
@@ -310,6 +314,7 @@ export default class Games extends Vue{
   mechanicsList: BoardgameAtlasMechanic[] = []
 
   getData(): void{
+    this.$set(this.loading, 'page', true)
     fetch(process.env.VUE_APP_API_URL + '/loehk/games', {
       headers:{
         Authorization: SessionStore.getSessionId() ?? ""
@@ -322,11 +327,13 @@ export default class Games extends Vue{
         this.owners = res.owners
 
         //this.replaceNullObj()
+    }).catch(() => {
+      this.$router.push('/login')
     })
+    .finally(() => this.$set(this.loading, 'page', false))
   }
 
   updateGame(item: LoehkGameData): void{
-    console.log(this.valid[item.id])
 
     if(!this.valid[item.id]){
       return
@@ -334,6 +341,7 @@ export default class Games extends Vue{
 
     this.$set(this.loading, 's' + item.id, true)
     this.$set(this.error, 's' + item.id, "")
+    this.$set(this.messages, 's' + item.id, "")
 
     if(item.owner?.name === undefined){
       item.owner = null
@@ -349,6 +357,7 @@ export default class Games extends Vue{
       }
     }).then(res => res.json()).then((res: LoehkGameData) => {
       item = res
+      this.$set(this.messages, item.id, "Sparad!")
     }).catch(() => {
       this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern")
     }).finally( () => {
@@ -361,8 +370,8 @@ export default class Games extends Vue{
       return
     }
 
-    this.$set(this.loading, 's' + item.id, true)
-    this.$set(this.error, 's' + item.id, "")
+    this.$set(this.loading, 's' + 'new', true)
+    this.$set(this.error, 's' + 'new', "")
 
     if(item.owner?.name === undefined){
       item.owner = null
@@ -395,12 +404,10 @@ export default class Games extends Vue{
         published_year: null,
         updated_at: null
       }
-      console.log(res)
-      console.log(this.games)
     }).catch(() => {
-      this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern")
+      this.$set(this.error, 's' + 'new', "Något gick fel när man försökte nå servern")
     }).finally( () => {
-      this.$set(this.loading, 's' + item.id, false)
+      this.$set(this.loading, 's' + 'new', false)
     })
   }
 /*
@@ -423,6 +430,7 @@ export default class Games extends Vue{
   */
 
   patchNewPlat(item: LoehkGameData, value: string): void{
+    this.$set(this.error, 's' + item.id, "")
 
     fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
       method: "PATCH",
@@ -434,10 +442,12 @@ export default class Games extends Vue{
     }).then(res => res.json()).then((res: PlatformData) => {
       this.platforms.push(res)
       item.platform = res
-    })
+    }).catch(() => this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern"))
   }
 
   patchNewGenre(item: LoehkGameData, value: string): void{
+    this.$set(this.error, 's' + item.id, "")
+
     fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
       method: "PATCH",
       body: JSON.stringify({genre: value}),
@@ -448,10 +458,12 @@ export default class Games extends Vue{
     }).then(res => res.json()).then((res: GameGenreData) => {
       this.genres.push(res)
       item.genre = res
-    })
+    }).catch(() => this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern"))
   }
 
   patchNewOwner(item: LoehkGameData, value: string): void{
+    this.$set(this.error, 's' + item.id, "")
+
     fetch(process.env.VUE_APP_API_URL + "/loehk/games", {
       method: "PATCH",
       body: JSON.stringify({owner: value}),
@@ -462,7 +474,7 @@ export default class Games extends Vue{
     }).then(res => res.json()).then((res: OwnerData) => {
       this.owners.push(res)
       item.owner = res
-    })
+    }).catch(() => this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern"))
   }
 
   deleteGame(item: LoehkGameData): void{
@@ -487,7 +499,6 @@ export default class Games extends Vue{
   }
 
   searchBoardgameAtlas(item: LoehkGameData): void{
-    console.log('click')
     this.error = []
     this.$set(this.loading,'atlas-s' + item.id, true)
     fetch('https://api.boardgameatlas.com/api/search?client_id=E23Rb2sc1L&limit=6&name=' + item.name)
