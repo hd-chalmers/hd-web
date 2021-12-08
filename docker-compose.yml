@@ -10,6 +10,7 @@ services:
       - 80:80
     volumes:
       - ./web/dist:/usr/share/nginx/html
+      - ../media:/usr/share/nginx/html/img/years
     restart: on-failure:3
 
 networks:
