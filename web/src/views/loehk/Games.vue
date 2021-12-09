@@ -10,6 +10,7 @@
     single-expand
     sort-by="name"
     must-sort
+    :loading="pageLoading"
   >
     <template v-slot:item.updated_at="{item}">{{new Date(item.updated_at).toLocaleString('sv')}}</template>
     <template v-slot:item.created_at="{item}">{{new Date(item.created_at).toLocaleString('sv')}}</template>
@@ -35,7 +36,7 @@
                   <v-form @submit.prevent="insertGame(newGame)" v-model="valid[newGame.id]">
                     <v-row>
                       <v-col>
-                        <v-text-field label="namn" v-model="newGame.name" :messages="messages['name-s' + newGame.id]" :rules="[rules.notEmpty]"  style="min-width: 100px;"/>
+                        <v-text-field label="namn" v-model="newGame.name" :messages="messages['name-s' + newGame.id]" :rules="[rules.notEmpty]" persistent-hint hint="Krävs"  style="min-width: 100px;"/>
                       </v-col>
                       <v-col>
                         <v-text-field label="utgivnings år" v-model="newGame.published_year" type="number" style="min-width: 100px;"/>
@@ -70,7 +71,7 @@
                         </v-expand-transition>
                       </v-col>
                       <v-col>
-                        <v-combobox label="platform" v-model="newGame.platform" item-text="name" item-value="id" :items="platforms" style="min-width: 100px;"
+                        <v-combobox label="platform" v-model="newGame.platform" item-text="name" item-value="id" :items="platforms" style="min-width: 100px;" persistent-hint hint="Krävs"
                                     :error-messages="error['platform-s'+ newGame.id]" @input="error['platform-s'+ newGame.id] = undefined" return-object :rules="[rules.noString, rules.notEmpty]"/>
                         <v-expand-transition>
                           <v-card v-if="typeof newGame.platform === 'string'" elevation="2">
@@ -109,8 +110,8 @@
                         </v-expansion-panels>
                       </v-col>
                       <v-col cols="12">
-                        <v-btn color="success" type="submit" :loading="loading['s' + newGame.id]">Spara</v-btn>
-                        <span></span>
+                        <v-btn :color="error['s' + newGame.id]? 'error' :'success'" type="submit" :loading="loading['s' + newGame.id]">Spara</v-btn>
+                        <span v-if="messages[newGame.id]">{{messages[newGame.id]}}</span>
                       </v-col>
                     </v-row>
                   </v-form>
@@ -137,7 +138,7 @@
     </template>
     <template v-slot:expanded-item="{ headers, item }">
       <td v-if="item.name !== 'DELETED'" :colspan="headers.length" class="v-data-table__expanded v-data-table__expanded__content px-0" style="margin: 10px;">
-        <v-card tile flat>
+        <v-card tile flat :loading="loading['s' + item.id]">
           <v-alert v-if="error['s' + item.id]" color="error" text>{{error['s' + item.id]}}</v-alert>
           <v-card-text>
             <v-row>
@@ -152,7 +153,7 @@
                 </v-fade-transition>
               </v-col>
               <v-col sm="1" cols style="padding: 0;">
-                <v-btn small outlined rounded @click="deleteGame(item)" :loading="loading['del' + item.id]" style="width: 100%;"><trash2-icon size="1.6x"/></v-btn>
+                <v-btn small outlined rounded @click="deleteGame(item)" :loading="loading['del' + item.id]" :color="error['del' + item.id] ? 'error' : ''" style="width: 100%;"><trash2-icon size="1.6x"/></v-btn>
               </v-col>
               <v-form @submit.prevent="updateGame(item)" v-model="valid[item.id]">
                 <v-row>
@@ -177,6 +178,7 @@
               <v-col cols="12">
                 <v-textarea label="beskrivning" v-model="item.description" dense outlined/>
               </v-col>
+                  <v-switch label="Aktiv" v-model="item.active" style="width: 100px; margin-left: 10px; margin-top: 30px;"/>
               <v-col>
                 <v-autocomplete label="expansion till" v-model="item.expansion_to" :items="games" item-text="name" item-value="id" style="min-width: 100px;"
                                 clearable :error-messages="error['expansion-s' + item.id]"
@@ -231,8 +233,8 @@
                 </v-expansion-panels>
               </v-col>
               <v-col cols="12">
-                <v-btn color="success" type="submit" :loading="loading['s' + item.id]">Spara</v-btn>
-                <span></span>
+                <v-btn :color="error['s' + item.id] ? 'error' :'success'" type="submit" :loading="loading['s' + item.id]" style="margin-right: 7px;">Spara</v-btn>
+                <span v-if="messages[item.id]">{{messages[item.id]}}</span>
               </v-col>
                 </v-row>
               </v-form>
@@ -284,8 +286,8 @@ export default class Games extends Vue{
     owner: null,
     platform: null as any,
     published_year: null,
-    updated_at: null
-
+    updated_at: null,
+    active: true
   }
   headers = [
     {text: 'Namn', value: 'name', align: 'start', groupable: false },
@@ -302,6 +304,7 @@ export default class Games extends Vue{
     }
   }
   loading: boolean[] = []
+  pageLoading = true
   error: string[] = []
   messages: string[] = []
   valid: boolean[] = []
@@ -310,6 +313,8 @@ export default class Games extends Vue{
   mechanicsList: BoardgameAtlasMechanic[] = []
 
   getData(): void{
+    this.pageLoading = true
+
     fetch(process.env.VUE_APP_API_URL + '/loehk/games', {
       headers:{
         Authorization: SessionStore.getSessionId() ?? ""
@@ -323,10 +328,12 @@ export default class Games extends Vue{
 
         //this.replaceNullObj()
     })
+      .catch(() => this.$router.push('/login'))
+    .finally(() => this.pageLoading = false)
   }
 
   updateGame(item: LoehkGameData): void{
-    console.log(this.valid[item.id])
+    this.$set(this.messages, item.id, "")
 
     if(!this.valid[item.id]){
       return
@@ -349,6 +356,7 @@ export default class Games extends Vue{
       }
     }).then(res => res.json()).then((res: LoehkGameData) => {
       item = res
+      this.$set(this.messages, item.id, "Sparat!")
     }).catch(() => {
       this.$set(this.error, 's' + item.id, "Något gick fel när man försökte nå servern")
     }).finally( () => {
@@ -393,7 +401,8 @@ export default class Games extends Vue{
         owner: null,
         platform: null as any,
         published_year: null,
-        updated_at: null
+        updated_at: null,
+        active: true
       }
       console.log(res)
       console.log(this.games)
@@ -468,6 +477,7 @@ export default class Games extends Vue{
   deleteGame(item: LoehkGameData): void{
     this.$set(this.loading, "del" + item.id, true)
     this.$set(this.error, "del" + item.id, "")
+    this.$set(this.error, "s" + item.id, "")
 
     fetch(process.env.VUE_APP_API_URL + "/loehk/games/" + item.id, {
       method: "DELETE",
@@ -479,8 +489,12 @@ export default class Games extends Vue{
         item.name = "DELETED"
       } else {
         this.$set(this.error, "del" + item.id, "Something went wrong in the server")
+        this.$set(this.error, "s" + item.id, "Ett problem uppstod i servern")
       }
-    }).catch(() => this.$set(this.error, "del" + item.id, "Something went wrong in the server"))
+    }).catch(() => {
+      this.$set(this.error, "del" + item.id, "Something went wrong in the server")
+      this.$set(this.error, "s" + item.id, "Kunde inte nå servern")
+    })
     .finally(()=> {
       this.$set(this.loading, "del" + item.id, false)
     })

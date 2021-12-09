@@ -1,5 +1,8 @@
 <template>
     <v-container>
+      <v-card v-if="error">
+        <v-alert text color="error"> {{error}} </v-alert>
+      </v-card>
         <v-card style="margin-bottom: 12px;" :loading="loading" elevation="6">
           <v-card-title style="margin-bottom: 5px;">
             <h2>Spellista</h2>
@@ -145,6 +148,7 @@ export default class GameList extends Vue{
             games: GameData[] = []
             search = ''
             groupBy = 'platform'
+            error: string | null = null
             groups = [
               {title: 'Ogrupperad', value: ''},
               {title: 'Platform', value: 'platform'},
@@ -184,7 +188,9 @@ export default class GameList extends Vue{
               }
           }).then(res => res.json()).then((res: GameData[]) => {
             this.games = res;
-          }).finally(() => {
+          })
+            .catch(()=> this.error = "Sidan hade ett problem när den försökte hämta data från servern")
+            .finally(() => {
             this.loading = false;
           })
         }

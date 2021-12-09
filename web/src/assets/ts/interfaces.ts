@@ -166,6 +166,7 @@ export interface LoehkGameData{
   expansion_to: {id: bigint, name: string} | null,
   owner: OwnerData | null,
   image_link: string | null,
+  active: boolean,
   updated_at: string | null,
   created_at: string | null
 }
