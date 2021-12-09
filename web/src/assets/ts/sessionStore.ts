@@ -1,6 +1,6 @@
 class sessionStore{
-  private readonly debug = true
-  private sessionId = null as string | null
+  private readonly debug = false
+  private sessionId: string | null = null
 
   getSessionId(): string | null{
     if(this.debug){
@@ -9,7 +9,7 @@ class sessionStore{
     return this.sessionId
   }
 
-  setSessionId (id: string) {
+  setSessionId (id: string): void {
     if (this.debug) {
       console.log('Session id is now set to ' + id)
     }

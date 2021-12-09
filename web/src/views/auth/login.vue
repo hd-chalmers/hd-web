@@ -33,10 +33,10 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
+import {SessionStore} from "@/assets/ts/sessionStore";
 
   @Component
   export default class loginPage extends Vue{
-    state = import('@/assets/ts/sessionStore')
 
     submit (): void{
       const inputs = document.getElementsByTagName('input')
@@ -55,7 +55,7 @@ import {Component, Vue} from 'vue-property-decorator'
         .then((res) => res.json())
         // Handling the results
         .then( (res: {token: string}) => {
-            this.state.then(object => object.SessionStore.setSessionId(res.token))
+            SessionStore.setSessionId(res.token)
             this.$router.push('/loehk/home')
         })
     }
