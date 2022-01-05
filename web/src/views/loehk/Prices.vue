@@ -2,7 +2,7 @@
     <v-card>
         <v-card-text>
             <v-data-table :items="items"
-                          :headers="headers"
+                          :headers="$vuetify.breakpoint.xs ? [headers[0]] :headers"
                           item-key="id"
                           :loading="loading"
                           loading-text="Hämtar produkter..."

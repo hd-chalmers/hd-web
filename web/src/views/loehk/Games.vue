@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="$vuetify.breakpoint.xs ? [headers[0]] :headers"
     :items="games"
     item-key="id"
     dense
