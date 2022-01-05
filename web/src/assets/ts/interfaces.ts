@@ -121,11 +121,21 @@ export interface LoehkSummaryData{
     name: string,
     created_at: string,
     platform: string,
-  } | null
+  } | null,
   games_updated: {
     name: string,
     updated_at: string,
     platform: string,
+  } | null,
+  door_status: {
+    status: string,
+    updated_at: string,
+    times_changed: number
+  } | null,
+  sales_month: {
+    this_month: number,
+    last_month: number,
+    top_product: string
   } | null
 }
 
@@ -230,6 +240,20 @@ export interface LoehkProductData{
   where $ is a boolean for a package barcode */
   combobox_barcodes: string[],
   updated_at: string | null
+}
+
+export interface LoehkDoorData{
+  status: boolean | null,
+  date: string,
+  time: string,
+  timestamp: string | Date
+}
+
+export interface VCalendarEvent{
+  start: Date,
+  end: Date,
+  color: string,
+  timed: boolean | number
 }
 
 export interface ProductCategory{
