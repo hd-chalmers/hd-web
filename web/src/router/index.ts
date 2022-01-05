@@ -99,6 +99,11 @@ const routes: Array<RouteConfig> = [
             path: '/loehk/games',
             name: 'loehk-games',
             component: () => import(/* webpackChunkName: "loehkGames" */ '@/views/loehk/Games.vue')
+          },
+          {
+            path: '/loehk/door',
+            name: 'loehk-door',
+            component: () => import(/* webpackChunkName: "loehkDoor"*/ '@/views/loehk/Door.vue')
           }
         ]
       },

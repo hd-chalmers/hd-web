@@ -53,6 +53,14 @@
                             Spel
                         </v-list-item-content>
                     </v-list-item>
+                  <v-list-item to="/loehk/door">
+                    <v-list-item-icon>
+                      <book-icon style="transform: rotate(180deg)"/>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      Door
+                    </v-list-item-content>
+                  </v-list-item>
                 </v-list-item-group>
             </v-list>
             <template v-slot:append>
@@ -87,7 +95,7 @@
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
 import {HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon,
-  ShoppingCartIcon, MonitorIcon, MenuIcon, LogOutIcon} from 'vue-feather-icons'
+  ShoppingCartIcon, MonitorIcon, MenuIcon, LogOutIcon, BookIcon} from 'vue-feather-icons'
 import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
@@ -99,7 +107,8 @@ import {SessionStore} from "@/assets/ts/sessionStore";
     ShoppingCartIcon,
     MonitorIcon,
     MenuIcon,
-    LogOutIcon
+    LogOutIcon,
+    BookIcon
   }
 })
 export default class LoehkMain extends Vue{
