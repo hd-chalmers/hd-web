@@ -95,7 +95,7 @@
       </v-col>
 
       <v-col align-self="stretch" v-if="stats.sales_month">
-        <v-card height="100%" min-width="250px" elevation="3">
+        <v-card height="100%" min-width="250px" elevation="3" to="/loehk/sales">
           <v-card-title><dollar-sign-icon style="margin-right: 5px;"/> Försäljning</v-card-title>
           <v-card-text>
             <p>
@@ -103,7 +103,7 @@
             </p>
             <p>
               <span class="subtitle-2" style="margin-right: 5px;">Skilland med förra månaden:</span> {{stats.sales_month.this_month - stats.sales_month.last_month}}kr
-              <v-progress-circular color="accent" size="25" style="top: -3px" :value="stats.sales_month.this_month / stats.sales_month.last_month * 100"/>
+              <v-progress-circular color="primary" size="25" style="top: -3px" :value="stats.sales_month.this_month / stats.sales_month.last_month * 100"/>
             </p>
             <p>
               <span class="subtitle-2" style="margin-right: 5px;">Topp produkt denna månaden:</span> {{stats.sales_month.top_product}}
