@@ -104,6 +104,11 @@ const routes: Array<RouteConfig> = [
             path: '/loehk/door',
             name: 'loehk-door',
             component: () => import(/* webpackChunkName: "loehkDoor"*/ '@/views/loehk/Door.vue')
+          },
+          {
+            path: '/loehk/sales',
+            name: 'loehk-sales',
+            component: () => import(/* webpackChunkName: "loehkSales"*/ '@/views/loehk/Sales.vue')
           }
         ]
       },

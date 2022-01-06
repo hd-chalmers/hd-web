@@ -61,7 +61,15 @@
                       Door
                     </v-list-item-content>
                   </v-list-item>
-                </v-list-item-group>
+              <v-list-item to="/loehk/sales">
+                <v-list-item-icon>
+                  <dollar-sign-icon />
+                </v-list-item-icon>
+                <v-list-item-content>
+                  Försäljning
+                </v-list-item-content>
+              </v-list-item>
+              </v-list-item-group>
             </v-list>
             <template v-slot:append>
                 <div class="pa-2">
@@ -95,7 +103,7 @@
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
 import {HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon,
-  ShoppingCartIcon, MonitorIcon, MenuIcon, LogOutIcon, BookIcon} from 'vue-feather-icons'
+  ShoppingCartIcon, MonitorIcon, MenuIcon, LogOutIcon, BookIcon, DollarSignIcon} from 'vue-feather-icons'
 import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
@@ -108,7 +116,8 @@ import {SessionStore} from "@/assets/ts/sessionStore";
     MonitorIcon,
     MenuIcon,
     LogOutIcon,
-    BookIcon
+    BookIcon,
+    DollarSignIcon
   }
 })
 export default class LoehkMain extends Vue{
