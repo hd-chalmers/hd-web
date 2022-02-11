@@ -1,74 +1,57 @@
 <template>
     <v-container>
       <v-row dense>
-        <v-col cols="12">
+        <v-col cols="12" v-if="error">
           <v-card>
-          <v-alert v-ripple v-if="eventObj" text color="#e0218a" tile elevation="6" style="margin-bottom: 0; cursor: pointer; padding: 10px;" @click="$router.push('/events')">
-            <v-row dense align="center">
-              <v-col>
-                <div style="margin: 0; display: inline-flex;" class="flex align-center">
-                  <strong style="margin: 0; display: inline-block">Nästa Event: </strong>
-                  <div style="display: inline-block; margin: 0 5px;" class="hidden-lg-and-up">
-                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventObj.title }}</p>
-                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
-                  </div>
-                  <p style="display: inline-block; margin: 0 5px; padding: 6px 0;" class="hidden-md-and-down">{{ eventObj.title + ' - ' + eventObj.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
-                </div>
-              </v-col>
-              <v-col v-if="eventAfter" class="hidden-xs-only">
-                <div style="margin: 0; display: inline-flex;" class="flex align-center">
-                  <strong style="margin: 0; display: inline-block">Därefter: </strong>
-                  <div style="display: inline-block; margin: 0 5px;" class="hidden-lg-and-up">
-                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventAfter.title }}</p>
-                    <p style="font-size: 0.75em; margin: 0; padding: 0;">{{ eventAfter.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
-                  </div>
-                  <p style="display: inline-block; margin: 0 5px; padding: 6px 0;" class="hidden-md-and-down">{{ eventAfter.title + ' - ' + eventAfter.date.toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'}) }}</p>
-                </div>
-              </v-col>
-              <v-col cols="2" sm="2"  v-if="eventCount || (eventAfter && $vuetify.breakpoint.xsOnly)" style="text-align: right">
-                {{"+" + ($vuetify.breakpoint.xsOnly ? eventCount + 1: eventCount)}}
-              </v-col>
-            </v-row>
-          </v-alert>
-          <v-alert v-if="error" text color="error" style="margin-bottom: 0"> {{error}} </v-alert>
+            <v-alert text color="error"> {{error}} </v-alert>
           </v-card>
         </v-col>
-        <v-col cols="12" sm="6" align-self="stretch" style="display: flex; flex-flow: column;">
-          <v-card style="margin-bottom: 6px;" elevation="4">
+
+        <v-col cols="12" v-if="$vuetify.breakpoint.xsOnly && eventPreviews[0]">
+          <v-card @click="$router.push('/events')">
+            <v-alert style="margin: 0" color="accent" text>
+              <strong>Nästa Event: </strong> {{eventPreviews[0].title + ' - ' + new Date(eventPreviews[0].date).toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'})}}
+            </v-alert>
+          </v-card>
+        </v-col>
+
+        <v-col cols="12" md="7" xl="6" align-self="stretch" style="display: flex; flex-flow: column;">
+          <v-card @click="showDate()" style="cursor: default;" elevation="4">
+            <v-card-text class="flex justify-space-between align-content-center" style="display: flex; align-items: center; transition: color 1s ease; height: 100%;" id="doorCard">
+              <template v-if="!doorLoading">
+                <v-scroll-x-transition leave-absolute>
+                  <lock-icon v-if="doorIcon === 'lock'"/>
+                </v-scroll-x-transition>
+                <v-scroll-x-transition leave-absolute>
+                  <unlock-icon v-if="doorIcon === 'unlock'"/>
+                </v-scroll-x-transition>
+                <v-scroll-x-transition leave-absolute>
+                  <alert-circle-icon v-if="doorIcon === 'alert'"/>
+                </v-scroll-x-transition>
+                <v-scroll-x-transition leave-absolute>
+                  <span v-if="!doorShowDate">Hoppas du har en bra dag :)</span>
+                </v-scroll-x-transition>
+                <v-scroll-x-transition leave-absolute>
+                  <span v-if="doorShowDate" style="line-height: 12px; font-size: 11px; text-align: right;">{{doorOpenTimestamp}} <br> ca {{doorDuration}} sedan</span>
+                </v-scroll-x-transition>
+              </template>
+              <template v-if="doorLoading">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                <v-skeleton-loader style="width: 20vw;" type="text"></v-skeleton-loader>
+              </template>
+            </v-card-text>
+          </v-card>
+
+          <v-card :style=" $vuetify.breakpoint.xsOnly ? 'margin-bottom: 6px; order: -1; flex-grow: 1;' : 'margin-top: 6px; flex-grow: 1;'" elevation="4">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
-            <v-img v-bind:src="frontpageImg" alt="unknown_group" contain></v-img>
+            <v-img v-bind:src="frontpageImg" alt="unknown_group" height="100%" width="100%"></v-img>
           </v-card>
-              <v-card @click="showDate()" style="cursor: default;" elevation="4">
-                <v-card-text class="flex justify-space-between align-content-center" style="display: flex; align-items: center; transition: color 1s ease" id="doorCard">
-                  <template v-if="!doorLoading">
-                    <v-scroll-x-transition leave-absolute>
-                      <lock-icon v-if="doorIcon === 'lock'"/>
-                    </v-scroll-x-transition>
-                    <v-scroll-x-transition leave-absolute>
-                      <unlock-icon v-if="doorIcon === 'unlock'"/>
-                    </v-scroll-x-transition>
-                    <v-scroll-x-transition leave-absolute>
-                      <alert-circle-icon v-if="doorIcon === 'alert'"/>
-                    </v-scroll-x-transition>
-                    <v-scroll-x-transition leave-absolute>
-                      <span v-if="!doorShowDate">Hoppas du har en bra dag :)</span>
-                    </v-scroll-x-transition>
-                    <v-scroll-x-transition leave-absolute>
-                      <span v-if="doorShowDate" style="line-height: 12px; font-size: 11px; text-align: right;">{{doorOpenTimestamp}} <br> ca {{doorDuration}} sedan</span>
-                    </v-scroll-x-transition>
-                  </template>
-                  <template v-if="doorLoading">
-                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
-                    <v-skeleton-loader style="width: 20vw;" type="text"></v-skeleton-loader>
-                  </template>
-                </v-card-text>
-              </v-card>
-              <footer-card class="hidden-xl-only hidden-xs-only" style="flex-grow: 1; margin-top: 6px;"/>
         </v-col>
+
         <v-col align-self="stretch">
           <v-card style="height: 100%;" elevation="4">
-            <div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block; filter: drop-shadow(0 0 2px white); margin-top: 7px;"></div>
-            <v-card-title style="padding-top: 0;">
+            <!--div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block; filter: drop-shadow(0 0 2px white); margin-top: 7px;"></div-->
+            <v-card-title>
               <strong>Vad är <span style="color: #E0218A">H</span><span style="
                             color: black;
                             -webkit-text-stroke-width: 0.5px;
@@ -89,60 +72,78 @@
           </v-card>
           </v-col>
 
-        <v-col cols="12" class="hidden-sm-only hidden-md-only hidden-lg-only">
-          <footer-card/>
-        </v-col>
-        <v-col cols="12" align-self="start">
-          <v-card id="feedCard" style="height: 100%;" elevation="3">
-            <!--v-card-title style="transform: scaleY(2) translateY(5%);">
-            <h3 style="display: flex; align-items: center;"><instagram-icon style="margin-right: 5px;"/> Instagram</h3>
-            </v-card-title-->
+        <v-col cols="12" xl="3" align-self="stretch">
+          <v-card style="height: 100%; overflow-y: hidden;" :max-height="$vuetify.breakpoint.xlOnly ? '550px' : '500px'">
+            <v-card-title>
+              <calendar-icon size="1x" style="margin-right: 5px;"/>
+              Kommande Evenemang
+            </v-card-title>
             <v-card-text>
-              <div class="embedsocial-hashtag" data-ref="7d09843251254063d8791fb6e0acc5f768a7d41a" style="filter: drop-shadow(0 0 2px white);"></div>
+              <v-card v-if="eventLoading" class="mb-3">
+                <v-skeleton-loader type="article"></v-skeleton-loader>
+              </v-card>
+              <template v-if="!eventPreviews.length">
+                Det finns inga evenemang inlagda just nu
+              </template>
+                <v-card v-for="event in eventPreviews" :key="event.id" style="margin: 10px 0;" elevation="4">
+                  <v-card-title>
+                    <h5>
+                      {{event.title}}
+
+                      <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebook_event_link">
+                        <facebook-icon/>
+                      </v-btn>
+                    </h5>
+                  </v-card-title>
+                  <v-card-subtitle style="padding-bottom: 0;">
+                    <h3>
+                      {{ new Date(event.date).toLocaleString('sv', {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}}
+                    </h3>
+                  </v-card-subtitle>
+                    <v-list v-if="event.location || event.description">
+                                <v-list-item v-if="event.location || event.description">
+                                  <v-list-item-subtitle>
+                                    <span v-if="event.location" style="margin-right: 10px;">
+                                      <map-pin-icon size="1x"/>
+                                        Plats: {{event.location}}
+                                    </span>
+
+                                    <span v-if="event.description">
+                                      <align-left-icon size="1x" style="margin-right: 5px;"/>
+                                      {{event.description}}
+                                    </span>
+                      </v-list-item-subtitle>
+                    </v-list-item>
+                    </v-list>
+                </v-card>
             </v-card-text>
+              <v-btn style=" position: absolute; bottom: 0; width: 100%;" tile elevation="6" @click="$router.push('/events')">
+                {{ eventPreviews.length ? `Se alla ${eventPreviews.length} evenemang`: 'Gå till evenemangs sidan'}}
+                <arrow-right-icon style="margin-left: 5px;"/>
+              </v-btn>
           </v-card>
+        </v-col>
+
+        <v-col cols="12">
+          <footer-card/>
         </v-col>
       </v-row>
     </v-container>
 </template>
 
 <style>
-.embedsocial-stories iframe {
-  max-height: 80px;
-}
-/*
-@media screen and (max-width: 1904px) and (min-width: 600px){
-  #feedCard{
-    width: 100%;
-    max-width: 576px;
-    transform: scale(1, 0.5) translateY(-50%);
-    position: absolute;
-    overflow: auto;
-  }
-  #feedCard .embedsocial-hashtag, #feedCard .embedsocial-stories{
-    width: 200%;
-    transform: scale(0.5, 1) translate(-50%, 0);
-  }
-}
-@media screen and (max-width: 1264px) and (min-width: 600px){
-  #feedCard{
-    max-width: 434px;
-  }
-}
-
-@media screen and (max-width: 960px) and (min-width: 600px){
-  #feedCard{
-    max-width: calc(50% - 16px);
-    margin-right: 12px;
-    max-height: calc(1200px * 2);
-  }
-}*/
 </style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import {FrontpageData, SimpleEventData} from '@/assets/ts/interfaces'
-import { AlertCircleIcon, LockIcon, UnlockIcon, InstagramIcon } from 'vue-feather-icons'
+import {EventType, FrontpageData, SimpleEventData} from '@/assets/ts/interfaces'
+import { AlertCircleIcon, LockIcon, UnlockIcon, FacebookIcon, MapPinIcon, AlignLeftIcon, ArrowRightIcon, CalendarIcon } from 'vue-feather-icons'
 import footerCard from '@/components/footerCard.vue'
 import {NavigationGuardNext, Route} from "vue-router";
 
@@ -152,18 +153,23 @@ import {NavigationGuardNext, Route} from "vue-router";
     UnlockIcon,
     AlertCircleIcon,
     footerCard,
-    InstagramIcon
+    FacebookIcon,
+    MapPinIcon,
+    AlignLeftIcon,
+    ArrowRightIcon,
+    CalendarIcon
   }
 })
 export default class IndexPage extends Vue {
-  constructor () {
+  constructor() {
     super()
     this.getData()
+    this.getEvents()
     this.getStatus()
     this.interval = setInterval(this.getStatus, 10000)
 
-    this.initSocialEmbed(document, "script", "EmbedSocialHashtagScript", "https://embedsocial.com/cdn/ht.js")
-    this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
+    //this.initSocialEmbed(document, "script", "EmbedSocialHashtagScript", "https://embedsocial.com/cdn/ht.js")
+    //this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
   }
 
   eventObj: SimpleEventData | null = null
@@ -183,19 +189,23 @@ export default class IndexPage extends Vue {
   doorIcon = 'mdi-alert-circle'
   doorColor: string | undefined = 'black'
 
+  eventPreviews: EventType[] = []
+  eventRemaining = 0
+  eventLoading = true
+
   beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext): void {
     clearInterval(this.interval)
     clearTimeout(this.timeout)
     next()
   }
 
-  async getData(): Promise<void>{
+  async getData(): Promise<void> {
     this.loading = true
-    fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res =>res.json()).then((res: FrontpageData) => {
-        this.error = ''
-        this.eventObj = res.event ? {
-          title: res.event.title,
-          date: new Date(res.event.date)
+    fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res => res.json()).then((res: FrontpageData) => {
+      this.error = ''
+      this.eventObj = res.event ? {
+        title: res.event.title,
+        date: new Date(res.event.date)
       } : null
 
       this.eventAfter = res.event_after ? {
@@ -207,40 +217,26 @@ export default class IndexPage extends Vue {
 
       this.frontpageImg = res.front_image ?? '/img/unknown_group.png'
     })
-    .catch(() => {
-      this.error = 'Sidan hade svårigheter att nå servern'
-      this.timeout = setTimeout(() => this.getData(), 3000)
-    })
-    .finally(() => this.loading = false)
+      .catch(() => {
+        this.error = 'Sidan hade svårigheter att nå servern'
+        this.timeout = setTimeout(() => this.getData(), 3000)
+      })
+      .finally(() => this.loading = false)
   }
 
-  initSocialEmbed(d: Document, s: string, id: string, src: string): void {
-    let js
-    const existing = d.getElementById(id)
-    if (existing) {
-      d.head.removeChild(existing)
-      //console.log('removed')
-    }
-    js = d.createElement(s) as any
-    js.id = id
-    js.src = src
-    d.getElementsByTagName("head")[0].appendChild(js)
-  }
-
-  getStatus (): void {
+  getStatus(): void {
     fetch(process.env.VUE_APP_API_URL + '/door')
       .then(res => {
-        if(res.ok) {
+        if (res.ok) {
           return res.json()
-        }
-        else {
+        } else {
           this.doorState = null
           this.doorIcon = 'alert'
           this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
           return null
         }
-      }).then((res: {status: boolean | null, updated: string, duration_str: string, duration: number}) => {
-      if(res) {
+      }).then((res: { status: boolean | null, updated: string, duration_str: string, duration: number }) => {
+      if (res) {
         this.doorState = res.status
         this.doorOpenTimestamp = res.updated
         this.doorDuration = res.duration_str
@@ -266,27 +262,25 @@ export default class IndexPage extends Vue {
     })
   }
 
-  showDate (): void {
+  getEvents(): void{
+    this.eventLoading = true
+
+    fetch(process.env.VUE_APP_API_URL + '/events')
+    .then(res => res.json()).then((res: EventType[]) => {
+      this.eventPreviews = res
+    }).finally( () => this.eventLoading = false)
+  }
+
+  showDate(): void {
     this.getStatus()
     this.doorShowDate = true
     setTimeout(() => this.doorShowDate = false, 3000)
   }
 
   setColor(): void {
-      const door = document.getElementById('doorCard') as HTMLElement
-      door.style.color = this.doorColor as string
-  }
+    const door = document.getElementById('doorCard') as HTMLElement
+    door.style.color = this.doorColor as string
 
-  checkStoryExist(): boolean{
-    const result = (document.getElementsByClassName('embedsocial-iframe-story')[0]?.clientHeight ?? 0) > 0
-    if(!document.getElementsByClassName('embedsocial-iframe-story')[0]){
-      setTimeout(() => {
-        //console.log('timeout tick')
-        this.$forceUpdate()
-      }, 500)
-    }
-    console.log(result)
-    return result
   }
 }
 </script>
