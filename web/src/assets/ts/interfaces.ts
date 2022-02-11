@@ -40,16 +40,13 @@ export interface MemberType {
 
 export interface YearData {
   displayed_year: string,
-  group_photo: string | null,
+  groupPhoto: string | null,
   description: string | null,
   committee_members: MemberType[]
 }
 
 export interface FrontpageData{
-  front_image: string | null,
-  event: {title: string, date: string} | null,
-  event_after: {title: string, date: string} | null,
-  event_count: number
+  front_image: string | null
 }
 
 export interface SimpleEventData{

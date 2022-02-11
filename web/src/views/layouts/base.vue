@@ -7,7 +7,7 @@
             <router-view/>
           </v-scroll-y-reverse-transition>
         </v-main>
-<FooterElement></FooterElement>
+<!--FooterElement></FooterElement-->
 </v-app>
 </template>
 <!--script src="/resources/js/app.js"></script-->
@@ -18,8 +18,7 @@ import FooterElement from '../../components/common/footer.vue'
 
   @Component({
     components: {
-      Navbar,
-      FooterElement
+      Navbar
     }
   })
 export default class Base extends Vue {

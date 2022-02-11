@@ -17,14 +17,19 @@
                   v-model.number="search"
                   label="Sök efter spel"
                   clearable
-                  append-icon="search"
-                ></v-text-field>
+                >
+                  <template v-slot:append> <search-icon/> </template>
+                </v-text-field>
               </v-col>
               <v-col>
-                <v-select label="Gruppera efter" append-icon="filter_list" v-model="groupBy" :items="groups" item-text="title" item-value="value"/>
+                <v-select label="Gruppera efter" v-model="groupBy" :items="groups" item-text="title" item-value="value">
+                  <template v-slot:append> <filter-icon/> </template>
+                </v-select>
               </v-col>
               <v-col>
-                <v-select label="Sortera efter" append-icon="sort" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value"/>
+                <v-select label="Sortera efter" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value">
+                  <template v-slot:append> <align-right-icon/> </template>
+                </v-select>
               </v-col>
             </v-row>
           </v-card-text>
@@ -123,7 +128,7 @@
 //import VPrintBreakpoint from "../VPrintBreakpoint";
 import {Vue, Component} from "vue-property-decorator";
 import footerCard from "@/components/footerCard.vue";
-import { UsersIcon, ClockIcon, CalendarIcon, LayersIcon, TagIcon, MonitorIcon, BoxIcon } from "vue-feather-icons";
+import { UsersIcon, ClockIcon, CalendarIcon, LayersIcon, TagIcon, MonitorIcon, BoxIcon, FilterIcon, AlignRightIcon, SearchIcon } from "vue-feather-icons";
 import {GameData} from "@/assets/ts/interfaces";
 
 @Component({
@@ -135,7 +140,10 @@ import {GameData} from "@/assets/ts/interfaces";
     LayersIcon,
     TagIcon,
     MonitorIcon,
-    BoxIcon
+    BoxIcon,
+    FilterIcon,
+    AlignRightIcon,
+    SearchIcon
   }
 })
 export default class GameList extends Vue{

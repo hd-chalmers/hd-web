@@ -4,13 +4,13 @@
         <v-alert v-if="error" text color="error"> {{error}} </v-alert>
       </v-card>
       <v-row dense>
-        <v-col cols="12" sm="5">
+        <v-col cols="12" sm="5" xl="4">
           <v-card elevation="6">
             <v-img lazy-src="/img/unknown_group.png" v-bind:src="groupPhoto ? groupPhoto : '/img/unknown_group.png'" class="mx-auto" contain></v-img>
           </v-card>
         </v-col>
 
-        <v-col align-self="stretch" cols="12" sm="7">
+        <v-col align-self="stretch" cols="12" sm="7" xl="8">
           <v-card class="text-center" style="height: 100%" elevation="6">
                 <v-card-title style="margin: auto; display: inline-block">
                   HD {{displayedYear}}
@@ -123,8 +123,8 @@
     }
   })
   export default class CommitteePage extends Vue{
-    constructor () {
-      super();
+    constructor() {
+      super()
       this.getData()
     }
     displayedYear = ''
@@ -138,7 +138,7 @@
       fetch(process.env.VUE_APP_API_URL + '/committee').then(res =>res.json()).then((res: YearData) =>{
         this.error = ''
         this.displayedYear = res.displayed_year
-        this.groupPhoto = res.group_photo
+        this.groupPhoto = res.groupPhoto
         this.description = res.description
         this.committeeMembers = res.committee_members
       })

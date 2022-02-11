@@ -3,7 +3,7 @@
         <v-card :loading="loading" class="mb-3" elevation="6">
           <v-alert v-if="error" text color="error">{{error}}</v-alert>
             <v-card-title>
-                Kommande Arrangemang
+              <h3> Kommande Arrangemang </h3>
             </v-card-title>
             <v-card-text v-if="!events[0] && !loading">
               <span>Inga arrangemang är just nu inlagda</span>
@@ -18,7 +18,7 @@
                              {{event.title}}
 
 
-                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebookLink">
+                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebook_event_link">
                                     <facebook-icon/>
                                 </v-btn>
                           </h5>
