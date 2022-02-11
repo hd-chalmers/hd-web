@@ -3,6 +3,9 @@ module.exports = {
     'vuetify'
   ],
   pwa: {
-    name: "HD Web"
+    name: "HD Web",
+    themeColor: "#f2008d",
+    appleMobileWebAppCapable: "yes",
+    appleMobileWebAppStatusBarStyle: 'black-translucent'
   }
 }
