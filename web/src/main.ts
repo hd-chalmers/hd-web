@@ -3,6 +3,7 @@ import vuetify from './plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 import Component from "vue-class-component";
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
