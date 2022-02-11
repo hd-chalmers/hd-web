@@ -172,9 +172,7 @@ export default class IndexPage extends Vue {
     //this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
   }
 
-  eventObj: SimpleEventData | null = null
-  eventAfter: SimpleEventData | null = null
-  eventCount = 0
+
   frontpageImg = ''
   error = ''
   loading = true
@@ -203,17 +201,6 @@ export default class IndexPage extends Vue {
     this.loading = true
     fetch(process.env.VUE_APP_API_URL + '/frontpage').then(res => res.json()).then((res: FrontpageData) => {
       this.error = ''
-      this.eventObj = res.event ? {
-        title: res.event.title,
-        date: new Date(res.event.date)
-      } : null
-
-      this.eventAfter = res.event_after ? {
-        title: res.event_after.title,
-        date: new Date(res.event_after.date)
-      } : null
-
-      this.eventCount = res.event_count
 
       this.frontpageImg = res.front_image ?? '/img/unknown_group.png'
     })
