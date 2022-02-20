@@ -11,6 +11,21 @@
 </v-app>
 </template>
 <!--script src="/resources/js/app.js"></script-->
+<style>
+.v-application .elevation-6.theme--dark {
+  box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%),
+  0px 6px 10px 0px rgb(0 0 0 / 14%),
+  0px 1px 18px 0px rgb(0 0 0 / 90%) !important;
+}
+
+.v-application .elevation-7.theme--dark {
+  box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 20%),
+  0px 7px 10px 1px rgb(0 0 0 / 14%),
+  0px 2px 16px 1px rgb(0 0 0 / 95%) !important;
+}
+
+</style>
+
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Navbar from '../../components/common/navbar.vue'

@@ -3,7 +3,7 @@
       <v-card v-if="error">
         <v-alert text color="error"> {{error}} </v-alert>
       </v-card>
-        <v-card style="margin-bottom: 12px;" :loading="loading" elevation="6">
+        <v-card style="margin-bottom: 12px;" :loading="loading" elevation="7">
           <v-card-title style="margin-bottom: 5px;">
             <h2>Spellista</h2>
           </v-card-title>
@@ -46,7 +46,7 @@
                               :expanded="expanded"
                               hide-default-footer>
                   <template v-slot:default="props">
-                    <v-card v-for="group in props.groupedItems" v-bind:key="group.key" style="margin-bottom: 10px;" elevation="4">
+                    <v-card v-for="group in props.groupedItems" v-bind:key="group.key" style="margin-bottom: 10px;" elevation="6">
                       <v-card-text>
                       <h2 :style="`margin-bottom: 20px; color: ${$vuetify.theme.currentTheme.primary};`">
                         {{group.items[0][groupBy]}}
@@ -120,7 +120,7 @@
                     </v-card>
                   </template>
                 </v-data-iterator>
-      <footer-card style="margin-top: 12px;"/>
+      <footer-card style="margin-top: 12px;" class="elevation-6"/>
     </v-container>
 </template>
 

@@ -8,7 +8,7 @@
         </v-col>
 
         <v-col cols="12" v-if="$vuetify.breakpoint.xsOnly && eventPreviews[0]">
-          <v-card @click="$router.push('/events')">
+          <v-card @click="$router.push('/events')" elevation="7">
             <v-alert style="margin: 0" color="accent" text>
               <strong>Nästa Event: </strong> {{eventPreviews[0].title + ' - ' + new Date(eventPreviews[0].date).toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'})}}
             </v-alert>
@@ -16,7 +16,7 @@
         </v-col>
 
         <v-col cols="12" md="7" xl="6" align-self="stretch" style="display: flex; flex-flow: column;">
-          <v-card @click="showDate()" style="cursor: default;" elevation="4">
+          <v-card @click="showDate()" style="cursor: default;" elevation="6">
             <v-card-text class="flex justify-space-between align-content-center" style="display: flex; align-items: center; transition: color 1s ease; height: 100%;" id="doorCard">
               <template v-if="!doorLoading">
                 <v-scroll-x-transition leave-absolute>
@@ -42,14 +42,14 @@
             </v-card-text>
           </v-card>
 
-          <v-card :style=" $vuetify.breakpoint.xsOnly ? 'margin-bottom: 6px; order: -1; flex-grow: 1;' : 'margin-top: 6px; flex-grow: 1;'" elevation="4">
+          <v-card :style=" $vuetify.breakpoint.xsOnly ? 'margin-bottom: 6px; order: -1; flex-grow: 1;' : 'margin-top: 6px; flex-grow: 1;'" elevation="6">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
             <v-img v-bind:src="frontpageImg" alt="unknown_group" height="100%" width="100%"></v-img>
           </v-card>
         </v-col>
 
         <v-col align-self="stretch">
-          <v-card style="height: 100%;" elevation="4">
+          <v-card style="height: 100%;" elevation="6">
             <!--div class='embedsocial-stories' data-ref="38a5e7a2a8cfad426c0309f8b980fb9e23ca4fe9" style="display: inline-block; filter: drop-shadow(0 0 2px white); margin-top: 7px;"></div-->
             <v-card-title>
               <strong>Vad är <span style="color: #E0218A">H</span><span style="
@@ -73,7 +73,7 @@
           </v-col>
 
         <v-col cols="12" xl="3" align-self="stretch">
-          <v-card style="height: 100%; overflow-y: hidden;" :max-height="$vuetify.breakpoint.xlOnly ? '550px' : '500px'">
+          <v-card style="height: 100%; overflow-y: hidden;" :max-height="$vuetify.breakpoint.xlOnly ? '550px' : '500px'" elevation="6">
             <v-card-title>
               <calendar-icon size="1x" style="margin-right: 5px;"/>
               Kommande Evenemang
@@ -85,7 +85,7 @@
               <template v-if="!eventPreviews.length">
                 Det finns inga evenemang inlagda just nu
               </template>
-                <v-card v-for="event in eventPreviews" :key="event.id" style="margin: 10px 0;" elevation="4">
+                <v-card v-for="event in eventPreviews" :key="event.id" style="margin: 10px 0;" elevation="5">
                   <v-card-title>
                     <h5>
                       {{event.title}}
@@ -131,7 +131,7 @@
         </v-col>
 
         <v-col cols="12">
-          <footer-card/>
+          <footer-card class="elevation-6"/>
         </v-col>
       </v-row>
     </v-container>

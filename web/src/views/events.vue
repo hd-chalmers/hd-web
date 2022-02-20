@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card :loading="loading" class="mb-3" elevation="6">
+        <v-card :loading="loading" class="mb-3" elevation="7">
           <v-alert v-if="error" text color="error">{{error}}</v-alert>
             <v-card-title>
               <h3> Kommande Arrangemang </h3>
@@ -12,7 +12,7 @@
       <v-card v-if="loading" class="mb-3">
         <v-skeleton-loader type="article"></v-skeleton-loader>
       </v-card>
-                    <v-card v-for="event in events" v-bind:key="event.id" class="mb-3" elevation="5">
+                    <v-card v-for="event in events" v-bind:key="event.id" class="mb-3" elevation="6">
                         <v-card-title>
                           <h5>
                              {{event.title}}
@@ -45,7 +45,7 @@
                               </span>
                         </v-card-text>
                     </v-card>
-      <footer-card/>
+      <footer-card class="elevation-6"/>
     </v-container>
 </template>
 
