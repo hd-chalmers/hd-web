@@ -73,7 +73,7 @@
           </v-col>
 
         <v-col cols="12" xl="3" align-self="stretch">
-          <v-card style="height: 100%; overflow-y: hidden;" :max-height="$vuetify.breakpoint.xlOnly ? '550px' : '500px'" elevation="6">
+          <v-card id="eventCard" elevation="6">
             <v-card-title>
               <calendar-icon size="1x" style="margin-right: 5px;"/>
               Kommande Evenemang
@@ -138,6 +138,19 @@
 </template>
 
 <style>
+
+  #eventCard{
+    height: 100%;
+    overflow-y: hidden;
+    max-height: 550px;
+  }
+
+  @media  screen and (min-width: 2450px){
+    #eventCard{
+      max-height: 50vw;
+    }
+  }
+
 </style>
 
 <script lang="ts">

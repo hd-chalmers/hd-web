@@ -24,6 +24,19 @@
   0px 2px 16px 1px rgb(0 0 0 / 95%) !important;
 }
 
+@media  screen and (min-width: 2450px) {
+  .v-application .container{
+    max-width: 80%;
+  }
+
+  .v-application .container *:not(h1, h2, h3, h4, h5, h6, .v-card__title) {
+    font-size: 1.05em;
+  }
+
+  .v-application .container .subtitle-2, .v-application .container .subtitle-1, .v-application .container .body-1, .v-application .container .body-2 {
+    font-size: 1.05em !important;
+  }
+}
 </style>
 
 <script lang="ts">
