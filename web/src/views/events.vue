@@ -18,7 +18,7 @@
                              {{event.title}}
 
 
-                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebook_event_link">
+                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" @click="$analytics.trackEvent('Events', 'Events Facebook click')" v-bind:href="event.facebook_event_link">
                                     <facebook-icon/>
                                 </v-btn>
                           </h5>
@@ -66,8 +66,11 @@ import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
     export default class EventPage extends Vue {
       constructor () {
         super();
+
+        performance.mark('eventLoadStart')
         this.getEvents()
       }
+
       events: EventType[] = []
       error = ''
       loading = true
@@ -86,7 +89,15 @@ import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
           this.error = 'Sidan kunde inte nå servern'
           setTimeout(() => this.getEvents(), 5000)
         })
-        .finally(() => this.loading = false)
+        .finally(() => {
+          this.loading = false
+
+          performance.mark('eventLoadEnd')
+          performance.measure('eventLoad', 'eventLoadStart', 'eventLoadEnd')
+          this.$analytics.trackTiming('API Load', 'Events', Math.round(performance.getEntriesByName('eventLoad')[0].duration))
+          performance.clearMarks()
+          performance.clearMeasures()
+        })
       }
     }
 </script>

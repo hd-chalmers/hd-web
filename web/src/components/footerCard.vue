@@ -6,7 +6,7 @@
     <v-card-text id="footer">
       <v-row no-gutters>
         <v-col  class="flex flex-column align-right" style="display: flex; min-width: 167px;" cols="12" sm>
-      <a href="mailto:hd@htek.chalmers.se">
+      <a href="mailto:hd@htek.chalmers.se" target="_blank" @click="$analytics.trackEvent('Social', 'Mail click')">
         <mail-icon size="1.5x"/>
         HD@htek.chalmers.se
         <external-link-icon size="0.8x"/>
@@ -15,19 +15,19 @@
       <home-icon size="1.5x"/>
       Nya Föreningstorget, Svea Källare, Lindholmen
       </span>
-      <a href="https://www.facebook.com/HDChalmers/">
+      <a href="https://www.facebook.com/HDChalmers/" target="_blank" @click="$analytics.trackEvent('Social', 'Facebook click')">
         <facebook-icon size="1.5x"/>
         @HDChalmers - HD / H-sektionens Datorförening
         <external-link-icon size="0.8x"/>
       </a>
         </v-col>
         <v-col  class="flex flex-column align-right" style="display: flex; min-width: 167px;" cols="12" sm>
-      <a href="https://www.instagram.com/hdchalmers/">
+      <a href="https://www.instagram.com/hdchalmers/" target="_blank" @click="$analytics.trackEvent('Social', 'Instagram click')">
         <instagram-icon size="1.5x"/>
         @hdchalmers
         <external-link-icon size="0.8x"/>
       </a>
-      <a href="https://discord.gg/H8BZPtXbzx">
+      <a href="https://discord.gg/H8BZPtXbzx" target="_blank" @click="$analytics.trackEvent('Social', 'Discord click')">
         <message-square-icon size="1.5x"/>
         Discord server - HDs spelhörna
         <external-link-icon size="0.8x"/>

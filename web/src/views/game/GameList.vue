@@ -17,17 +17,18 @@
                   v-model.number="search"
                   label="Sök efter spel"
                   clearable
+                  @change="$analytics.trackEvent('Games', 'Search', search)"
                 >
                   <template v-slot:append> <search-icon/> </template>
                 </v-text-field>
               </v-col>
               <v-col>
-                <v-select label="Gruppera efter" v-model="groupBy" :items="groups" item-text="title" item-value="value">
+                <v-select label="Gruppera efter" v-model="groupBy" :items="groups" item-text="title" item-value="value" @input="$analytics.trackEvent('Games', 'Changed grouping', groupBy)">
                   <template v-slot:append> <filter-icon/> </template>
                 </v-select>
               </v-col>
               <v-col>
-                <v-select label="Sortera efter" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value">
+                <v-select label="Sortera efter" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value" @input="$analytics.trackEvent('Games', 'Changed sorting', sortBy)">
                   <template v-slot:append> <align-right-icon/> </template>
                 </v-select>
               </v-col>
@@ -81,7 +82,12 @@
                           <v-col v-if="item.expansions.length">
                             <h4><layers-icon size="1x"/> Expansioner</h4>
                             <v-chip-group>
-                              <v-chip ripple v-for="expansion in item.expansions" v-bind:key="expansion.id" @click="goToEntry(expansion.id)">{{expansion.name}}</v-chip>
+                              <v-chip ripple v-for="expansion in item.expansions" v-bind:key="expansion.id" @click="() => {
+                                goToEntry(expansion.id)
+                                $analytics.trackEvent('Games', 'Expansion breadcrumb click', item.name, expansion.name)
+                              }">
+                                {{expansion.name}}
+                              </v-chip>
                             </v-chip-group>
                           </v-col>
                             <v-col v-if="item.platform">
@@ -108,7 +114,10 @@
                             </v-col>
                             <v-col style="padding: 0" cols="12">
                               <v-btn text outlined ripple :style="$vuetify.breakpoint.xsOnly ? 'font-size: 0.7em;' : ''" style="width: 100%; margin-top: 5px;"
-                                     v-if="item.expansion_to" @click="goToEntry(item.expansion_to.id)">
+                                     v-if="item.expansion_to" @click="() => {
+                                       goToEntry(item.expansion_to.id)
+                                       $analytics.trackEvent('Games', 'Expansion to btn click', item.name, item.expansion_to.name)
+                                     }">
                                 <box-icon size="1.3x" style="margin-right: 3px;"/>  Expansion till {{item.expansion_to.name}}
                               </v-btn>
                             </v-col>
@@ -148,8 +157,10 @@ import {GameData} from "@/assets/ts/interfaces";
 })
 export default class GameList extends Vue{
     constructor() {
-        super()
-        this.getGames()
+     super()
+
+      performance.mark('gameLoadStart')
+      this.getGames()
     }
 
             loading = true
@@ -199,7 +210,13 @@ export default class GameList extends Vue{
           })
             .catch(()=> this.error = "Sidan hade ett problem när den försökte hämta data från servern")
             .finally(() => {
-            this.loading = false;
+              this.loading = false
+
+              performance.mark('gameLoadEnd')
+              performance.measure('gameLoad', 'gameLoadStart', 'gameLoadEnd')
+              this.$analytics.trackTiming('API Load', 'Games', Math.round(performance.getEntriesByName('gameLoad')[0].duration))
+              performance.clearMarks()
+              performance.clearMeasures()
           })
         }
 

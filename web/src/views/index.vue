@@ -90,7 +90,7 @@
                     <h5>
                       {{event.title}}
 
-                      <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" v-bind:href="event.facebook_event_link">
+                      <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" v-bind:href="event.facebook_event_link" @click="$analytics.trackEvent('Events', 'Frontpage Facebook click')">
                         <facebook-icon/>
                       </v-btn>
                     </h5>
@@ -155,7 +155,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import {EventType, FrontpageData, SimpleEventData} from '@/assets/ts/interfaces'
+import {EventType, FrontpageData} from '@/assets/ts/interfaces'
 import { AlertCircleIcon, LockIcon, UnlockIcon, FacebookIcon, MapPinIcon, AlignLeftIcon, ArrowRightIcon, CalendarIcon } from 'vue-feather-icons'
 import footerCard from '@/components/footerCard.vue'
 import {NavigationGuardNext, Route} from "vue-router";
@@ -176,10 +176,13 @@ import {NavigationGuardNext, Route} from "vue-router";
 export default class IndexPage extends Vue {
   constructor() {
     super()
+    performance.mark('frontLoadStart')
     this.getData()
+    performance.mark('frontEventLoadStart')
     this.getEvents()
     this.getStatus()
-    this.interval = setInterval(this.getStatus, 10000)
+
+    this.interval = setInterval(this.getStatus, 10000);
 
     //this.initSocialEmbed(document, "script", "EmbedSocialHashtagScript", "https://embedsocial.com/cdn/ht.js")
     //this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
@@ -217,11 +220,21 @@ export default class IndexPage extends Vue {
 
       this.frontpageImg = res.front_image ?? '/img/unknown_group.png'
     })
-      .catch(() => {
+      .catch((err: Error) => {
         this.error = 'Sidan hade svårigheter att nå servern'
         this.timeout = setTimeout(() => this.getData(), 3000)
+        this.$analytics.trackException('(Front) ' + err.message)
       })
-      .finally(() => this.loading = false)
+      .finally(() => {
+        this.loading = false
+
+        performance.mark('frontLoadEnd')
+        performance.measure('frontLoad', 'frontLoadStart', 'frontLoadEnd')
+        this.$analytics.trackTiming('API Load', 'Frontpage', Math.round(performance.getEntriesByName('frontLoad')[0].duration))
+        performance.clearMarks('frontLoadEnd')
+        performance.clearMarks('frontLoadStart')
+        performance.clearMeasures('frontLoad')
+      })
   }
 
   getStatus(): void {
@@ -252,10 +265,12 @@ export default class IndexPage extends Vue {
           this.doorColor = this.$vuetify.theme.currentTheme.error?.toString()
         }
       }
-    }).catch(() => {
+    }).catch((err: Error) => {
       this.doorState = null
       this.doorIcon = 'alert'
       this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
+
+      this.$analytics.trackException('(Door) ' + err.message)
     }).finally(() => {
       this.doorLoading = false
       this.setColor()
@@ -268,13 +283,25 @@ export default class IndexPage extends Vue {
     fetch(process.env.VUE_APP_API_URL + '/events')
     .then(res => res.json()).then((res: EventType[]) => {
       this.eventPreviews = res
-    }).finally( () => this.eventLoading = false)
+    }).catch((err: Error) => this.$analytics.trackException('(Front-event) ' + err.message))
+      .finally( () => {
+        this.eventLoading = false
+
+        performance.mark('frontEventLoadEnd')
+        performance.measure('frontEventLoad', 'frontEventLoadStart', 'frontEventLoadEnd')
+        this.$analytics.trackTiming('API Load', 'Events', Math.round(performance.getEntriesByName('frontEventLoad')[0].duration))
+        performance.clearMarks('frontEventLoadStart')
+        performance.clearMarks('frontEventLoadEnd')
+        performance.clearMeasures('frontEventLoad')
+      })
   }
 
   showDate(): void {
     this.getStatus()
     this.doorShowDate = true
     setTimeout(() => this.doorShowDate = false, 3000)
+
+    this.$analytics.trackEvent('Door', 'Reveal timestamp')
   }
 
   setColor(): void {

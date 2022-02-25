@@ -54,10 +54,10 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-          <v-tab style="color: #ea1d86;" href="https://www.facebook.com/HsektionenChalmers/">
+          <v-tab style="color: #ea1d86;" target="_blank" href="https://www.facebook.com/HsektionenChalmers/" @click="$analytics.trackEvent('Social', 'Htek link')">
             <v-img contain id="h-tek-img" width="28px" height="28px" src="/img/H-sektionen.svg" />
           </v-tab>
-          <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.goTo('#footer')">
+          <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="scrollToFooter()">
             <phone-call-icon class="navbar-icon"></phone-call-icon>
             <!--span class="hidden-sm-and-down">
               Kontakta Oss
@@ -70,7 +70,7 @@
               <instagram-icon/>
           </v-tab-->
 
-        <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+        <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="toggleTheme()">
           <sun-icon :hidden="$vuetify.theme.dark"/> <moon-icon :hidden="!$vuetify.theme.dark"/>
         </v-btn>
         </v-tabs>
@@ -183,7 +183,7 @@ export default class navbar extends Vue {
 
     this.$router.afterEach((to, from) => {
       //console.log('router after')
-      setLoad(false)
+      setLoad(false, to.path)
     })
   }
 
@@ -193,19 +193,45 @@ export default class navbar extends Vue {
   getLoad(): boolean{
     return this.loading
   }
-  setLoad(value: boolean, event?: Event): void{
+
+  toggleTheme(): void{
+    this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+
+    if(this.$vuetify.theme.dark){
+      this.$analytics.trackEvent("Theme", "Switched to Dark mode")
+    } else {
+      this.$analytics.trackEvent("Theme", "Switched to Light mode")
+    }
+  }
+
+  scrollToFooter(): void{
+    this.$vuetify.goTo('#footer')
+    this.$analytics.trackEvent('Footer', 'Scroll to footer card')
+  }
+
+  setLoad(value: boolean, path?: string): void{
     // sometimes the router event is faster than the click event so a lock check is used
     if(value === this.loading){
       this.lock = true
-      console.log('locked')
+      //console.log('locked')
     }
     else if(!this.lock || !value) {
       this.loading = value
-      console.log('set ' + this.loading + ' ' + value)
+
+      if(value){
+        performance.mark('loadStart')
+      } else {
+        performance.mark('loadEnd')
+        performance.measure('load', 'loadStart', 'loadEnd')
+        this.$analytics.trackTiming("Routing", path ?? '', Math.round(performance.getEntriesByName('load')[0].duration))
+        performance.clearMarks()
+        performance.clearMeasures()
+      }
+      //console.log('set ' + this.loading + ' ' + value)
     }
     else {
       this.lock = false
-      console.log('unlocked')
+      //console.log('unlocked')
     }
   }
 }

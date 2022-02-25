@@ -125,6 +125,8 @@
   export default class CommitteePage extends Vue{
     constructor() {
       super()
+
+      performance.mark('committeeLoadStart')
       this.getData()
     }
     displayedYear = ''
@@ -146,7 +148,15 @@
         this.error = 'Sidan kunde inte nå servern'
         setTimeout(() => this.getData(), 5000)
       })
-      .finally(() => this.loading = false)
+      .finally(() => {
+        this.loading = false
+
+        performance.mark('committeeLoadEnd')
+        performance.measure('committeeLoad', 'committeeLoadStart', 'committeeLoadEnd')
+        this.$analytics.trackTiming('API Load', 'Committee Members', Math.round(performance.getEntriesByName('committeeLoad')[0].duration))
+        performance.clearMarks()
+        performance.clearMeasures()
+      })
     }
   }
 </script>
