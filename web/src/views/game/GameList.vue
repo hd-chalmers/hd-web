@@ -58,14 +58,14 @@
                       <v-expansion-panel v-for="item in group.items" v-bind:key="item.id" @click="clearSelect(item.id)" class="elevation-4">
                         <v-expansion-panel-header :id="'s' + item.id" style="transition: background-color 0.5s;">
                           <v-row>
-                            <v-col class="subtitle-2" sm cols="12">
+                            <v-col class="text-subtitle-2" sm cols="12">
                               {{item.name}}
                             </v-col>
-                            <v-col class="body-2 hidden-xs-only">
+                            <v-col class="text-body-2 hidden-xs-only">
                               <users-icon size="1x"/>
                               {{item.min_players === item.max_players ? item.min_players :`${item.min_players}-${item.max_players}`}} spelare
                             </v-col>
-                            <v-col class="body-2 hidden-xs-only">
+                            <v-col class="text-body-2 hidden-xs-only">
                               <clock-icon size="1x"/>
                               {{item.min_playtime === item.max_playtime ? item.min_playtime :`${item.min_playtime}-${item.max_playtime}`}} min
                             </v-col>

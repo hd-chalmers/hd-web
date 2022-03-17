@@ -14,13 +14,13 @@
           <v-card-title><calendar-icon style="margin-right: 5px;"/> Events</v-card-title>
           <v-card-text>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.events}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.events}}
               </p>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Nyaste event:</span> "{{stats.event_latest.title}}" skapat den {{ new Date(stats.event_latest.created_at).toLocaleString('sv')}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Nyaste event:</span> "{{stats.event_latest.title}}" skapat den {{ new Date(stats.event_latest.created_at).toLocaleString('sv')}}
               </p>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Senast ändrade event:</span> "{{stats.event_updated.title}}" ändrades den {{ new Date(stats.event_updated.updated_at).toLocaleString('sv')}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Senast ändrade event:</span> "{{stats.event_updated.title}}" ändrades den {{ new Date(stats.event_updated.updated_at).toLocaleString('sv')}}
               </p>
           </v-card-text>
         </v-card>
@@ -31,13 +31,13 @@
           <v-card-title><shopping-cart-icon style="margin-right: 5px;"/> Produkter</v-card-title>
           <v-card-text>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.products}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.products}}
               </p>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Nyaste produkt:</span> "{{stats.product_latest.name}}" skapat den {{ new Date(stats.product_latest.created_at).toLocaleString('sv')}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Nyaste produkt:</span> "{{stats.product_latest.name}}" skapat den {{ new Date(stats.product_latest.created_at).toLocaleString('sv')}}
               </p>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Senast ändrade produkt:</span> "{{stats.product_updated.name}}" ändrades den {{ new Date(stats.product_updated.updated_at).toLocaleString('sv')}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Senast ändrade produkt:</span> "{{stats.product_updated.name}}" ändrades den {{ new Date(stats.product_updated.updated_at).toLocaleString('sv')}}
               </p>
           </v-card-text>
         </v-card>
@@ -48,13 +48,13 @@
           <v-card-title><clipboard-icon style="margin-right: 5px;"/> Strecklista</v-card-title>
           <v-card-text>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.investment_accounts}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.investment_accounts}}
               </p>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Nyaste kontot:</span> "{{stats.investment_latest.name}}" skapat den {{ new Date(stats.investment_latest.created_at).toLocaleString('sv')}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Nyaste kontot:</span> "{{stats.investment_latest.name}}" skapat den {{ new Date(stats.investment_latest.created_at).toLocaleString('sv')}}
               </p>
               <p>
-                <span class="subtitle-2" style="margin-right: 5px;">Senast ändrade kontot:</span> "{{stats.investment_updated.name}}" ändrades den {{ new Date(stats.investment_updated.updated_at).toLocaleString('sv')}}
+                <span class="text-subtitle-2" style="margin-right: 5px;">Senast ändrade kontot:</span> "{{stats.investment_updated.name}}" ändrades den {{ new Date(stats.investment_updated.updated_at).toLocaleString('sv')}}
               </p>
           </v-card-text>
         </v-card>
@@ -65,13 +65,13 @@
           <v-card-title><disc-icon style="margin-right: 5px;"/> Spel</v-card-title>
           <v-card-text>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.games}}
+              <span class="text-subtitle-2" style="margin-right: 5px;">Antal:</span> {{stats.games}}
             </p>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Nyaste spelet:</span> "{{stats.games_latest.name}}" skapat den {{ new Date(stats.games_latest.created_at).toLocaleString('sv')}}
+              <span class="text-subtitle-2" style="margin-right: 5px;">Nyaste spelet:</span> "{{stats.games_latest.name}}" skapat den {{ new Date(stats.games_latest.created_at).toLocaleString('sv')}}
             </p>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Senast ändrade spelet:</span> "{{stats.games_updated.name}}" ändrades den {{ new Date(stats.games_updated.updated_at).toLocaleString('sv')}}
+              <span class="text-subtitle-2" style="margin-right: 5px;">Senast ändrade spelet:</span> "{{stats.games_updated.name}}" ändrades den {{ new Date(stats.games_updated.updated_at).toLocaleString('sv')}}
             </p>
           </v-card-text>
         </v-card>
@@ -82,13 +82,13 @@
           <v-card-title><book-icon style="margin-right: 5px; transform: rotate(180deg)"/> Door</v-card-title>
           <v-card-text>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Status:</span> {{stats.door_status.status}}
+              <span class="text-subtitle-2" style="margin-right: 5px;">Status:</span> {{stats.door_status.status}}
             </p>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Senast ändrad:</span> {{new Date(stats.door_status.updated_at).toLocaleString('sv')}}
+              <span class="text-subtitle-2" style="margin-right: 5px;">Senast ändrad:</span> {{new Date(stats.door_status.updated_at).toLocaleString('sv')}}
             </p>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Antal ändringar idag:</span> {{stats.door_status.times_changed}}
+              <span class="text-subtitle-2" style="margin-right: 5px;">Antal ändringar idag:</span> {{stats.door_status.times_changed}}
             </p>
           </v-card-text>
         </v-card>
@@ -99,14 +99,14 @@
           <v-card-title><dollar-sign-icon style="margin-right: 5px;"/> Försäljning</v-card-title>
           <v-card-text>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Sålt:</span> {{stats.sales_month.this_month}}kr
+              <span class="text-subtitle-2" style="margin-right: 5px;">Sålt:</span> {{stats.sales_month.this_month}}kr
             </p>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Skilland med förra månaden:</span> {{stats.sales_month.this_month - stats.sales_month.last_month}}kr
+              <span class="text-subtitle-2" style="margin-right: 5px;">Skilland med förra månaden:</span> {{stats.sales_month.this_month - stats.sales_month.last_month}}kr
               <v-progress-circular color="primary" size="25" style="top: -3px" :value="stats.sales_month.this_month / stats.sales_month.last_month * 100"/>
             </p>
             <p>
-              <span class="subtitle-2" style="margin-right: 5px;">Topp produkt denna månaden:</span> {{stats.sales_month.top_product}}
+              <span class="text-subtitle-2" style="margin-right: 5px;">Topp produkt denna månaden:</span> {{stats.sales_month.top_product}}
             </p>
           </v-card-text>
         </v-card>

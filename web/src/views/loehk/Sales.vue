@@ -21,7 +21,7 @@
          <template v-slot:default="props">
           <v-expansion-panels>
             <v-expansion-panel v-for="item in props.items" :key="item.id">
-              <v-expansion-panel-header class="flex justify-space-between subtitle-2">
+              <v-expansion-panel-header class="flex justify-space-between text-subtitle-2">
                 <span>{{ 0 > item.sum ? '+' + (item.sum * -1) : item.sum}}kr</span>
                 <span style="text-align: center">{{item.user}}</span>
                 <span style="text-align: right">{{new Date(item.created_at).toLocaleString('sv')}}</span>

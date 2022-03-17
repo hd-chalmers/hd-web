@@ -52,7 +52,7 @@
                 </v-col>
                 <template v-if="member.favourite_game" class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
                   <v-col>
-                  <span class="subtitle-2" style="margin-right: 5px;">
+                  <span class="text-subtitle-2" style="margin-right: 5px;">
                     Favoritspel:
                   </span>
                     {{ member.favourite_game }}
@@ -60,7 +60,7 @@
                 </template>
                 <template v-if="member.favourite_sugar" class="mx-0 py-0 px-0 text-left" style="min-height: 20px">
                   <v-col class="flex-nowrap">
-                  <span class="subtitle-2" style="margin-right: 5px;">
+                  <span class="text-subtitle-2" style="margin-right: 5px;">
                     Favoritsocker:
                   </span>
                     {{ member.favourite_sugar }}
