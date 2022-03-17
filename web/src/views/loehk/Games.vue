@@ -501,12 +501,10 @@ export default class Games extends Vue{
   }
 
   searchBoardgameAtlas(item: LoehkGameData): void{
-    console.log('click')
     this.error = []
     this.$set(this.loading,'atlas-s' + item.id, true)
-    fetch('https://api.boardgameatlas.com/api/search?client_id=E23Rb2sc1L&limit=6&name=' + item.name)
+    fetch(`https://api.boardgameatlas.com/api/search?client_id=${process.env.VUE_APP_BOARDGAME_ATLAS_KEY}&limit=6&name=` + item.name)
       .then(res => res.json()).then((res: {games: BoardgameAtlasGame[], count: number}) => {
-        console.log(res.games[0])
         if(res.games[0] === undefined){
           this.error['s' + item.id as any] = 'Kunde inte hitta spelet i Boardgame Atlas'
           return
@@ -518,7 +516,7 @@ export default class Games extends Vue{
           this.fillEntry(item)
         }
         else {
-          fetch('https://api.boardgameatlas.com/api/game/mechanics?client_id=E23Rb2sc1L')
+          fetch('https://api.boardgameatlas.com/api/game/mechanics?client_id=' + process.env.VUE_APP_BOARDGAME_ATLAS_KEY)
             .then(res => res.json()).then((res: {mechanics: BoardgameAtlasMechanic[]}) => {
               this.mechanicsList = res.mechanics
               this.fillEntry(item)
