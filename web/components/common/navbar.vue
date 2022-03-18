@@ -5,7 +5,6 @@
   <nuxt-link to="/">
     <v-toolbar-title @click.once="setLoad(true, $event)">
         <v-btn
-            :hidden="$vuetify.breakpoint.mobile"
             class="hidden-sm-and-down"
             text
             :small="$vuetify.breakpoint.mobile"
@@ -13,7 +12,6 @@
             <span style="color: #E0218A">H</span>-Sektionens Datorförening
         </v-btn>
         <v-btn
-            :hidden="$vuetify.breakpoint.mobile"
             class="hidden-md-and-up"
             text
             :small="$vuetify.breakpoint.xs">
