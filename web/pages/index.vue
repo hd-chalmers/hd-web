@@ -44,7 +44,7 @@
 
           <v-card :style=" $vuetify.breakpoint.xsOnly ? 'margin-bottom: 6px; order: -1; flex-grow: 1;' : 'margin-top: 6px; flex-grow: 1;'" elevation="6">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
-            <v-img v-bind:src="frontpageImg" alt="unknown_group" height="100%" width="100%"></v-img>
+            <v-img v-bind:src="frontpageImg" lazy-src="/img/unknown_group.webp" alt="unknown_group" height="100%" width="100%"></v-img>
           </v-card>
         </v-col>
 
@@ -218,7 +218,7 @@ export default class IndexPage extends Vue {
     fetch(process.env.NUXT_ENV_API_URL + '/frontpage').then(res => res.json()).then((res: FrontpageData) => {
       this.error = ''
 
-      this.frontpageImg = res.front_image ?? '/img/unknown_group.png'
+      this.frontpageImg = res.front_image ?? '/img/unknown_group.webp'
     })
       .catch((err: Error) => {
         this.error = 'Sidan hade svårigheter att nå servern'

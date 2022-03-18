@@ -6,7 +6,7 @@
       <v-row dense>
         <v-col cols="12" sm="5" xl="4">
           <v-card elevation="7">
-            <v-img lazy-src="/img/unknown_group.png" v-bind:src="groupPhoto ? groupPhoto : '/img/unknown_group.png'" class="mx-auto" contain></v-img>
+            <v-img lazy-src="/img/unknown_group.webp" v-bind:src="groupPhoto ? groupPhoto : '/img/unknown_group.webp'" class="mx-auto" contain></v-img>
           </v-card>
         </v-col>
 
@@ -31,7 +31,7 @@
               <v-row dense class="align-center" style="height: 100%;">
                 <v-col cols="12" sm="4" align-self="center">
           <v-avatar :width="$vuetify.breakpoint.xsOnly ? '150px' :'100%'" :height="$vuetify.breakpoint.xsOnly ? '150px' : 'inherit'" style="margin: auto; display: block;" class="elevation-4 mb-2">
-            <v-img lazy-src="/img/unknown_profile.png" v-bind:src="member.image ? member.image : '/img/unknown_profile.png'" class="mx-auto" max-height="200px" contain></v-img>
+            <v-img lazy-src="/img/unknown_profile.webp" v-bind:src="member.image ? member.image : '/img/unknown_profile.webp'" class="mx-auto" max-height="200px" contain></v-img>
           </v-avatar>
                 </v-col>
                 <v-col sm="8" cols="12" align-self="stretch">

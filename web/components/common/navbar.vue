@@ -1,7 +1,7 @@
 <template>
 <v-app-bar app elevate-on-scroll clipped-left>
   <v-container style="display: flex; align-items: center;">
-    <v-img src="/img/HD_logo.png" id="hd-logo" max-width="100" style="z-index: 10; cursor: pointer;" @click="$router.push('/')"></v-img>
+    <v-img src="/img/HD_logo.webp" id="hd-logo" max-width="100" style="z-index: 10; cursor: pointer;" @click="$router.push('/')"></v-img>
   <nuxt-link to="/">
     <v-toolbar-title @click.once="setLoad(true, $event)">
         <v-btn
