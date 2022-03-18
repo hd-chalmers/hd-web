@@ -11,13 +11,22 @@
     sort-by="name"
     must-sort
     :loading="pageLoading"
+    :search="searchFilter"
   >
     <template v-slot:item.updated_at="{item}">{{new Date(item.updated_at).toLocaleString('sv')}}</template>
     <template v-slot:item.created_at="{item}">{{new Date(item.created_at).toLocaleString('sv')}}</template>
     <template v-slot:top>
+
+      <v-text-field label="Sök spel" v-model="searchFilter" outlined>
+        <template v-slot:prepend-inner> <search-icon size="1.3x"/> </template>
+      </v-text-field>
+
+
       <v-expansion-panels>
         <v-expansion-panel>
-          <v-expansion-panel-header> Nytt Spel</v-expansion-panel-header>
+          <v-expansion-panel-header>
+            <v-card-title style="padding: 0;"> <plus-circle-icon style="margin-right: 5px;"/> Nytt Spel </v-card-title>
+          </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-card tile flat>
               <v-alert v-if="error['s' + newGame.id]" color="error" text>{{error['s' + newGame.id]}}</v-alert>
@@ -248,7 +257,7 @@
 
 <script lang="ts">
 import { Component, Vue} from "vue-property-decorator"
-import {SearchIcon, Trash2Icon} from "vue-feather-icons";
+import {SearchIcon, Trash2Icon, PlusCircleIcon} from "vue-feather-icons";
 import {
   BoardgameAtlasGame,
   BoardgameAtlasMechanic,
@@ -260,7 +269,7 @@ import {
 import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
-  components: { SearchIcon, Trash2Icon }
+  components: { SearchIcon, Trash2Icon, PlusCircleIcon }
 })
 export default class Games extends Vue{
   constructor() {
@@ -304,6 +313,7 @@ export default class Games extends Vue{
     }
   }
   loading: boolean[] = []
+  searchFilter = ""
   pageLoading = true
   error: string[] = []
   messages: string[] = []

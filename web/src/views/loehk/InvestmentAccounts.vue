@@ -1,10 +1,5 @@
 <template>
-    <v-card>
-        <v-card-actions>
-            <v-btn icon to="/loehk/investments/print">
-                <printer-icon/>
-            </v-btn>
-        </v-card-actions>
+  <v-card>
         <v-card-title>
             Strecklistan
         </v-card-title>
@@ -27,9 +22,12 @@
                           sort-desc>
               <template v-slot:item.updated_at="{item}">{{new Date(item.updated_at).toLocaleString('sv')}}</template>
                 <template v-slot:top>
-                    <v-card color="mb-1">
-                        <v-card-title>Ny Användare</v-card-title>
-                        <v-card-text>
+                  <v-expansion-panels>
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>
+                        <v-card-title style="padding: 0;"> <plus-circle-icon style="margin-right: 5px;"/> Ny Användare</v-card-title>
+                      </v-expansion-panel-header>
+                        <v-expansion-panel-content>
                             <v-form>
                                 <v-row dense>
                                     <v-col cols="12" sm="6" md="4" lg="4">
@@ -47,15 +45,28 @@
                                     </v-col>
                                 </v-row>
                             </v-form>
-                        </v-card-text>
-                    </v-card>
-                    <v-toolbar flat>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                  <v-card-actions>
+                    <v-row>
+                      <v-col cols="12" sm="1">
+                        <v-btn text to="/loehk/investments/print">
+                          <printer-icon/>
+                        </v-btn>
+                      </v-col>
+                      <v-col>
                         <v-text-field
                             v-model.number="search"
                             label="Sök..."
                             clearable
-                        ></v-text-field>
-                    </v-toolbar>
+                            outlined
+                        >
+                          <template v-slot:prepend-inner> <search-icon size="1.4x"/> </template>
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-actions>
                 </template>
                 <template v-slot:group.header="
                      /* eslint-disable-next-line vue/no-unused-vars */
@@ -125,11 +136,11 @@
 <script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
 import {InvestAccData} from "@/assets/ts/interfaces";
-import  {PrinterIcon, TrashIcon} from "vue-feather-icons";
+import  {PrinterIcon, TrashIcon, PlusCircleIcon, SearchIcon} from "vue-feather-icons";
 import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component({
-  components:{PrinterIcon, TrashIcon}
+  components:{PrinterIcon, TrashIcon, PlusCircleIcon, SearchIcon}
 })
 export default class LoehkInvestmentAccounts extends Vue{
   constructor() {

@@ -82,9 +82,9 @@
               <v-card v-if="eventLoading" class="mb-3">
                 <v-skeleton-loader type="article"></v-skeleton-loader>
               </v-card>
-              <template v-if="!eventPreviews.length">
+              <div v-if="!eventPreviews.length" style="margin-bottom: 30px;">
                 Det finns inga evenemang inlagda just nu
-              </template>
+              </div>
                 <v-card v-for="event in eventPreviews" :key="event.id" style="margin: 10px 0;" elevation="5">
                   <v-card-title>
                     <h5>

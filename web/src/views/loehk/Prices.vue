@@ -19,9 +19,9 @@
             >
               <template v-slot:item.updated_at="{item}">{{new Date(item.updated_at).toLocaleString('sv')}}</template>
                 <template v-slot:top>
-                    <v-toolbar flat>
+                    <v-card>
                       <v-row>
-                        <v-col cols="1">
+                        <v-col cols="12" sm="1">
                           <v-btn rounded text to="/pricelist">
                             <printer-icon/>
                           </v-btn>
@@ -31,79 +31,80 @@
                               v-model.number="search"
                               label="Sök..."
                               clearable
-                          ></v-text-field>
+                              outlined
+                              style="margin: 0 10px;"
+                          >
+                            <template v-slot:prepend-inner> <search-icon size="1.4x"/> </template>
+                          </v-text-field>
                         </v-col>
                       </v-row>
-                    </v-toolbar>
-                    <v-form class="px-4" @submit.stop.prevent="createProduct" v-model="item.valid" ref="newProduct">
-                        <v-card>
-                            <v-card-title>
-                                <span @click="edit = !edit" style="cursor: pointer">
-                                    <v-btn small icon v-if="edit">
-                                        <v-icon>mdi-menu-up</v-icon>
-                                    </v-btn>
-                                    <v-btn small icon v-else>
-                                        <v-icon>mdi-menu-down</v-icon>
-                                    </v-btn>Ny Produkt
-                                </span>
-                            </v-card-title>
-                            <v-card-text v-show="edit">
-                                <template v-if="item.axfood">
-                                    På axfoodkvittot så är det á-priset du vill skriva in, däremot så är rabatten redan inräknad i detta priset.<br/>
-                                    Välj att antingen: Uppdatera priser varje inköp, eller dra bort rabatten från priset.
-                                </template>
-                                <v-row>
-                                    <v-col cols="12" md="4" lg="3">
-                                        <v-text-field v-model="item.name" hint="Krävs" persistent-hint label="Produkt" :rules="[rules.required]" validate-on-blur></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" md="4" lg="2">
-                                        <v-text-field type="number" min="0" v-model.number="item.purchase_price" label="Förpackningspris*" hint="Krävs" persistent-hint :rules="[rules.required, rules.positive]" validate-on-blur>
-                                        </v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" md="4" lg="3" class="justify-center">
-                                        <v-radio-group row class="mt-0 justify-center just">
-                                            <v-checkbox label="Axfood" class="mr-2" v-model="item.axfood"></v-checkbox>
-                                            <v-checkbox label="Pant" class="mr-2" v-model="item.pant"></v-checkbox>
-                                            <v-checkbox label="Aktiv" v-model="item.active"></v-checkbox>
-                                        </v-radio-group>
-                                    </v-col>
-                                    <v-col cols="12" md="4" lg="2">
-                                        <v-text-field type="number" min="0" hint="Krävs" persistent-hint v-model.number="item.package_size" label="Antal per Förpackning" :rules="[rules.required, rules.positive]"
-                                                      validate-on-blur></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" md="4" lg="2">
-                                        <v-select :items="categories" label="Kategori" hint="Krävs" persistent-hint item-text="name" item-value="id" v-model="item.category_id" :rules="[rules.required, rules.positive]" validate-on-blur></v-select>
-                                    </v-col>
-                                    <v-col cols="12" md="2">
-                                        <v-text-field v-model.number="item.adjustment" label="Prisjustering" :min="((-1)*Math.ceil(item.purchase_price*1.12))" type="number"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" md="10">
-                                        <v-combobox hint="Skriv antingen in bara artikelnumret eller som 'extra_name=article_no'" persistent-hint label="Streckkoder/Artikelnummer" v-model="item.combobox_barcodes" multiple deletable-chips
-                                                    :delimiters="[',']" chips>
-                                        </v-combobox>
-                                    </v-col>
-                                    <v-col cols="12" v-if="new_price">
-                                        Försäljningspris: <strong>{{ item.purchase_price }}</strong>/<strong>{{ item.package_size }}</strong>
-                                        <template v-if="item.axfood">+<strong>12%</strong></template>
-                                        <template v-if="item.pant">+<strong>1</strong></template>
-                                        +{{ (1 - (item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)) % 1).toFixed(2) }}(Öresavrundning)=<strong>{{ new_price }}</strong><br/>
-                                        Vinst per enhet: {{ (new_price - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)).toFixed(2) }}<br/>
-                                        Vinst per förpackning: {{ ((new_price - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)) * item.package_size).toFixed(2) }}
-                                    </v-col>
-                                    <v-col cols="12" v-else>
-                                        Försäljningspris: Fyll i Pris och "Antal per Förpackning" för att visa
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col>
-                                        <v-spacer></v-spacer>
-                                        <v-btn type="submit" :color="errors['new'] ? 'error' : 'success'" :loading="save_loading[item.id] === true">Spara</v-btn>
-                                        <span :style="`color: ${$vuetify.theme.currentTheme.error}; margin: 5px;`" v-if="errors['new']">{{errors['new']}}</span>
-                                    </v-col>
-                                </v-row>
-                            </v-card-text>
-                        </v-card>
-                    </v-form>
+                      <v-expansion-panels>
+                        <v-expansion-panel class="elevation-2">
+                          <v-expansion-panel-header>
+                            <v-card-title style="padding: 0"> <plus-circle-icon style="margin-right: 5px;"/> Ny Produkt </v-card-title>
+                          </v-expansion-panel-header>
+                          <v-expansion-panel-content>
+                            <v-form class="px-4" @submit.stop.prevent="createProduct" v-model="item.valid" ref="newProduct">
+                                        <div v-if="item.axfood" style="margin-bottom: 5px;">
+                                            På axfoodkvittot så är det á-priset du vill skriva in, däremot så är rabatten redan inräknad i detta priset.<br/>
+                                            Välj att antingen: Uppdatera priser varje inköp, eller dra bort rabatten från priset.
+                                        </div>
+
+                                        <v-row>
+                                            <v-col cols="12" md="4" lg="3">
+                                                <v-text-field v-model="item.name" hint="Krävs" persistent-hint label="Produkt" :rules="[rules.required]" validate-on-blur></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" md="4" lg="2">
+                                                <v-text-field type="number" min="0" v-model.number="item.purchase_price" label="Förpackningspris*" hint="Krävs" persistent-hint
+                                                              :rules="[rules.required, rules.positive]" validate-on-blur suffix="kr">
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" md="4" lg="3" class="justify-center">
+                                                <v-radio-group row class="mt-0 justify-center just">
+                                                    <v-checkbox label="Axfood" class="mr-2" v-model="item.axfood"></v-checkbox>
+                                                    <v-checkbox label="Pant" class="mr-2" v-model="item.pant"></v-checkbox>
+                                                    <v-checkbox label="Aktiv" v-model="item.active"></v-checkbox>
+                                                </v-radio-group>
+                                            </v-col>
+                                            <v-col cols="12" md="4" lg="2">
+                                                <v-text-field type="number" min="0" hint="Krävs" persistent-hint v-model.number="item.package_size" label="Antal per Förpackning" :rules="[rules.required, rules.positive]"
+                                                              validate-on-blur suffix="st"></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" md="4" lg="2">
+                                                <v-select :items="categories" label="Kategori" hint="Krävs" persistent-hint item-text="name" item-value="id" v-model="item.category_id" :rules="[rules.required, rules.positive]" validate-on-blur></v-select>
+                                            </v-col>
+                                            <v-col cols="12" md="2">
+                                                <v-text-field v-model.number="item.adjustment" label="Prisjustering" :min="((-1)*Math.ceil(item.purchase_price*1.12))" type="number" suffix="kr"></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" md="10">
+                                                <v-combobox hint="Skriv antingen in bara artikelnumret eller som 'extra_name=article_no'. Ange $ i början för att markera att det är ett flak." persistent-hint label="Streckkoder/Artikelnummer" v-model="item.combobox_barcodes" multiple deletable-chips
+                                                            :delimiters="[',']" chips outlined>
+                                                </v-combobox>
+                                            </v-col>
+                                            <v-col cols="12" v-if="new_price">
+                                                Försäljningspris: <strong>{{ item.purchase_price }}</strong>/<strong>{{ item.package_size }}</strong>
+                                                <template v-if="item.axfood">+<strong>12%</strong></template>
+                                                <template v-if="item.pant">+<strong>1</strong></template>
+                                                +{{ (1 - (item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)) % 1).toFixed(2) }}(Öresavrundning)=<strong>{{ new_price }}</strong> kr<br/>
+                                                Vinst per enhet: {{ (new_price - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)).toFixed(2) }} kr<br/>
+                                                Vinst per förpackning: {{ ((new_price - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)) * item.package_size).toFixed(2) }} kr
+                                            </v-col>
+                                            <v-col cols="12" v-else>
+                                                Försäljningspris: Fyll i Pris och "Antal per Förpackning" för att visa
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col>
+                                                <v-spacer></v-spacer>
+                                                <v-btn type="submit" :color="errors['new'] ? 'error' : 'success'" :loading="save_loading[item.id] === true">Spara</v-btn>
+                                                <span :style="`color: ${$vuetify.theme.currentTheme.error}; margin: 5px;`" v-if="errors['new']">{{errors['new']}}</span>
+                                            </v-col>
+                                        </v-row>
+                            </v-form>
+                          </v-expansion-panel-content>
+                        </v-expansion-panel>
+                      </v-expansion-panels>
+                    </v-card>
                 </template>
                 <template v-slot:group.header="
                 /* eslint-disable-next-line vue/no-unused-vars */
@@ -132,16 +133,17 @@
                                 </v-btn>
                             </v-card-title>
                             <v-card-text>
-                                <template v-if="item.axfood">
+                                <div v-if="item.axfood" style="margin-bottom: 10px;">
                                     På axfoodkvittot så är det á-priset du vill skriva in, däremot så är rabatten redan inräknad i detta priset.<br/>
                                     Välj att antingen: Uppdatera priser varje inköp, eller dra bort rabatten från priset.
-                                </template>
+                                </div>
                                 <v-row>
                                     <v-col cols="12" md="4" lg="3">
                                         <v-text-field v-model="item.name" hint="Krävs" persistent-hint label="Produkt" :rules="[rules.required]" validate-on-blur></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="4" lg="2">
-                                        <v-text-field type="number" min="0" v-model.number="item.purchase_price" label="Förpackningspris*" hint="Krävs" persistent-hint :rules="[rules.required, rules.positive]" validate-on-blur>
+                                        <v-text-field type="number" min="0" v-model.number="item.purchase_price" label="Förpackningspris*" hint="Krävs" persistent-hint
+                                                      :rules="[rules.required, rules.positive]" validate-on-blur suffix="kr">
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="4" lg="3" class="justify-center">
@@ -153,32 +155,32 @@
                                     </v-col>
                                     <v-col cols="12" md="4" lg="2">
                                         <v-text-field type="number" min="0" hint="Krävs" persistent-hint v-model.number="item.package_size" label="Antal per Förpackning" :rules="[rules.required, rules.positive]"
-                                                      validate-on-blur></v-text-field>
+                                                      validate-on-blur suffix="st"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="4" lg="2">
                                         <v-select :items="categories" label="Kategori" hint="Krävs" persistent-hint item-text="name" item-value="id" v-model="item.category_id" :rules="[rules.required]" validate-on-blur></v-select>
                                     </v-col>
                                     <v-col cols="12" md="2">
-                                        <v-text-field v-model.number="item.adjustment" label="Prisjustering" :min="((-1)*Math.ceil(item.purchase_price*1.12))" type="number"></v-text-field>
+                                        <v-text-field v-model.number="item.adjustment" label="Prisjustering" :min="((-1)*Math.ceil(item.purchase_price*1.12))" type="number" suffix="kr"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="10">
-                                        <v-combobox hint="Skriv antingen in bara artikelnumret eller som 'extra_name=article_no'" persistent-hint label="Streckkoder/Artikelnummer" v-model="item.combobox_barcodes" multiple deletable-chips
-                                                    :delimiters="[' ', ',', '.']" chips>
+                                        <v-combobox hint="Skriv antingen in bara artikelnumret eller som 'extra_name=article_no'. Ange $ i början för att markera att det är ett flak." persistent-hint label="Streckkoder/Artikelnummer" v-model="item.combobox_barcodes" multiple deletable-chips
+                                                    :delimiters="[' ', ',', '.']" chips outlined>
                                         </v-combobox>
                                     </v-col>
                                     <v-col cols="12" v-if="!(isNaN(item.purchase_price) || isNaN(item.package_size) || !item.package_size)">
                                         Försäljningspris: <strong>{{ item.purchase_price }}</strong>/<strong>{{ item.package_size }}</strong>
                                         <template v-if="item.axfood">+<strong>12%</strong></template>
                                         <template v-if="item.pant">+<strong>1</strong></template>
-                                        +Öresavrundning=<strong>{{ (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0))) }}</strong><br/>
+                                        +Öresavrundning= <strong>{{ (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0))) }}</strong> kr<br/>
                                         Vinst per enhet:
                                         {{
                                             (Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)) - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)).toFixed(2)
-                                        }}<br/>
+                                        }} kr<br/>
                                         Vinst per förpackning:
                                         {{
                                             ((Math.ceil((item.purchase_price * (item.axfood ? 1.12 : 1)) / item.package_size + (item.pant ? 1 : 0) + (item.adjustment ? item.adjustment : 0)) - (item.pant ? 1 : 0) - item.purchase_price / item.package_size * (item.axfood ? 1.12 : 1)) * item.package_size).toFixed(2)
-                                        }}
+                                        }} kr
                                     </v-col>
                                     <v-col cols="12" v-else>
                                         Försäljningspris: Fyll i Pris och "Antal per Förpackning" för att visa
@@ -205,12 +207,12 @@
 
 
 import {Component, Vue} from "vue-property-decorator"
-import { PrinterIcon } from 'vue-feather-icons'
+import { PrinterIcon, SearchIcon, PlusCircleIcon } from 'vue-feather-icons'
 import {LoehkProductData, ProductCategory} from "@/assets/ts/interfaces";
 import {SessionStore} from "@/assets/ts/sessionStore";
 
 @Component<LoehkPrices>({
-  components: { PrinterIcon },
+  components: { PrinterIcon, SearchIcon, PlusCircleIcon },
   computed: {
     new_price() {
       if (isNaN(this.item.purchase_price) || isNaN(this.item.package_size) || !this.item.package_size) {

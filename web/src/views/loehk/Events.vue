@@ -4,8 +4,8 @@
       <v-row>
         <v-col cols="12" md="7">
           <v-select v-model="event" :items="allEvents" :loading="this.isLoading('newEvent')" item-text="title"
-                    item-value="id" label="Event" return-object @input="reset">
-            <template v-slot:prepend> <ListIcon/> </template>
+                    item-value="id" label="Event" return-object @input="reset" outlined>
+            <template v-slot:prepend-inner> <ListIcon size="1.4x"/> </template>
             <template v-slot:item="
                           // eslint-disable-next-line vue/no-unused-vars
                           {parent, item, on, attrs}">
