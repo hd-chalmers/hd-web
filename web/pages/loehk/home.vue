@@ -1,8 +1,5 @@
 <router>
 {
-  alias: [
-    '/loehk'
-  ],
     beforeEnter:
   (to, from, next) => {
     import('@/store/sessionStore').then(c => {
