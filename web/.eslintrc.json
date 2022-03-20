@@ -1,0 +1,26 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:vue/essential",
+        "plugin:vuetify/base",
+        "plugin:@typescript-eslint/recommended"
+    ],
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+  "sourceType": "module"
+  },
+    "plugins": [
+        "vue",
+        "@typescript-eslint"
+    ],
+    "rules": {
+      "vue/no-useless-template-attributes": "off",
+      "no-undef": "warn"
+    }
+}
