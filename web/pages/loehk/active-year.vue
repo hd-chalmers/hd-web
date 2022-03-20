@@ -32,7 +32,7 @@
                 <v-row>
                     <v-col cols="6">
                         <v-file-input show-size label="Gruppbild" :success-messages="message.group_photo" :messages="active_year.group_photo" :loading="load.group_photo === true" :success="load.group_photo === 'success'"
-                                      :error-messages="errors.group_photo" v-model="form.group_photo" prepend-icon solo>
+                                      :error-messages="errors.group_photo" v-model="form.group_photo" prepend-icon="" solo>
                           <template v-slot:prepend-inner> <paperclip-icon/> </template>
                         </v-file-input>
                     </v-col>

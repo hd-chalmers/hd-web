@@ -4,7 +4,7 @@
       <v-alert v-if="error" color="error" text>{{error}}</v-alert>
       <v-card-title> <h2>Prislista</h2> </v-card-title>
       <v-card-subtitle style="padding-bottom: 0;">Här är saker man kan köpa i våra arr!</v-card-subtitle>
-      <img src="/img/HD_logo.png" width="90px" id="printLogo" alt="HD:s logotyp"/>
+      <img src="/img/HD_logo.webp" width="90px" id="printLogo" alt="HD:s logotyp"/>
       <v-card-text>
         <v-row>
         <v-col v-for="category in categories" v-bind:key="'c' + category.id">
