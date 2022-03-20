@@ -43,7 +43,9 @@ export default {
 
     '@nuxtjs/router-extras',
 
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+
+    '@nuxtjs/pwa'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -72,6 +74,14 @@ export default {
           'info': '#31a8de'
         }
       }
+    }
+  },
+
+  pwa: {
+    meta: {
+      nativeUI: true,
+      lang: "se",
+      themeColor: "#f2008d"
     }
   },
 
