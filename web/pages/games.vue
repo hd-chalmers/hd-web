@@ -17,18 +17,18 @@
                   v-model.number="search"
                   label="Sök efter spel"
                   clearable
-                  @change="$analytics.trackEvent('games.vue', 'Search', search)"
+                  @change="$ga.event('games', 'Search', search)"
                 >
                   <template v-slot:append> <search-icon/> </template>
                 </v-text-field>
               </v-col>
               <v-col>
-                <v-select label="Gruppera efter" v-model="groupBy" :items="groups" item-text="title" item-value="value" @input="$analytics.trackEvent('games.vue', 'Changed grouping', groupBy)">
+                <v-select label="Gruppera efter" v-model="groupBy" :items="groups" item-text="title" item-value="value" @input="$ga.event('games', 'Changed grouping', groupBy)">
                   <template v-slot:append> <filter-icon/> </template>
                 </v-select>
               </v-col>
               <v-col>
-                <v-select label="Sortera efter" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value" @input="$analytics.trackEvent('games.vue', 'Changed sorting', sortBy)">
+                <v-select label="Sortera efter" v-model="sortBy" :items="sortingOptions" item-text="title" item-value="value" @input="$ga.event('games', 'Changed sorting', sortBy)">
                   <template v-slot:append> <align-right-icon/> </template>
                 </v-select>
               </v-col>
@@ -84,7 +84,7 @@
                             <v-chip-group>
                               <v-chip ripple v-for="expansion in item.expansions" v-bind:key="expansion.id" @click="() => {
                                 goToEntry(expansion.id)
-                                $analytics.trackEvent('games.vue', 'Expansion breadcrumb click', item.name, expansion.name)
+                                $ga.event('games', 'Expansion breadcrumb click', item.name, expansion.name)
                               }">
                                 {{expansion.name}}
                               </v-chip>
@@ -116,7 +116,7 @@
                               <v-btn text outlined ripple :style="$vuetify.breakpoint.xsOnly ? 'font-size: 0.7em;' : ''" style="width: 100%; margin-top: 5px;"
                                      v-if="item.expansion_to" @click="() => {
                                        goToEntry(item.expansion_to.id)
-                                       $analytics.trackEvent('games.vue', 'Expansion to btn click', item.name, item.expansion_to.name)
+                                       $ga.event('games', 'Expansion to btn click', item.name, item.expansion_to.name)
                                      }">
                                 <box-icon size="1.3x" style="margin-right: 3px;"/>  Expansion till {{item.expansion_to.name}}
                               </v-btn>
@@ -208,13 +208,16 @@ export default class GameList extends Vue{
           }).then(res => res.json()).then((res: GameData[]) => {
             this.games = res;
           })
-            .catch(()=> this.error = "Sidan hade ett problem när den försökte hämta data från servern")
+            .catch((err: Error)=> {
+              this.error = "Sidan hade ett problem när den försökte hämta data från servern"
+              this.$ga.exception('(Games) ' + err.message)
+            })
             .finally(() => {
               this.loading = false
 
               performance.mark('gameLoadEnd')
               performance.measure('gameLoad', 'gameLoadStart', 'gameLoadEnd')
-              //this.$analytics.trackTiming('API Load', 'Games', Math.round(performance.getEntriesByName('gameLoad')[0].duration))
+              this.$ga.time('API Load', 'Games', Math.round(performance.getEntriesByName('gameLoad')[0].duration))
               performance.clearMarks()
               performance.clearMeasures()
           })

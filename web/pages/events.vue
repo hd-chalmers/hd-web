@@ -18,7 +18,7 @@
                              {{event.title}}
 
 
-                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" @click="$analytics.trackEvent('Events', 'Events Facebook click')" v-bind:href="event.facebook_event_link">
+                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" @click="$ga.social('Facebook', 'Events Facebook click', event.facebook_event_link)" v-bind:href="event.facebook_event_link">
                                     <facebook-icon/>
                                 </v-btn>
                           </h5>
@@ -85,8 +85,9 @@ import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
             return value
           })
         })
-        .catch(() => {
+        .catch((err: Error) => {
           this.error = 'Sidan kunde inte nå servern'
+          this.$ga.exception('(Events) ' + err.message)
           setTimeout(() => this.getEvents(), 5000)
         })
         .finally(() => {
@@ -94,7 +95,7 @@ import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
 
           performance.mark('eventLoadEnd')
           performance.measure('eventLoad', 'eventLoadStart', 'eventLoadEnd')
-          //this.$analytics.trackTiming('API Load', 'Events', Math.round(performance.getEntriesByName('eventLoad')[0].duration))
+          this.$ga.time('API Load', 'Events', Math.round(performance.getEntriesByName('eventLoad')[0].duration))
           performance.clearMarks()
           performance.clearMeasures()
         })

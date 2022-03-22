@@ -50,7 +50,7 @@
             <v-btn text href="games">Våra Spel</v-btn>
         @endif
         -->
-          <v-tab style="color: #ea1d86;" target="_blank" href="https://www.facebook.com/HsektionenChalmers/" @click="$analytics.trackEvent('Social', 'Htek link')">
+          <v-tab style="color: #ea1d86;" target="_blank" href="https://www.facebook.com/HsektionenChalmers/" @click="$ga.event('Social', 'Htek link')">
             <v-img contain id="h-tek-img" width="28px" height="28px" src="/img/H-sektionen.svg" />
           </v-tab>
           <v-btn style="background-color: transparent; height: 100%; border-radius: 0;" class="navBtn" depressed x-small @click="scrollToFooter()">
@@ -192,16 +192,16 @@ export default class navbar extends Vue {
   toggleTheme(): void{
     this.$vuetify.theme.dark = !this.$vuetify.theme.dark
 
-   /* if(this.$vuetify.theme.dark){
-      this.$analytics.trackEvent("Theme", "Switched to Dark mode")
+   if(this.$vuetify.theme.dark){
+      this.$ga.event("Theme", "Switched to Dark mode")
     } else {
-      this.$analytics.trackEvent("Theme", "Switched to Light mode")
-    }*/
+      this.$ga.event("Theme", "Switched to Light mode")
+    }
   }
 
   scrollToFooter(): void{
     this.$vuetify.goTo('#footer')
-    //this.$analytics.trackEvent('Footer', 'Scroll to footer card')
+    this.$ga.event('Footer', 'Scroll to footer card')
   }
 
   setLoad(value: boolean, path?: string): void{
@@ -218,7 +218,7 @@ export default class navbar extends Vue {
       } else {
         performance.mark('loadEnd')
         performance.measure('load', 'loadStart', 'loadEnd')
-        //this.$analytics.trackTiming("Routing", path ?? '', Math.round(performance.getEntriesByName('load')[0].duration))
+        this.$ga.time("Routing", path ?? '', Math.round(performance.getEntriesByName('load')[0].duration))
         performance.clearMarks()
         performance.clearMeasures()
       }

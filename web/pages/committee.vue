@@ -144,8 +144,9 @@
         this.description = res.description
         this.committeeMembers = res.committee_members
       })
-      .catch(() => {
+      .catch((err: Error) => {
         this.error = 'Sidan kunde inte nå servern'
+        this.$ga.exception('Committee ' + err.message)
         setTimeout(() => this.getData(), 5000)
       })
       .finally(() => {
@@ -153,7 +154,7 @@
 
         performance.mark('committeeLoadEnd')
         performance.measure('committeeLoad', 'committeeLoadStart', 'committeeLoadEnd')
-        //this.$analytics.trackTiming('API Load', 'Committee Members', Math.round(performance.getEntriesByName('committeeLoad')[0].duration))
+        this.$ga.time('API Load', 'Committee Members', Math.round(performance.getEntriesByName('committeeLoad')[0].duration))
         performance.clearMarks()
         performance.clearMeasures()
       })

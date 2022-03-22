@@ -90,7 +90,7 @@
                     <h5>
                       {{event.title}}
 
-                      <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" v-bind:href="event.facebook_event_link" @click="$analytics.trackEvent('Events', 'Frontpage Facebook click')">
+                      <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" v-bind:href="event.facebook_event_link" @click="$ga.social('Facebook', 'Frontpage Facebook click', event.facebook_event_link)">
                         <facebook-icon/>
                       </v-btn>
                     </h5>
@@ -204,7 +204,6 @@ export default class IndexPage extends Vue {
   doorColor: string | undefined = 'black'
 
   eventPreviews: EventType[] = []
-  eventRemaining = 0
   eventLoading = true
 
   beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext): void {
@@ -223,14 +222,14 @@ export default class IndexPage extends Vue {
       .catch((err: Error) => {
         this.error = 'Sidan hade svårigheter att nå servern'
         this.timeout = setTimeout(() => this.getData(), 3000)
-        // this.$analytics.trackException('(Front) ' + err.message)
+        this.$ga.exception('(Front) ' + err.message)
       })
       .finally(() => {
         this.loading = false
 
         performance.mark('frontLoadEnd')
         performance.measure('frontLoad', 'frontLoadStart', 'frontLoadEnd')
-        // this.$analytics.trackTiming('API Load', 'Frontpage', Math.round(performance.getEntriesByName('frontLoad')[0].duration))
+        this.$ga.time('API Load', 'Frontpage', Math.round(performance.getEntriesByName('frontLoad')[0].duration))
         performance.clearMarks('frontLoadEnd')
         performance.clearMarks('frontLoadStart')
         performance.clearMeasures('frontLoad')
@@ -270,7 +269,7 @@ export default class IndexPage extends Vue {
       this.doorIcon = 'alert'
       this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
 
-      // this.$analytics.trackException('(Door) ' + err.message)
+      this.$ga.exception('(Door) ' + err.message)
     }).finally(() => {
       this.doorLoading = false
       this.setColor()
@@ -283,13 +282,13 @@ export default class IndexPage extends Vue {
     fetch(process.env.NUXT_ENV_API_URL + '/events')
     .then(res => res.json()).then((res: EventType[]) => {
       this.eventPreviews = res
-    })//.catch((err: Error) => this.$analytics.trackException('(Front-event) ' + err.message))
+    }).catch((err: Error) => this.$ga.exception('(Front-event) ' + err.message))
       .finally( () => {
         this.eventLoading = false
 
         performance.mark('frontEventLoadEnd')
         performance.measure('frontEventLoad', 'frontEventLoadStart', 'frontEventLoadEnd')
-        // this.$analytics.trackTiming('API Load', 'Events', Math.round(performance.getEntriesByName('frontEventLoad')[0].duration))
+        this.$ga.time('API Load', 'Events', Math.round(performance.getEntriesByName('frontEventLoad')[0].duration))
         performance.clearMarks('frontEventLoadStart')
         performance.clearMarks('frontEventLoadEnd')
         performance.clearMeasures('frontEventLoad')
@@ -301,7 +300,7 @@ export default class IndexPage extends Vue {
     this.doorShowDate = true
     setTimeout(() => this.doorShowDate = false, 3000)
 
-    // this.$analytics.trackEvent('Door', 'Reveal timestamp')
+    this.$ga.event('Door', 'Reveal timestamp')
   }
 
   setColor(): void {

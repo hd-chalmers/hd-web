@@ -47,7 +47,7 @@
     font-size: 1.05em;
   }
 
-  .v-application .container .subtitle-2, .v-application .container .subtitle-1, .v-application .container .body-1, .v-application .container .body-2 {
+  .v-application .container .text-subtitle-2, .v-application .container .text-subtitle-1, .v-application .container .text-body-1, .v-application .container .text-body-2 {
     font-size: 1.05em !important;
   }
 }
@@ -83,7 +83,7 @@ export default class Base extends Vue {
           'background-attachment: fixed;' +
           'background-size: cover ;"'
       })
-       // .finally(() => this.$analytics.trackTiming('Initial Load', 'Load layout', Math.round(performance.now())))
+       .finally(() => this.$ga.time('Initial Load', 'Load layout', Math.round(performance.now())))
     }
 
     getCookie(cname: string): string {
@@ -103,14 +103,13 @@ export default class Base extends Vue {
     }
 
     getConsent(): void{
-      console.log(document.cookie)
-      console.log(this.getCookie("consent") === 'true')
       this.consent = this.getCookie("consent") === 'true'
     }
 
     setConsent(consent: boolean): void{
       document.cookie = "consent=" + consent + ';'
-      console.log(document.cookie)
+
+      this.$ga.event("Tracking", "consent")
 
       this.getConsent()
     }

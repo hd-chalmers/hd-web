@@ -38,6 +38,11 @@ import {HomeIcon, AlertOctagonIcon} from "vue-feather-icons";
   }
 })
 export default class Error404 extends Vue{
+  created(): void {
+    console.log(this.$props.error.statusCode)
+    this.$ga.event("Load error", "error " + this.$props.error.statusCode, this.$router.currentRoute.path)
+  }
+
   toHome(): void{
     this.$router.push("/")
   }

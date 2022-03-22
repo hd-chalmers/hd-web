@@ -7,8 +7,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - hd-web',
-    title: 'hd-web',
+    titleTemplate: '%s - HD',
+    title: 'H-sektionens Datorförening',
     htmlAttrs: {
       lang: 'sv'
     },
@@ -45,7 +45,9 @@ export default {
 
     '@nuxtjs/eslint-module',
 
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+
+    '@nuxtjs/google-analytics'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -82,6 +84,13 @@ export default {
       nativeUI: true,
       lang: "se",
       themeColor: "#f2008d"
+    }
+  },
+
+  googleAnalytics: {
+    id: process.env.NUXT_ENV_TRACKING_ID,
+    autoTracking: {
+      exception: true
     }
   },
 
