@@ -1,13 +1,13 @@
 
 <template>
 <v-app id="app" v-bind:style="backgroundProperties">
-<Navbar></Navbar>
+<Navbar class="hidden-print-only"></Navbar>
         <v-main>
           <v-scroll-y-reverse-transition leave-absolute>
             <Nuxt/>
           </v-scroll-y-reverse-transition>
 
-          <v-expand-transition>
+          <v-expand-transition class="hidden-print-only">
             <v-alert v-if="!consent" color="info" style="position: fixed; width: 100%; bottom: 0; margin: 0;" dense>
               <v-container style="display: flex; justify-content: space-between; align-items: center; padding-top: 0; padding-bottom: 0;" :style="$vuetify.breakpoint.xsOnly ? 'flex-direction: column;' : ''">
                 <p style="display: inline-block; margin: 0;">

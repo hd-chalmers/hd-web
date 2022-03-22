@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <v-btn id="home-button" style="margin: 15px;" fab fixed color="#DE3163" to="/loehk"><HomeIcon/></v-btn>
+    <div id="barcodes">
+      <v-btn id="home-button" style="margin: 15px;" fab fixed color="#DE3163" to="/loehk/home"><HomeIcon/></v-btn>
         <v-row v-for="(row,key) in rows" :key="key" style="page-break-after: always" dense>
             <v-col cols="4" class="text-center" v-for="(user) in row" :key="user.uid" style="display: flex; flex-direction: column; align-items: center;">
                 <strong v-if="user.name !== ''" style="overflow: hidden;">{{ user.name.substr(0, 20) }}</strong>
@@ -56,7 +56,7 @@ export default class PrintView extends Vue{
 
   getData(): void{
     //this.state.then(obj => {
-      fetch(process.env.VUE_APP_API_URL + '/loehk/investments/print', {
+      fetch(process.env.NUXT_ENV_API_URL + '/loehk/investments/print', {
         headers: {
           Authorization: SessionStore.getSessionId() ?? ""
         }
@@ -95,6 +95,15 @@ export default class PrintView extends Vue{
 @media print {
   #home-button{
     display: none;
+  }
+
+  #barcodes{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: black;
   }
 }
 </style>

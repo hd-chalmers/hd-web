@@ -131,8 +131,6 @@
 </template>
 
 <script lang="ts">
-
-
 import {Component, Vue} from "vue-property-decorator";
 import {LoehkSummaryData} from "@/assets/interfaces";
 import {SessionStore} from "@/store/sessionStore";

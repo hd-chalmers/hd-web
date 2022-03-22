@@ -66,7 +66,7 @@
                   <v-card-actions>
                     <v-row>
                       <v-col cols="12" sm="1">
-                        <v-btn text to="/loehk/investments/print">
+                        <v-btn text nuxt to="/loehk/print/investments">
                           <printer-icon/>
                         </v-btn>
                       </v-col>
