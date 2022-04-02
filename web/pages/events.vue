@@ -5,6 +5,9 @@
             <v-card-title>
               <h3> Kommande Arrangemang </h3>
             </v-card-title>
+            <v-card-text>
+              Varje läsperiod så sker Chilla med HD i läsvecka 2 & 6 medan Spelpuben sker i läsvecka 4.
+            </v-card-text>
             <v-card-text v-if="!events[0] && !loading">
               <span>Inga arrangemang är just nu inlagda</span>
             </v-card-text>
