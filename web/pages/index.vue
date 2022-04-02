@@ -16,31 +16,8 @@
         </v-col>
 
         <v-col cols="12" md="7" xl="6" align-self="stretch" style="display: flex; flex-flow: column;">
-          <v-card @click="showDate()" style="cursor: default;" elevation="6">
-            <v-card-text class="flex justify-space-between align-content-center" style="display: flex; align-items: center; transition: color 1s ease; height: 100%;" id="doorCard">
-              <template v-if="!doorLoading">
-                <v-scroll-x-transition leave-absolute>
-                  <lock-icon v-if="doorIcon === 'lock'"/>
-                </v-scroll-x-transition>
-                <v-scroll-x-transition leave-absolute>
-                  <unlock-icon v-if="doorIcon === 'unlock'"/>
-                </v-scroll-x-transition>
-                <v-scroll-x-transition leave-absolute>
-                  <alert-circle-icon v-if="doorIcon === 'alert'"/>
-                </v-scroll-x-transition>
-                <v-scroll-x-transition leave-absolute>
-                  <span v-if="!doorShowDate">Hoppas du har en bra dag :)</span>
-                </v-scroll-x-transition>
-                <v-scroll-x-transition leave-absolute>
-                  <span v-if="doorShowDate" style="line-height: 12px; font-size: 11px; text-align: right;">{{doorOpenTimestamp}} <br> ca {{doorDuration}} sedan</span>
-                </v-scroll-x-transition>
-              </template>
-              <template v-if="doorLoading">
-                <v-progress-circular indeterminate color="primary"></v-progress-circular>
-                <v-skeleton-loader style="width: 20vw;" type="text"></v-skeleton-loader>
-              </template>
-            </v-card-text>
-          </v-card>
+
+          <door-card :intervalCallback="saveDoorInterval"/>
 
           <v-card :style=" $vuetify.breakpoint.xsOnly ? 'margin-bottom: 6px; order: -1; flex-grow: 1;' : 'margin-top: 6px; flex-grow: 1;'" elevation="6">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
@@ -121,19 +98,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import {EventType, FrontpageData} from '@/assets/interfaces'
-import { AlertCircleIcon, LockIcon, UnlockIcon, FacebookIcon, MapPinIcon, AlignLeftIcon, ArrowRightIcon, CalendarIcon } from 'vue-feather-icons'
+import { ArrowRightIcon, CalendarIcon } from 'vue-feather-icons'
 import footerCard from '@/components/common/footerCard.vue'
 import {NavigationGuardNext, Route} from "vue-router";
 
 @Component({
   components: {
-    LockIcon,
-    UnlockIcon,
-    AlertCircleIcon,
     footerCard,
-    FacebookIcon,
-    MapPinIcon,
-    AlignLeftIcon,
     ArrowRightIcon,
     CalendarIcon
   }
@@ -145,9 +116,6 @@ export default class IndexPage extends Vue {
     this.getData()
     performance.mark('frontEventLoadStart')
     this.getEvents()
-    this.getStatus()
-
-    this.interval = setInterval(this.getStatus, 10000);
 
     //this.initSocialEmbed(document, "script", "EmbedSocialHashtagScript", "https://embedsocial.com/cdn/ht.js")
     //this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
@@ -157,24 +125,20 @@ export default class IndexPage extends Vue {
   frontpageImg = ''
   error = ''
   loading = true
-  interval: NodeJS.Timer
   timeout: NodeJS.Timeout | undefined
-
-  doorShowDate = false
-  doorLoading = true
-  doorState: boolean | null = null
-  doorDuration = ''
-  doorOpenTimestamp = '0000-00-00 00:00:00'
-  doorIcon = 'mdi-alert-circle'
-  doorColor: string | undefined = 'black'
+  doorInterval: NodeJS.Timer | undefined
 
   eventPreviews: EventType[] = []
   eventLoading = true
 
   beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext): void {
-    clearInterval(this.interval)
     clearTimeout(this.timeout!)
+    clearTimeout(this.doorInterval!)
     next()
+  }
+
+  saveDoorInterval(interval: NodeJS.Timer){
+    this.doorInterval = interval
   }
 
   async getData(): Promise<void> {
@@ -201,46 +165,6 @@ export default class IndexPage extends Vue {
       })
   }
 
-  getStatus(): void {
-    fetch(process.env.NUXT_ENV_API_URL + '/door')
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        } else {
-          this.doorState = null
-          this.doorIcon = 'alert'
-          this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
-          return null
-        }
-      }).then((res: { status: boolean | null, updated: string, duration_str: string, duration: number }) => {
-      if (res) {
-        this.doorState = res.status
-        this.doorOpenTimestamp = res.updated
-        this.doorDuration = res.duration_str
-        if (res.status) {
-          this.doorIcon = 'unlock'
-          this.doorColor = this.$vuetify.theme.currentTheme.success?.toString()
-        } else if (res.status === null) {
-          this.doorState = null
-          this.doorIcon = 'alert'
-          this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
-        } else {
-          this.doorIcon = 'lock'
-          this.doorColor = this.$vuetify.theme.currentTheme.error?.toString()
-        }
-      }
-    }).catch((err: Error) => {
-      this.doorState = null
-      this.doorIcon = 'alert'
-      this.doorColor = this.$vuetify.theme.currentTheme.warning?.toString()
-
-      this.$ga.exception('(Door) ' + err.message)
-    }).finally(() => {
-      this.doorLoading = false
-      this.setColor()
-    })
-  }
-
   getEvents(): void{
     this.eventLoading = true
 
@@ -258,20 +182,6 @@ export default class IndexPage extends Vue {
         performance.clearMarks('frontEventLoadEnd')
         performance.clearMeasures('frontEventLoad')
       })
-  }
-
-  showDate(): void {
-    this.getStatus()
-    this.doorShowDate = true
-    setTimeout(() => this.doorShowDate = false, 3000)
-
-    this.$ga.event('Door', 'Reveal timestamp')
-  }
-
-  setColor(): void {
-    const door = document.getElementById('doorCard') as HTMLElement
-    door.style.color = this.doorColor as string
-
   }
 }
 </script>
