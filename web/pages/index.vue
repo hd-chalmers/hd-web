@@ -9,7 +9,7 @@
 
         <v-col cols="12" v-if="$vuetify.breakpoint.xsOnly && eventPreviews[0]">
           <v-card @click="$router.push('/events')" elevation="7">
-            <v-alert style="margin: 0" color="accent" text>
+            <v-alert style="margin: 0" color="primary" text>
               <strong>Nästa Event: </strong> {{eventPreviews[0].title + ' - ' + new Date(eventPreviews[0].date).toLocaleDateString('sv-SE', {weekday:'long', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'})}}
             </v-alert>
           </v-card>
@@ -85,43 +85,8 @@
               <div v-if="!eventPreviews.length" style="margin-bottom: 30px;">
                 Det finns inga evenemang inlagda just nu
               </div>
-                <v-card v-for="event in eventPreviews" :key="event.id" style="margin: 10px 0;" elevation="5">
-                  <v-card-title>
-                    <h5>
-                      {{event.title}}
-
-                      <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" v-bind:href="event.facebook_event_link" @click="$ga.social('Facebook', 'Frontpage Facebook click', event.facebook_event_link)">
-                        <facebook-icon/>
-                      </v-btn>
-                    </h5>
-                  </v-card-title>
-                  <v-card-subtitle style="padding-bottom: 0;">
-                    <h3>
-                      {{ new Date(event.date).toLocaleString('sv', {
-                      year: 'numeric',
-                      month: 'numeric',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}}
-                    </h3>
-                  </v-card-subtitle>
-                    <v-list v-if="event.location || event.description">
-                                <v-list-item v-if="event.location || event.description">
-                                  <v-list-item-subtitle>
-                                    <span v-if="event.location" style="margin-right: 10px;">
-                                      <map-pin-icon size="1x"/>
-                                        Plats: {{event.location}}
-                                    </span>
-
-                                    <span v-if="event.description">
-                                      <align-left-icon size="1x" style="margin-right: 5px;"/>
-                                      {{event.description}}
-                                    </span>
-                      </v-list-item-subtitle>
-                    </v-list-item>
-                    </v-list>
-                </v-card>
+                <event-card v-for="event in eventPreviews" :key="event.id" style="margin: 10px 0;" elevation="5" compact
+                        :title="event.title" :date="new Date(event.date)" :description="event.description" :facebook="event.facebook_event_link" :location="event.location"></event-card>
             </v-card-text>
               <v-btn style=" position: absolute; bottom: 0; width: 100%;" tile elevation="6" @click="$router.push('/events')">
                 {{ eventPreviews.length ? `Se alla ${eventPreviews.length} evenemang`: 'Gå till evenemangs sidan'}}

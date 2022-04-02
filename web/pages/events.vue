@@ -15,39 +15,10 @@
       <v-card v-if="loading" class="mb-3">
         <v-skeleton-loader type="article"></v-skeleton-loader>
       </v-card>
-                    <v-card v-for="event in events" v-bind:key="event.id" class="mb-3" elevation="6">
-                        <v-card-title>
-                          <h5>
-                             {{event.title}}
+                    <event-card v-for="event in events" v-bind:key="event.id" class="mb-3"
+                                :title="event.title" :date="event.date" :description="event.description" :facebook="event.facebook_event_link" :location="event.location">
 
-
-                                <v-btn v-if="event.facebook_event_link" style="background-color: transparent;" icon color="blue" target="_blank" @click="$ga.social('Facebook', 'Events Facebook click', event.facebook_event_link)" v-bind:href="event.facebook_event_link">
-                                    <facebook-icon/>
-                                </v-btn>
-                          </h5>
-                        </v-card-title>
-                        <v-card-subtitle>
-                          <h3>
-                            {{event.date.toLocaleString('sv', {
-                            year: 'numeric',
-                            month: 'numeric',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}}
-                          </h3>
-                        </v-card-subtitle>
-                        <v-card-text v-if="event.location || event.description">
-                                <span v-if="event.location">
-                                  <map-pin-icon size="1x"/>
-                                    Plats: {{event.location}}<br/><br/>
-                                </span>
-                              <span v-if="event.description" style="display: flex; align-items: center;">
-                                <align-left-icon size="1x" style="margin-right: 5px;"/>
-                                {{event.description}}
-                              </span>
-                        </v-card-text>
-                    </v-card>
+                    </event-card>
       <footer-card class="elevation-6"/>
     </v-container>
 </template>
@@ -56,14 +27,10 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { EventType } from '@/assets/interfaces'
 import footerCard from '@/components/common/footerCard.vue'
-import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
 
 @Component({
       components: {
-        footerCard,
-        FacebookIcon,
-        MapPinIcon,
-        AlignLeftIcon
+        footerCard
       }
     })
     export default class EventPage extends Vue {
