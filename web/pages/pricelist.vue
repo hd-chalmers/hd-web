@@ -7,16 +7,18 @@
       <img src="/img/HD_logo.webp" width="90px" id="printLogo" alt="HD:s logotyp"/>
       <v-card-text>
         <v-row>
-        <v-col v-for="category in categories" v-bind:key="'c' + category.id">
-          <div style="min-width: 200px;">
-          <h2 :style="`color: ${$vuetify.theme.currentTheme.primary}; font-size: 1.6em; margin-bottom: 5px;`">{{category.name}}</h2>
-          <div v-for="product in category.products" v-bind:key="'p' + product.id" class="productEntry"
-               style="display: flex; justify-content: space-between; font-size: 1.3em; padding: 2.5px 0;">
-            <strong>{{product.name}}</strong>
-            <span>{{product.price}} kr</span>
-          </div>
-          </div>
-        </v-col>
+          <template v-for="category in categories">
+            <v-col v-bind:key="'c' + category.id" v-if="category.products.length">
+              <div style="min-width: 200px;">
+              <h2 :style="`color: ${$vuetify.theme.currentTheme.primary}; font-size: 1.6em; margin-bottom: 5px;`">{{category.name}}</h2>
+              <div v-for="product in category.products" v-bind:key="'p' + product.id" class="productEntry"
+                   style="display: flex; justify-content: space-between; font-size: 1.3em; padding: 2.5px 0;">
+                <strong>{{product.name}}</strong>
+                <span>{{product.price}} kr</span>
+              </div>
+              </div>
+            </v-col>
+          </template>
           <template v-if="loading">
             <v-col>
               <v-skeleton-loader type="article"></v-skeleton-loader>
@@ -96,7 +98,7 @@ export default class pricelist extends Vue{
 
   getData(): void{
     this.loading = true
-    fetch(process.env.VUE_APP_API_URL + '/pricelist').then(res => res.json()).then((res: PricelistCategory[]) => {
+    fetch(process.env.NUXT_ENV_API_URL + '/pricelist').then(res => res.json()).then((res: PricelistCategory[]) => {
       this.error = ''
       this.categories = res
     })
