@@ -67,7 +67,12 @@ import {ExternalLinkIcon} from "vue-feather-icons";
   })
 export default class Base extends Vue {
     created(): void {
-      this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+      if(window.localStorage.getItem("theme")){
+        this.$vuetify.theme.dark = window.localStorage.getItem("theme") === "dark"
+      } else {
+        this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      }
 
       this.getConsent()
       this.getData()
@@ -86,28 +91,12 @@ export default class Base extends Vue {
        .finally(() => this.$ga.time('Initial Load', 'Load layout', Math.round(performance.now())))
     }
 
-    getCookie(cname: string): string {
-      let name = cname + "=";
-      let decodedCookie = decodeURIComponent(document.cookie);
-      let ca = decodedCookie.split(';');
-      for(let i = 0; i <ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
-    }
-
     getConsent(): void{
-      this.consent = this.getCookie("consent") === 'true'
+      this.consent = window.localStorage.getItem("consent") === 'true'
     }
 
     setConsent(consent: boolean): void{
-      document.cookie = "consent=" + consent + ';'
+      window.localStorage.setItem("consent", '' + consent)
 
       this.$ga.event("Tracking", "consent")
 

@@ -194,8 +194,10 @@ export default class navbar extends Vue {
 
    if(this.$vuetify.theme.dark){
       this.$ga.event("Theme", "Switched to Dark mode")
+      window.localStorage.setItem("theme", "dark")
     } else {
       this.$ga.event("Theme", "Switched to Light mode")
+      window.localStorage.setItem("theme", "light")
     }
   }
 
