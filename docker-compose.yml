@@ -1,50 +1,16 @@
 version: "3"
 
 services:
-  hd:
-    build: .
+  hd-site:
+    build: web
     hostname: hd
     env_file:
-      - ./web/.env
+      - web/.env
     ports:
-      - 8081:8080
-      - 6001:6001
+      - 80:80
     volumes:
-      - ./web:/var/www/html
-      - ./web/bootstrap/cache:/opt/app/cache
-      - /var/www/html/bootstrap/cache
-      - ./web/storage/logs:/opt/app/logs
-      - ./web/storage/logs/docker:/var/www/html/storage/logs
-      - ./web/storage/app/public:/var/www/html/public/storage
-    restart: on-failure:3
-    depends_on:
-    - hd-db
-    - hd-memcached
-    - hd-redis
-
-  hd-db:
-    #    image: registry.wayatech.se/frontend/hd/db
-    build: db
-    hostname: hd-db
-    env_file:
-      - ./web/.env
-    ports:
-      - ${HOST_AUX_PORT_HEKTO:-10}81:5432
-    restart: on-failure:3
-
-  hd-memcached:
-    image: memcached:latest
-    hostname: hd-memcached
-    env_file:
-    - ./web/.env
-    restart: on-failure:3
-
-  hd-redis:
-    image: redis:latest
-    hostname: hd-redis
-    env_file:
-      - ./web/.env
-    restart: on-failure:3
+      - ../media:/usr/share/nginx/html/img/years
+    restart: on-failure
 
 networks:
   default:
