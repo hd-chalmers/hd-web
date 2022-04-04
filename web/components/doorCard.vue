@@ -27,14 +27,8 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator";
+import {Component, Prop, Vue} from "vue-property-decorator";
 import {AlertCircleIcon, LockIcon, UnlockIcon} from "vue-feather-icons";
-
-const doorProps = Vue.extend({
-  props: {
-    intervalCallback: Function
-  }
-})
 
 @Component({
   components: {
@@ -43,13 +37,15 @@ const doorProps = Vue.extend({
     AlertCircleIcon,
   }
 })
-export default class DoorCard extends doorProps{
+export default class DoorCard extends Vue{
   created():void {
     this.getStatus()
 
     this.interval = setInterval(this.getStatus, 10000);
-    this.intervalCallback(this.interval)
+    this.intervalCallback(this.interval as any)
   }
+
+  @Prop() intervalCallback = Function
 
   doorShowDate = false
   doorLoading = true

@@ -53,29 +53,9 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator"
+import {Component, Prop, Vue} from "vue-property-decorator"
 import {FacebookIcon, MapPinIcon, AlignLeftIcon} from 'vue-feather-icons'
 
-const eventProps = Vue.extend({
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    date: {
-      type: Date,
-      required: true
-    },
-    location: String,
-    facebook: String,
-    description: String,
-    compact: Boolean,
-    elevation: {
-      type: String,
-      default: "6"
-    }
-  }
-})
 
 @Component({
   components: {
@@ -84,8 +64,23 @@ const eventProps = Vue.extend({
     AlignLeftIcon
   }
 })
-export default class EventCard extends eventProps{
-
+export default class EventCard extends Vue{
+  @Prop() title = {
+    type: String,
+    required: true
+  }
+  @Prop() date = {
+    type: Date,
+    required: true
+  }
+  @Prop() location = String
+  @Prop() facebook = String
+  @Prop() description = String
+  @Prop() compact = Boolean
+  @Prop() elevation = {
+    type: String,
+    default: "6"
+  }
 }
 </script>
 
