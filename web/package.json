@@ -6,7 +6,9 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "styleguide": "vue-styleguidist server",
+    "styleguide:build": "vue-styleguidist build"
   },
   "dependencies": {
     "@babel/core": "^7.17.7",
@@ -39,6 +41,7 @@
     "@typescript-eslint/parser": "^5.15.0",
     "eslint": "^8.11.0",
     "eslint-plugin-vue": "^8.5.0",
-    "eslint-plugin-vuetify": "^1.1.0"
+    "eslint-plugin-vuetify": "^1.1.0",
+    "vue-styleguidist": "^4.44.27"
   }
 }
