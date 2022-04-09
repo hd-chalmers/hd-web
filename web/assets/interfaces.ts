@@ -1,7 +1,7 @@
 import {Route} from "vue-router";
 
 export interface EventType {
-  id: bigint
+  id: number
   title: string
   description: string | null
   location: string | null
