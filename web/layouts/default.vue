@@ -7,8 +7,8 @@
             <Nuxt/>
           </v-scroll-y-reverse-transition>
 
-          <v-expand-transition class="hidden-print-only">
-            <v-alert v-if="!consent" color="info" style="position: fixed; width: 100%; bottom: 0; margin: 0;" dense>
+          <v-expand-transition class="d-print-none">
+            <v-alert v-if="consent === null" color="info" style="position: fixed; width: 100%; margin: 0;" :style="$vuetify.breakpoint.xsOnly ? 'bottom: 56px;' : 'bottom: 0;'" class="d-print-none" dense>
               <v-container style="display: flex; justify-content: space-between; align-items: center; padding-top: 0; padding-bottom: 0;" :style="$vuetify.breakpoint.xsOnly ? 'flex-direction: column;' : ''">
                 <p style="display: inline-block; margin: 0;">
                   Denna sidan använder sig av Google Analytics för att samla anonym statistik. Läs om deras
@@ -16,7 +16,10 @@
                     integritets policy här. <external-link-icon size="1x"/>
                   </a>
                 </p>
-                <v-btn color="warning" @click="setConsent(true)" style="z-index: 11;" :width="$vuetify.breakpoint.xsOnly ? '100%' : ''"> Jag förstår </v-btn>
+                <span :style="$vuetify.breakpoint.xsOnly ? 'width: 100%' : ''">
+                  <v-btn color="error" @click="setConsent(false)" style="z-index: 11;" :width="$vuetify.breakpoint.xsOnly ? '49%' : '130px'"> Jag nekar </v-btn>
+                  <v-btn color="warning" @click="setConsent(true)" style="z-index: 11;" :width="$vuetify.breakpoint.xsOnly ? '49%' : '130px'"> Jag medger </v-btn>
+                </span>
               </v-container>
             </v-alert>
           </v-expand-transition>
@@ -68,17 +71,21 @@ import {ExternalLinkIcon} from "vue-feather-icons";
 export default class Base extends Vue {
     created(): void {
 
-      if(window.localStorage.getItem("theme")){
-        this.$vuetify.theme.dark = window.localStorage.getItem("theme") === "dark"
-      } else {
-        this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      try {
+        if (window.localStorage.getItem("theme")) {
+          this.$vuetify.theme.dark = window.localStorage.getItem("theme") === "dark"
+        } else {
+          this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        }
+      } catch (e) {
+        console.error(e)
       }
 
       this.getConsent()
       this.getData()
     }
     backgroundProperties = ''
-    consent = false;
+    consent: boolean | null = false;
 
     getData(): void{
       fetch(process.env.NUXT_ENV_API_URL + '/background').then(res =>res.json()).then((res: {background_image: string | null}) => {
@@ -92,11 +99,34 @@ export default class Base extends Vue {
     }
 
     getConsent(): void{
-      this.consent = window.localStorage.getItem("consent") === 'true'
+      let c: string | null
+
+      try {
+        c = window.localStorage.getItem("consent")
+      } catch (e) {
+        console.error(e)
+        this.$ga.disable()
+        return
+      }
+
+      if(c === null){
+        this.consent = null
+      } else {
+        this.consent = c === 'true'
+      }
+
+      if(this.consent === false){
+        this.$ga.disable()
+      }
     }
 
     setConsent(consent: boolean): void{
-      window.localStorage.setItem("consent", '' + consent)
+      try {
+        window.localStorage.setItem("consent", '' + consent)
+      } catch (e){
+        console.error(e)
+        return
+      }
 
       this.$ga.event("Tracking", "consent")
 
