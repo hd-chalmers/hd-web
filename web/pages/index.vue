@@ -84,7 +84,7 @@
   #eventCard{
     height: 100%;
     overflow-y: hidden;
-    max-height: 555px;
+    max-height: 650px;
   }
 
   @media  screen and (min-width: 2450px){
