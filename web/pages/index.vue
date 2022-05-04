@@ -41,7 +41,7 @@
                 och intar socker i olika former.</p>
               <p>Vi tillhandahåller även hjälp i diverse datorrelaterade kurser.</p>
               <p>Vi leverar socker samt högupplöst kärlek till alla och några till. Våra arr är alkoholfria, med undantag för våra spelpubar som vi har några gånger per år.</p>
-              <p>Så om ni vill spela spel, ha hjälp med programmering eller bara få er en sockerchock är det oss ni ska vända er till.</p>
+              <p>Så om ni vill spela spel, ha hjälp med programmering eller bara få er en sockershock är det oss ni ska vända er till.</p>
               <p>Vårt tillhåll är vid lilla FöreningsTorget i källaren av Svea-huset.</p>
               <!----<p>Vi håller till i katakomberna under Lindholmen.</p>----->
               <p><strong>TL;DR:</strong> Socker, spel, datorer, kakor, läsk, SOCKER!!1!</p>
