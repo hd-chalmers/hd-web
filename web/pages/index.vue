@@ -17,7 +17,7 @@
 
         <v-col cols="12" md="7" xl="6" align-self="stretch" style="display: flex; flex-flow: column;">
 
-          <door-card :intervalCallback="saveDoorInterval"/>
+          <door-card v-model="doorInterval"/>
 
           <v-card :style=" $vuetify.breakpoint.xsOnly ? 'margin-bottom: 6px; order: -1; flex-grow: 1;' : 'margin-top: 6px; flex-grow: 1;'" elevation="6">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
@@ -102,6 +102,9 @@ import { ArrowRightIcon, CalendarIcon } from 'vue-feather-icons'
 import footerCard from '@/components/common/footerCard.vue'
 import {NavigationGuardNext, Route} from "vue-router";
 
+/**
+ * The frontpage which shows group photos, description and events.
+ */
 @Component({
   components: {
     footerCard,
@@ -110,6 +113,9 @@ import {NavigationGuardNext, Route} from "vue-router";
   }
 })
 export default class IndexPage extends Vue {
+  /**
+   * The constructor. Gets the group photo and events from the server.
+   */
   constructor() {
     super()
     performance.mark('frontLoadStart')
@@ -121,26 +127,38 @@ export default class IndexPage extends Vue {
     //this.initSocialEmbed(document, "script", "EmbedSocialStoriesScript", "https://embedsocial.com/embedscript/st.js")
   }
 
-
+  // The group photo link.
   frontpageImg = ''
+  // Error message if any api call fails.
   error = ''
+  // loading state for group photo
   loading = true
+  // timeout if group photo is not loaded
   timeout: NodeJS.Timeout | undefined
+  // interval for getting door status
   doorInterval: NodeJS.Timer | undefined
 
+  // Events to be displayed on the frontpage.
   eventPreviews: EventType[] = []
+  // Loading state for events
   eventLoading = true
 
+  /**
+   * Cleans up the interval and timeout. When the user navigates away from the page.
+   * @param to Route to the next page.
+   * @param from Route navigated from.
+   * @param next Function to call to navigate to the next page.
+   */
   beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext): void {
     clearTimeout(this.timeout!)
-    clearTimeout(this.doorInterval!)
+    clearInterval(this.doorInterval!)
     next()
   }
 
-  saveDoorInterval(interval: NodeJS.Timer){
-    this.doorInterval = interval
-  }
-
+  /**
+   * Gets the group photo from the server.
+   * @public
+   */
   async getData(): Promise<void> {
     this.loading = true
     fetch(process.env.NUXT_ENV_API_URL + '/frontpage').then(res => res.json()).then((res: FrontpageData) => {
@@ -165,6 +183,10 @@ export default class IndexPage extends Vue {
       })
   }
 
+  /**
+   * Gets the events from the server.
+   * @public
+   */
   getEvents(): void{
     this.eventLoading = true
 

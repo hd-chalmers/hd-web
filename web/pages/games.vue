@@ -140,6 +140,9 @@ import footerCard from "@/components/common/footerCard.vue";
 import { UsersIcon, ClockIcon, CalendarIcon, LayersIcon, TagIcon, MonitorIcon, BoxIcon, FilterIcon, AlignRightIcon, SearchIcon } from "vue-feather-icons";
 import {GameData} from "@/assets/interfaces";
 
+/**
+ * The games page which lists all games and categorizes them. Can be filtered by name, platform, genre, publisher, and year.
+ */
 @Component({
   components: {
     footerCard,
@@ -156,46 +159,64 @@ import {GameData} from "@/assets/interfaces";
   }
 })
 export default class GameList extends Vue{
-    constructor() {
+
+  /**
+   * Constructor for the games page.
+   */
+  constructor() {
      super()
 
       performance.mark('gameLoadStart')
       this.getGames()
     }
 
-            loading = true
-            games: GameData[] = []
-            search = ''
-            groupBy = 'platform'
-            error: string | null = null
-            groups = [
-              {title: 'Ogrupperad', value: ''},
-              {title: 'Platform', value: 'platform'},
-              {title: 'Genre', value: 'genre'},
-              {title: 'Minst antal spelare', value: 'min_players'},
-              {title: 'Max antal spelare', value: 'max_players'},
-              {title: 'Kortast speltid', value: 'min_playtime'},
-              {title: 'Längst speltid', value: 'max_playtime'},
-              {title: 'Utgivnings år', value: 'published_year'}
-            ]
-            sortBy = 'name'
-            sortingOptions = [
-              {title: 'Alphabetisk Ordning', value: 'name'},
-              {title: 'Platform', value: 'platform'},
-              {title: 'Genre', value: 'genre'},
-              {title: 'Minst antal spelare', value: 'min_players'},
-              {title: 'Max antal spelare', value: 'max_players'},
-              {title: 'Kortast speltid', value: 'min_playtime'},
-              {title: 'Längst speltid', value: 'max_playtime'},
-              {title: 'Utgivnings år', value: 'published_year'}
-            ]
-            expanded: number[] = []
-/*
+        // Loading state for the games page
+        loading = true
+        // The games to be displayed
+        games: GameData[] = []
+        // Search query
+        search = ''
+        // The selected group to categorize the games by
+        groupBy = 'platform'
+        // error message for when the games could not be loaded
+        error: string | null = null
+        // options for categorizing the games
+        groups = [
+          {title: 'Ogrupperad', value: ''},
+          {title: 'Platform', value: 'platform'},
+          {title: 'Genre', value: 'genre'},
+          {title: 'Minst antal spelare', value: 'min_players'},
+          {title: 'Max antal spelare', value: 'max_players'},
+          {title: 'Kortast speltid', value: 'min_playtime'},
+          {title: 'Längst speltid', value: 'max_playtime'},
+          {title: 'Utgivnings år', value: 'published_year'}
+        ]
+        // The selected group to sort the games by
+        sortBy = 'name'
+  // options for sorting the games
+        sortingOptions = [
+          {title: 'Alphabetisk Ordning', value: 'name'},
+          {title: 'Platform', value: 'platform'},
+          {title: 'Genre', value: 'genre'},
+          {title: 'Minst antal spelare', value: 'min_players'},
+          {title: 'Max antal spelare', value: 'max_players'},
+          {title: 'Kortast speltid', value: 'min_playtime'},
+          {title: 'Längst speltid', value: 'max_playtime'},
+          {title: 'Utgivnings år', value: 'published_year'}
+        ]
+        // Keeps track of which entries are expanded
+        expanded: number[] = []
+        /*
         expandRow(row?: any): number {
             console.log(row)
             return this.expanded
         }
         */
+
+        /**
+         * Gets the games from the database.
+         * @public
+         */
         getGames(): void {
           fetch(process.env.NUXT_ENV_API_URL + '/games', {
             headers:
@@ -223,12 +244,22 @@ export default class GameList extends Vue{
           })
         }
 
-      goToEntry(targetId: number | bigint): void {
+        /**
+         * A method to have the window scroll to the referenced entry and highlight it.
+         * @param targetId The id of the game to scroll to.
+         * @public
+         */
+        goToEntry(targetId: number | bigint): void {
           const target = document.getElementById('s' + targetId) as HTMLElement
           target.style.backgroundColor = this.$vuetify.theme.currentTheme.primary + '22'
           this.$vuetify.goTo('#s' + targetId, {offset: 200});
         }
 
+        /**
+         * A method to remove the highlight from the entry.
+         * @param targetId The id of the game to remove the highlight from.
+         * @public
+         */
         clearSelect(targetId: number | bigint): void{
           const target = document.getElementById('s' + targetId)
           if(target?.style.backgroundColor)
