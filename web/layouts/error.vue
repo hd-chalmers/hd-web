@@ -22,19 +22,18 @@
 
 <script lang="ts">
 
-import {Component, Vue} from "vue-property-decorator";
+import {Component, Prop, Vue} from "vue-property-decorator";
 import {HomeIcon, AlertOctagonIcon} from "vue-feather-icons";
 
+/**
+ * An error page that shown when a client side error occurs such as 404 when a page is not found or 500 when a crash occurs.
+ * There is a button that directs to the homepage. While the page is in the layouts folder
+ * it is used as a page. See the Nuxt documentation for more information.
+ */
 @Component<Error404>({
   components:{
     HomeIcon,
     AlertOctagonIcon
-  },
-  props: {
-    error: {
-      type: Object,
-      default: null
-    }
   }
 })
 export default class Error404 extends Vue{
@@ -42,6 +41,12 @@ export default class Error404 extends Vue{
     console.log(this.$props.error.statusCode)
     this.$ga.event("Load error", "error " + this.$props.error.statusCode, this.$router.currentRoute.path)
   }
+
+  /**
+   * The error object that is passed to the component that contains the status code and the message.
+   */
+  @Prop({type: Object, default: null}) error!: {statusCode: number, message: string}
+
 
   toHome(): void{
     this.$router.push("/")
