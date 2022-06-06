@@ -2,26 +2,31 @@
   <span class="d-print-none">
     <v-app-bar app elevate-on-scroll clipped-left :bottom="$vuetify.breakpoint.xsOnly">
       <v-container style="display: flex; align-items: center; padding: 0">
+
+        <!-- Logo -->
         <v-img src="/img/HD_logo.webp" id="hd-logo" max-width="100" style="z-index: 10; cursor: pointer;" @click="$router.push('/')"></v-img>
-      <nuxt-link to="/">
-        <v-toolbar-title @click.once="setLoad(true, $event)">
-            <v-btn
-                class="hidden-sm-and-down"
-                text
-                :small="$vuetify.breakpoint.mobile"
-            >
-                <span style="color: #E0218A">H</span>-Sektionens Datorförening
-            </v-btn>
-            <v-btn
-                class="hidden-md-and-up"
-                text
-                :small="$vuetify.breakpoint.xs">
-                <span style="color: #E0218A">H</span>
-              <span>D</span>
-            </v-btn>
-        </v-toolbar-title>
-      </nuxt-link>
+        <nuxt-link to="/">
+          <v-toolbar-title @click.once="setLoad(true, $event)">
+              <v-btn
+                  class="hidden-sm-and-down"
+                  text
+                  :small="$vuetify.breakpoint.mobile"
+              >
+                  <span style="color: #E0218A">H</span>-Sektionens Datorförening
+              </v-btn>
+              <v-btn
+                  class="hidden-md-and-up"
+                  text
+                  :small="$vuetify.breakpoint.xs">
+                  <span style="color: #E0218A">H</span>
+                <span>D</span>
+              </v-btn>
+          </v-toolbar-title>
+        </nuxt-link>
+
         <v-spacer></v-spacer>
+
+        <!-- Nav buttons -->
         <v-toolbar-items :show-arrows="false" :style="$vuetify.breakpoint.smAndDown ? 'height: 56px;' : 'height: 64px;'">
             <v-tabs optional id="navbarBtns" right>
               <template v-if="$vuetify.breakpoint.smAndUp">
@@ -84,6 +89,7 @@
       <v-progress-linear v-if="getLoad()" color="primary" fixed bottom indeterminate></v-progress-linear>
     </v-app-bar>
 
+    <!-- Hamburger menu for mobile -->
     <v-navigation-drawer app clipped v-model="nav" v-if="$vuetify.breakpoint.xsOnly">
       <v-list style="position: absolute; bottom: 0; width: 100%;" nav>
         <v-list-item-group color="primary">
@@ -116,6 +122,7 @@
       </v-list>
 
     </v-navigation-drawer>
+
   </span>
 </template>
 
@@ -189,6 +196,9 @@
 import { Component, Vue } from 'vue-property-decorator'
 import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, MoonIcon, ShoppingCartIcon, DiscIcon, MenuIcon, HomeIcon } from 'vue-feather-icons'
 
+/**
+ * Navigation bar that is used on every page and contains the logo and the navigation buttons. On mobile it uses a hamburger menu and is set to the bottom of the screen.
+ */
 @Component({
   components: {
     UsersIcon,
@@ -203,6 +213,9 @@ import {CalendarIcon, UsersIcon, PhoneCallIcon, SunIcon, MoonIcon, ShoppingCartI
   }
 })
 export default class navbar extends Vue {
+  /**
+   * The constructor of the navbar component. When the page is switched, the navbar shows a loading animation while the page is loading.
+   */
   constructor () {
     super()
     const setLoad = this.setLoad
@@ -213,14 +226,27 @@ export default class navbar extends Vue {
     })
   }
 
+  // Bool to show loading animation
   loading = false
+  // Bool to prevent loading animation from showing when the page is already loaded
   lock = false
+  // Bool to show the hamburger menu
   nav = false
 
+  /**
+   * A getter for the loading variable.
+   * @returns {boolean} The loading variable for the loading animation.
+   * @public
+   */
   getLoad(): boolean{
     return this.loading
   }
 
+  /**
+   * A setter to toggle the current theme between light and dark. And toggles the icon of the sun and moon.
+   * The theme is set in the local storage (cache).
+   * @public
+   */
   toggleTheme(): void{
     this.$vuetify.theme.dark = !this.$vuetify.theme.dark
 
@@ -233,12 +259,22 @@ export default class navbar extends Vue {
     }
   }
 
+  /**
+   * An event listener for when the contact button is clicked. It scrolls to the footer card.
+   * @public
+   */
   scrollToFooter(): void{
     this.$vuetify.goTo('#footer')
     this.$ga.event('Footer', 'Scroll to footer card')
   }
 
-  setLoad(value: boolean, path?: string): void{
+  /**
+   * A setter to toggle the loading animation. If the page is already loaded, the loading animation won't show by toggling the lock variable.
+   * @param {boolean} value The loading variable to set.
+   * @param {string} path The path of the current page, optional.
+   * @public
+   */
+  setLoad(value: boolean, path?: string | undefined): void{
     // sometimes the router event is faster than the click event so a lock check is used
     if(value === this.loading){
       this.lock = true

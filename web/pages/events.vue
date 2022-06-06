@@ -46,6 +46,9 @@ import { EventType } from '@/assets/interfaces'
 import { ChevronLeftIcon, ChevronRightIcon } from "vue-feather-icons";
 
 
+/**
+ * The events page that has a calendar and a list of events.
+ */
 @Component({
       components: {
         ChevronLeftIcon,
@@ -54,17 +57,30 @@ import { ChevronLeftIcon, ChevronRightIcon } from "vue-feather-icons";
       }
     })
     export default class EventPage extends Vue {
+
+      /**
+       * The constructor of the events page.
+       */
       created() {
         performance.mark('eventLoadStart')
         this.getEvents()
       }
 
+      // List of events to display
       events: EventType[] = []
+      // Error message to display if API call fails
       error = ''
+      // loading state of the page
       loading = true
+      // The date to display in the calendar
       observedDate = new Date()
+      // The calendar component and its reference function
       @Ref() readonly calendar!: {next: (amount?: number) => void, prev: (amount?: number) => void}
 
+      /**
+       * Gets the events from the API.
+       * @public
+       */
       getEvents (): void {
         this.loading = true
         fetch(process.env.NUXT_ENV_API_URL + '/events').then(res =>res.text()).then(res => {
@@ -96,6 +112,10 @@ import { ChevronLeftIcon, ChevronRightIcon } from "vue-feather-icons";
         })
       }
 
+      /**
+       * Converts the events to a format that the calendar component can understand.
+       * @public
+       */
       getCalendarData(){
         const data: {start: Date, name?:string, id: number, timed?: boolean}[] = []
 
@@ -110,7 +130,12 @@ import { ChevronLeftIcon, ChevronRightIcon } from "vue-feather-icons";
         return data
       }
 
-      onEventClick(event: {event: {id: number}}){
+    /**
+     * Scrolls to the event with the given id in the list. Is called when the calendar component has a click event.
+     * @param event The clicked event to scroll to.
+     * @public
+     */
+    onEventClick(event: {event: {id: number}}){
         this.$vuetify.goTo('#event' + event.event.id, {offset: 200})
       }
     }
