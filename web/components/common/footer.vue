@@ -21,6 +21,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 
+/**
+ * A footer component that is fixed to the bottom of the page. With a small HD watermark.
+ * @deprecated
+ */
 @Component
 export default class footerElement extends Vue {}
 </script>

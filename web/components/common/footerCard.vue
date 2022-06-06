@@ -46,6 +46,9 @@
   import { Vue, Component } from 'vue-property-decorator'
   import {MailIcon, HomeIcon, SmileIcon, FacebookIcon, InstagramIcon, MessageSquareIcon, ExternalLinkIcon} from 'vue-feather-icons'
 
+  /**
+   * A card with contact information and social media links. It is used as a footer and is appended to the end of the page.
+   */
   @Component({
     components: {
       MailIcon,
