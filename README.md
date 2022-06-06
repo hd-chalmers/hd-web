@@ -2,6 +2,7 @@
 This is the website seen in [hd.chalmers.se](https://hd.chalmers.se) or in the staging server [diod.hd.chalmers.se](diod.hd.chalmers.se) and is dependent on the REST API [HD DB API](https://github.com/hd-chalmers/hd-db-api) while the databse is edited with [HD Web Loehk](https://github.com/hd-chalmers/hd-web-loehk). This project uses Vue.js + Nuxt where Vue is a templating framework and Nuxt is a framework that handles configuration for various configuration regarding a vue web app. There's also support for SCSS styling and Typescript for type checking in JavaScript.
 ## Build Setup
 To run make sure you have NodeJS and yarn installed. Yarn can be installed via NPM as seen below. To run in a container then docker needs to be installed.
+Also make sure that a `.env` is present in the **web** directory of the project, otherwise it can be created by copying the `.env.example` file.
 
 ```bash
 # install dependencies
@@ -16,6 +17,10 @@ $ yarn generate
 # build for production and launch server with server side rendering (may require a change in nuxt config)
 $ yarn build
 $ yarn start
+
+# Render code documentation into a static HTML file
+$ yarn styleguide:build
+$ yarn styleguide # starts server with live reload
 
 # to build and run the website in a server in a docker container
 $ docker-compose up
