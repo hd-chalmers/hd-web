@@ -1,5 +1,6 @@
 const { resolve } = require('path')
 const { getWebpackConfig } = require('nuxt')
+const { Vuetify } = require('vuetify')
 
 const FILTERED_PLUGINS = [
   'WebpackBarPlugin',
@@ -34,15 +35,30 @@ module.exports = async () => {
     ]
   }
 
+  renderRootJsx => {
+    return {
+      vuetify: new Vuetify(),
+      render(createElement) {
+        // v-app to support vuetify plugin
+        return createElement('v-app', [createElement(previewComponent)])
+      }
+    }
+  }
+
   return {
-    //components: './components/**/*.vue',
+    components: 'components/**/*.vue',
     sections: [
       {
+        name: 'Introduction README',
         content: "../README.md"
       },
       {
         name: "Components",
         components: 'components/**/*.vue'
+      },
+      {
+        name: "Layouts",
+        components: 'layouts/**/*.vue'
       },
       {
         name: "Pages",
