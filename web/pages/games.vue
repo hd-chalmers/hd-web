@@ -163,9 +163,7 @@ export default class GameList extends Vue{
   /**
    * Constructor for the games page.
    */
-  constructor() {
-     super()
-
+  mounted() {
       performance.mark('gameLoadStart')
       this.getGames()
     }

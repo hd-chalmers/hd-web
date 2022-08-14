@@ -51,7 +51,7 @@ export default class DoorCard extends Vue{
   /**
    * The constructor of the component which sets the interval for getting the door status.
    */
-  created():void {
+  mounted():void {
     this.getStatus()
 
     this.interval = setInterval(this.getStatus, 10000);
@@ -60,7 +60,7 @@ export default class DoorCard extends Vue{
   /**
    * Save the interval id to pass to the destroy method
    */
-  @VModel({type: Number, required: true}) interval!: NodeJS.Timer
+  @VModel({required: true}) interval!: NodeJS.Timer
 
   // A boolean that is true when the date is shown, it is set by clicking the card and resets after a few seconds.
   doorShowDate = false

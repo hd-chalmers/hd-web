@@ -61,7 +61,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "vue-feather-icons";
       /**
        * The constructor of the events page.
        */
-      created() {
+      mounted() {
         performance.mark('eventLoadStart')
         this.getEvents()
       }

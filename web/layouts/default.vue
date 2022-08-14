@@ -84,7 +84,7 @@ import {ExternalLinkIcon} from "vue-feather-icons";
      * The constructor for the default layout. It will check if the user has consented to the use of Google Analytics. If not, it will display an alert.
      * And check what theme the user has selected which is applied to Vuetify.
      */
-    created(): void {
+    mounted(): void {
 
       try {
         if (window.localStorage.getItem("theme")) {

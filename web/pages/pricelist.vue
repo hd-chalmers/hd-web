@@ -98,8 +98,7 @@ import {PricelistCategory} from "@/assets/interfaces";
   }
 })
 export default class pricelist extends Vue{
-  constructor() {
-    super()
+  mounted() {
     this.getData()
   }
 

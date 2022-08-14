@@ -216,8 +216,7 @@ export default class navbar extends Vue {
   /**
    * The constructor of the navbar component. When the page is switched, the navbar shows a loading animation while the page is loading.
    */
-  constructor () {
-    super()
+  created () {
     const setLoad = this.setLoad
 
     this.$router.afterEach((to, from) => {

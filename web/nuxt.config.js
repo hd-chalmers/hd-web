@@ -1,6 +1,6 @@
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
+  // Enable server-side pre rendering: https://go.nuxtjs.dev/ssr-mode
+  ssr: true,
 
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -60,6 +60,7 @@ export default {
     treeShaking: true,
     customVariables: ['~/assets/variables.scss'],
     theme: {
+      dark: true,
       themes: {
         light:{
           'primary': '#d2017a',

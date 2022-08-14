@@ -63,8 +63,7 @@ export default class Counter extends Vue{
   /**
    * The content of the counter, gets the value from the server and sets an interval to update it.
    */
-  constructor() {
-    super()
+  mounted() {
     this.doCount('get')
     setInterval(this.doCount, 2000, ['get'])
   }

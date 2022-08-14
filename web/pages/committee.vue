@@ -141,9 +141,7 @@
     /**
      * A constructor for the committee page which starts the loading of the data.
      */
-    constructor() {
-      super()
-
+    mounted() {
       performance.mark('committeeLoadStart')
       this.getData()
     }

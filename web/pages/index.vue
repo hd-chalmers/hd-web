@@ -113,11 +113,16 @@ import {NavigationGuardNext, Route} from "vue-router";
   }
 })
 export default class IndexPage extends Vue {
+
+  created(){
+    this.timeout = undefined
+    this.doorInterval = undefined
+  }
+
   /**
    * The constructor. Gets the group photo and events from the server.
    */
-  constructor() {
-    super()
+  mounted() {
     performance.mark('frontLoadStart')
     this.getData()
     performance.mark('frontEventLoadStart')
@@ -134,9 +139,9 @@ export default class IndexPage extends Vue {
   // loading state for group photo
   loading = true
   // timeout if group photo is not loaded
-  timeout: NodeJS.Timeout | undefined
+  timeout: NodeJS.Timeout | undefined = 0 as any
   // interval for getting door status
-  doorInterval: NodeJS.Timer | undefined
+  doorInterval: NodeJS.Timer | undefined = 0 as any
 
   // Events to be displayed on the frontpage.
   eventPreviews: EventType[] = []
