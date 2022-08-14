@@ -15,10 +15,10 @@
 
         <!-- Door text -->
         <v-scroll-x-transition leave-absolute>
-          <span v-if="!doorShowDate">Hoppas du har en bra dag :)</span>
+          <span v-if="!doorShowDate" style="width: 180px;">Hoppas du har en bra dag :)</span>
         </v-scroll-x-transition>
         <v-scroll-x-transition leave-absolute>
-          <span v-if="doorShowDate" style="line-height: 12px; font-size: 11px; text-align: right;">{{doorOpenTimestamp}} <br> ca {{doorDuration}} sedan</span>
+          <span v-if="doorShowDate" style="line-height: 12px; font-size: 11px; text-align: right; min-width: 200px;">{{doorOpenTimestamp}} <br> ca {{doorDuration}} sedan</span>
         </v-scroll-x-transition>
       </template>
 
