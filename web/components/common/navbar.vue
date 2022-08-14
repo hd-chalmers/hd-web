@@ -4,7 +4,13 @@
       <v-container style="display: flex; align-items: center; padding: 0">
 
         <!-- Logo -->
-        <v-img src="/img/HD_logo.webp" id="hd-logo" max-width="100" style="z-index: 10; cursor: pointer;" @click="$router.push('/')"></v-img>
+        <v-img
+          src="/img/HD_logo.webp"
+          id="hd-logo"
+          max-width="100"
+          style="z-index: 10; cursor: pointer;"
+          @click="$vuetify.breakpoint.xs ? nav = !nav :$router.push('/')"
+        />
         <nuxt-link to="/">
           <v-toolbar-title @click.once="setLoad(true, $event)">
               <v-btn
@@ -90,7 +96,7 @@
     </v-app-bar>
 
     <!-- Hamburger menu for mobile -->
-    <v-navigation-drawer app clipped v-model="nav" v-if="$vuetify.breakpoint.xsOnly">
+    <v-navigation-drawer fixed app height="calc(100% - 56px)" clipped v-model="nav" v-if="$vuetify.breakpoint.xsOnly">
       <v-list style="position: absolute; bottom: 0; width: 100%;" nav>
         <v-list-item-group color="primary">
           <v-list-item href="https://www.facebook.com/HsektionenChalmers/">
