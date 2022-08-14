@@ -32,10 +32,11 @@
         Discord server - HDs spelhörna
         <external-link-icon size="0.8x"/>
       </a>
-      <span>
-      <smile-icon size="1.5x"/>
-      Om du ser nån av oss, Skrik/Vifta/fånga oss och prata på
-      </span>
+      <a href="https://www.twitch.tv/hdatorforening" target="_blank" @click="$ga.social('Twitch', 'Click', 'https://www.twitch.tv/hdatorforening')">
+      <twitch-icon size="1.5x"/>
+       HDatorforening - Twitch
+        <external-link-icon size="0.8x"/>
+      </a>
         </v-col>
       </v-row>
     </v-card-text>
@@ -44,7 +45,7 @@
 
 <script lang="ts">
   import { Vue, Component } from 'vue-property-decorator'
-  import {MailIcon, HomeIcon, SmileIcon, FacebookIcon, InstagramIcon, MessageSquareIcon, ExternalLinkIcon} from 'vue-feather-icons'
+  import {MailIcon, HomeIcon, TwitchIcon, FacebookIcon, InstagramIcon, MessageSquareIcon, ExternalLinkIcon} from 'vue-feather-icons'
 
   /**
    * A card with contact information and social media links. It is used as a footer and is appended to the end of the page.
@@ -53,11 +54,11 @@
     components: {
       MailIcon,
       HomeIcon,
-      SmileIcon,
       FacebookIcon,
       InstagramIcon,
       MessageSquareIcon,
-      ExternalLinkIcon
+      ExternalLinkIcon,
+      TwitchIcon
     }
   })
   export default class footerCard extends Vue{
