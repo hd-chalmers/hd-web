@@ -51,6 +51,10 @@ export interface FrontpageData{
   front_image: string | null
 }
 
+export interface LiveStatus{
+  live: boolean
+}
+
 export interface SimpleEventData{
   title: string,
   date: Date

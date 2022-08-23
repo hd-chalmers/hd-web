@@ -21,7 +21,15 @@
 
           <v-card :style=" $vuetify.breakpoint.xsOnly ? 'margin-bottom: 6px; order: -1; flex-grow: 1;' : 'margin-top: 6px; flex-grow: 1;'" elevation="6">
             <v-progress-circular indeterminate v-if="loading" color="primary" style="margin: 5px; width: 100%;"></v-progress-circular>
-            <v-img v-bind:src="frontpageImg" lazy-src="/img/unknown_group.webp" alt="unknown_group" height="100%" width="100%"></v-img>
+            <v-img v-bind:src="frontpageImg" v-if="!twitchLive" lazy-src="/img/unknown_group.webp" alt="unknown_group" height="100%" width="100%"></v-img>
+            <iframe
+              style="width: 100%; height: 100%; min-height: 500px;"
+              v-if="twitchLive"
+              src="https://player.twitch.tv/?channel=hdatorforening&parent=hd.chalmers.se&muted=false&autoplay=true"
+              height="720"
+              width="1280"
+              allowfullscreen>
+            </iframe>
           </v-card>
         </v-col>
 
@@ -97,7 +105,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import {EventType, FrontpageData} from '@/assets/interfaces'
+import {EventType, FrontpageData, LiveStatus} from '@/assets/interfaces'
 import { ArrowRightIcon, CalendarIcon } from 'vue-feather-icons'
 import footerCard from '@/components/common/footerCard.vue'
 import {NavigationGuardNext, Route} from "vue-router";
@@ -126,6 +134,7 @@ export default class IndexPage extends Vue {
     performance.mark('frontLoadStart')
     this.getData()
     performance.mark('frontEventLoadStart')
+    this.getLiveStatus()
     this.getEvents()
 
     //this.initSocialEmbed(document, "script", "EmbedSocialHashtagScript", "https://embedsocial.com/cdn/ht.js")
@@ -142,6 +151,9 @@ export default class IndexPage extends Vue {
   timeout: NodeJS.Timeout | undefined = 0 as any
   // interval for getting door status
   doorInterval: NodeJS.Timer | undefined = 0 as any
+
+  // If HD is live
+  twitchLive = false
 
   // Events to be displayed on the frontpage.
   eventPreviews: EventType[] = []
@@ -186,6 +198,12 @@ export default class IndexPage extends Vue {
         performance.clearMarks('frontLoadStart')
         performance.clearMeasures('frontLoad')
       })
+  }
+
+  async getLiveStatus(): Promise<void> {
+    fetch(process.env.NUXT_ENV_API_URL + '/live').then(res => res.json()).then((res: LiveStatus) => {
+      this.twitchLive = res.live
+    })
   }
 
   /**
