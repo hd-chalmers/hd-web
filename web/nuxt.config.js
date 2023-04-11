@@ -89,11 +89,12 @@ export default {
     }
   },
 
-  googleAnalytics: {
+  googleAnalytics: { // plugin is deprecated
     id: process.env.NUXT_ENV_TRACKING_ID,
     autoTracking: {
       exception: true
-    }
+    },
+    disabled: true
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

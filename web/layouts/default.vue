@@ -96,7 +96,7 @@ import {ExternalLinkIcon} from "vue-feather-icons";
         console.error(e)
       }
 
-      this.getConsent()
+      //this.getConsent()
       this.getData()
     }
 
