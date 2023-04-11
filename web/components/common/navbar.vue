@@ -1,6 +1,6 @@
 <template>
   <span class="d-print-none">
-    <v-app-bar app elevate-on-scroll clipped-left :bottom="$vuetify.breakpoint.xsOnly">
+    <v-app-bar app elevate-on-scroll clipped-left>
       <v-container style="display: flex; align-items: center; padding: 0">
 
         <!-- Logo -->
@@ -96,8 +96,8 @@
     </v-app-bar>
 
     <!-- Hamburger menu for mobile -->
-    <v-navigation-drawer fixed app height="calc(100% - 56px)" clipped v-model="nav" v-if="$vuetify.breakpoint.xsOnly">
-      <v-list style="position: absolute; bottom: 0; width: 100%;" nav>
+    <v-navigation-drawer fixed app clipped v-model="nav" v-if="$vuetify.breakpoint.xsOnly">
+      <v-list style="width: 100%;" nav>
         <v-list-item-group color="primary">
           <v-list-item href="https://www.facebook.com/HsektionenChalmers/">
             <v-list-item-icon> <v-img contain width="24" height="24" id="h-tek-img" src="/img/H-sektionen.svg" /> </v-list-item-icon>

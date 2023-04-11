@@ -9,7 +9,7 @@
 
           <!-- Consent pop up dialog -->
           <v-expand-transition class="d-print-none">
-            <v-alert v-if="consent === null" color="info" style="position: fixed; width: 100%; margin: 0;" :style="$vuetify.breakpoint.xsOnly ? 'bottom: 56px;' : 'bottom: 0;'" class="d-print-none" dense>
+            <v-alert v-if="consent === null" color="info" style="position: fixed; width: 100%; margin: 0; bottom: 0;" class="d-print-none" dense>
               <v-container style="display: flex; justify-content: space-between; align-items: center; padding-top: 0; padding-bottom: 0;" :style="$vuetify.breakpoint.xsOnly ? 'flex-direction: column;' : ''">
                 <p style="display: inline-block; margin: 0;">
                   Denna sidan använder sig av Google Analytics för att samla anonym statistik. Läs om deras
