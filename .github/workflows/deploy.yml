@@ -1,0 +1,23 @@
+name: Deploy website
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-image:
+    name: Build and deploy image
+
+    runs-on: [deploy, web]
+
+    steps:
+    - name: Pull git changes
+      working-directory: /lager/hd/hd-web
+      run: git pull
+    - name: Build Image
+      working-directory: /lager/system
+      run: docker-compose build hd-site
+    - name: Deploy container
+      working-directory: /lager/system
+      run: docker-compose up -d hd-site
+      
