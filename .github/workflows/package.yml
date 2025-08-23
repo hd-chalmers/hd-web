@@ -2,12 +2,12 @@
 #
 # To get started with Nuxt see: https://nuxtjs.org/docs/get-started/installation
 #
-name: Deploy Nuxt site to Pages
+name: Build docker image
 
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,6 +21,55 @@ permissions:
   packages: write
 
 jobs:
+  build-image:
+    name: Build image
+    runs-on: [linux, x64]
+    concurrency:
+      group: hd-web
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+          cache: ${{ steps.detect-package-manager.outputs.manager }}
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            web/.output
+            web/.nuxt
+          key: ${{ runner.os }}-nuxt-build-${{ hashFiles('web/.output') }}
+          restore-keys: |
+            ${{ runner.os }}-nuxt-build-
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: web
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/hd-chalmers/hd-web:latest
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ghcr.io/hd-chalmers/hd-web
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: false
+          
   # Build job
 #  build:
 #    runs-on: ubuntu-latest
@@ -75,51 +124,3 @@ jobs:
 #        id: deployment
 #        uses: actions/deploy-pages@v4
 
-  build-image:
-    name: Build image
-    runs-on: [linux, x64]
-    concurrency:
-      group: hd-web
-    env:
-      REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "16"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
-      - name: Restore cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            web/.output
-            web/.nuxt
-          key: ${{ runner.os }}-nuxt-build-${{ hashFiles('web/.output') }}
-          restore-keys: |
-            ${{ runner.os }}-nuxt-build-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push Docker image
-        id: push
-        uses: docker/build-push-action@v6
-        with:
-          context: web
-          push: true
-          platforms: linux/amd64
-          tags: |
-            ghcr.io/hd-chalmers/hd-web:latest
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ghcr.io/hd-chalmers/hd-web
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: false
