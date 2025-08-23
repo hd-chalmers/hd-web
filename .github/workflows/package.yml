@@ -79,7 +79,7 @@ jobs:
     name: Build image
     runs-on: [linux, x64]
     concurrency:
-      group: docker
+      group: hd-web
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
