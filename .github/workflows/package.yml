@@ -20,6 +20,9 @@ permissions:
   attestations: write
   packages: write
 
+env:
+ ENV_FILE: ${{vars.ENV_FILE}}
+
 jobs:
   build-image:
     name: Build image
@@ -54,6 +57,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create env file
+        run: echo $ENV_FILE > .env
+        working-directory: web
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v6
