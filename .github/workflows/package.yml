@@ -23,7 +23,7 @@ permissions:
 jobs:
   build-image:
     name: Build image
-    runs-on: [linux, X64]
+    runs-on: ubuntu-latest
     concurrency:
       group: hd-web
     env:
