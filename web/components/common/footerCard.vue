@@ -13,7 +13,7 @@
       </a>
       <span>
       <home-icon size="1.5x"/>
-      Lilla Lindholmen, översta våningen på Wijkanders Johanneberg
+      Lilla Lindholmen, Vån 4 Vasa Hus 8, Johanneberg
       </span>
       <a href="https://www.facebook.com/HDChalmers/" target="_blank" @click="$ga.social('Facebook', 'Click', 'https://www.facebook.com/HDChalmers/')">
         <facebook-icon size="1.5x"/>
