@@ -35,20 +35,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "16"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
-      - name: Restore cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            web/.output
-            web/.nuxt
-          key: ${{ runner.os }}-nuxt-build-${{ hashFiles('web/.output') }}
-          restore-keys: |
-            ${{ runner.os }}-nuxt-build-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry

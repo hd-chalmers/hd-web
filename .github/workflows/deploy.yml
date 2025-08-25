@@ -6,6 +6,7 @@ on:
 
 jobs:
   build-image:
+    if: false
     name: Build and deploy image
 
     runs-on: [deploy, web]
