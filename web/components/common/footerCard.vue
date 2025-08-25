@@ -8,12 +8,12 @@
         <v-col  class="flex flex-column align-right" style="display: flex; min-width: 167px;" cols="12" sm>
       <a href="mailto:hd@htek.chalmers.se" target="_blank" @click="$ga.social('E-mail', 'Click', 'HD@htek.chalmers.se')">
         <mail-icon size="1.5x"/>
-        HD@htek.chalmers.se
+        HD@hd.chalmers.se
         <external-link-icon size="0.8x"/>
       </a>
       <span>
       <home-icon size="1.5x"/>
-      Nya Föreningstorget, Svea Källare, Lindholmen
+      Lilla Lindholmen, översta våningen på Wijkanders Johanneberg
       </span>
       <a href="https://www.facebook.com/HDChalmers/" target="_blank" @click="$ga.social('Facebook', 'Click', 'https://www.facebook.com/HDChalmers/')">
         <facebook-icon size="1.5x"/>
